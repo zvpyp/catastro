@@ -1,8 +1,9 @@
 unit arbol;
 
-{ Librería de árboles binarios utilizados como índice de datos para archivos. }
+{ Unidad de árboles binarios utilizados como índice de datos para archivos. }
 
 {--------------------------------}
+
 interface
 
     type
@@ -17,12 +18,14 @@ interface
     // Retorna un arbol binario cuya raiz es el índice dado.
     function crear_arbol(indice : cardinal): t_arbol;
 
-    // Procedimientos que añaden subárboles hijos a árboles.
+    // Añade un hijo izquierdo a un nodo.
     procedure anidar_hijo_izq(arbol : t_arbol; indice : cardinal);
+
+    // Añade un hijo derecho a un nodo.
     procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal);
 
-
 {--------------------------------}
+
 implementation
 
     function crear_arbol(indice : cardinal): t_arbol;
