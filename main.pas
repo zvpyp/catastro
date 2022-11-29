@@ -1,10 +1,10 @@
 program main;
 
 // Units utilizadas
-uses arbol in 'units/arbol/arbol';
+uses arbol in 'units/arbol/arbol',
+    contribuyente in 'units/contribuyente/contribuyente.pas';
 
 var
-    a : t_arbol;
 
 begin
     // Aquí todavía no hay nada :(
