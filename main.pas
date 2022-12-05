@@ -1,10 +1,7 @@
 program main;
 
-// Units utilizadas
-uses arbol in 'units/arbol/arbol',
-    contribuyente in 'units/contribuyente/contribuyente.pas';
-
-var
+// Units utilizadas:
+// uses inserte_unit;
 
 begin
     // Aquí todavía no hay nada :(

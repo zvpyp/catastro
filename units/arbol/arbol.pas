@@ -24,6 +24,12 @@ interface
     // Añade un hijo derecho a un nodo.
     procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal);
 
+    // Retorna verdadero si el nodo raíz posee hijo izquierdo.
+    function tiene_hijo_izq(arbol : t_arbol): boolean;
+
+    // Retorna verdadero si el nodo raíz posee hijo derecho.
+    function tiene_hijo_der(arbol : t_arbol): boolean;
+
 {--------------------------------}
 
 implementation
@@ -49,6 +55,16 @@ implementation
         new(arbol.sd);
         hijo_der := crear_arbol(indice);
         arbol.sd^ := hijo_der;
+    end;
+
+    function tiene_hijo_izq(arbol : t_arbol): boolean;
+    begin
+        tiene_hijo_izq := not(arbol.si = nil);
+    end;
+
+    function tiene_hijo_der(arbol : t_arbol): boolean;
+    begin
+        tiene_hijo_der := not(arbol.sd = nil);
     end;
 
 end.
