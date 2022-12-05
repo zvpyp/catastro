@@ -30,8 +30,6 @@ implementation
 
     function crear_arbol(indice : cardinal): t_arbol;
     begin
-        new(crear_arbol.si);
-        new(crear_arbol.sd);
         crear_arbol.indice := indice;
     end;
 
@@ -39,6 +37,7 @@ implementation
     var
     hijo_izq : t_arbol;
     begin
+        new(arbol.si);
         hijo_izq := crear_arbol(indice);
         arbol.si^ := hijo_izq;
     end;
@@ -47,6 +46,7 @@ implementation
     var
     hijo_der : t_arbol;
     begin
+        new(arbol.sd);
         hijo_der := crear_arbol(indice);
         arbol.sd^ := hijo_der;
     end;

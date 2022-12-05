@@ -26,7 +26,7 @@ interface
     t_archivo_contribuyentes = file of t_contribuyente;
 
     // Genera el archivo de contribuyentes si no existe. Sino, lo abre.
-    procedure crear_archivo_contribuyentes(var archivo : t_archivo_contribuyentes);
+    procedure abrir_archivo_contribuyentes(var archivo : t_archivo_contribuyentes);
 
     // Añade un contribuyente a un archivo en un índice dado.
     procedure escribir_contribuyente(var archivo : t_archivo_contribuyentes;
@@ -40,9 +40,11 @@ interface
 
 implementation
     
-    procedure crear_archivo_contribuyentes(var archivo : t_archivo_contribuyentes);
+    procedure abrir_archivo_contribuyentes(var archivo : t_archivo_contribuyentes);
     begin
         assign(archivo, ruta_contribuyentes);
+        
+        reset(archivo);
 
         // Si el archivo no existe, lo crea.
         if ioresult <> 0 then rewrite(archivo);
@@ -53,7 +55,6 @@ implementation
                                     contribuyente : t_contribuyente;
                                     indice : cardinal);
     begin
-        rewrite(archivo);
         seek(archivo, indice);
         write(archivo, contribuyente);
     end;
@@ -61,7 +62,6 @@ implementation
     function leer_contribuyente(var archivo : t_archivo_contribuyentes;
                                 indice : cardinal): t_contribuyente;
     begin
-        reset(archivo);
         seek(archivo, indice);
         read(archivo, leer_contribuyente);
     end;
