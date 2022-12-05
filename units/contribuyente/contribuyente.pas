@@ -36,6 +36,10 @@ interface
     // Retorna el contribuyente en el indice indicado de un archivo.
     function leer_contribuyente(var archivo : t_archivo_contribuyentes;
                                 indice : cardinal): t_contribuyente;
+    
+    // Syntactic sugar. Cierra el archivo.
+    procedure cerrar_archivo_contribuyentes(var archivo: t_archivo_contribuyentes);
+
 {--------------------------------}
 
 implementation
@@ -44,7 +48,7 @@ implementation
     begin
         assign(archivo, ruta_contribuyentes);
         
-        reset(archivo);
+        {$I-} reset(archivo) {$I+};
 
         // Si el archivo no existe, lo crea.
         if ioresult <> 0 then rewrite(archivo);
@@ -64,6 +68,11 @@ implementation
     begin
         seek(archivo, indice);
         read(archivo, leer_contribuyente);
+    end;
+
+    procedure cerrar_archivo_contribuyentes(var archivo: t_archivo_contribuyentes);
+    begin
+        close(archivo);
     end;
 
 end.
