@@ -1,17 +1,23 @@
 unit menu;
 
+{ Unidad de menús y submenús. }
+
+{--------------------------------}
+
 interface
 
-uses crt;
+    uses crt;
 
-// Muestra el menú principal. Devuelve la opción elegida.
-function menu_principal(): char;
+    // Muestra el menú principal. Devuelve la opción elegida.
+    function menu_principal(): char;
 
-// Muestra un submenú de AMBC genérico. Devuelve la opción elegida.
-function submenu_ambc(submenu_nombre : string): char;
+    // Muestra un submenú de AMBC genérico. Devuelve la opción elegida.
+    function submenu_ambc(submenu_nombre : string): char;
 
-// Muestra el submenú de listados y estadísticas. Devuelve la opción elegida.
-function submenu_listados_estadisticas(): char;
+    // Muestra el submenú de listados y estadísticas. Devuelve la opción elegida.
+    function submenu_listados_estadisticas(): char;
+
+{--------------------------------}
 
 implementation
 

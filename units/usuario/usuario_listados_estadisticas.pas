@@ -1,6 +1,12 @@
 unit usuario;
 
+{ Unidad de tipo de interacción con usuario del submenú de listados y estadísticas. }
+
+{--------------------------------}
+
 interface
+
+{--------------------------------}
 
 implementation
 

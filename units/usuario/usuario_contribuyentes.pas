@@ -1,37 +1,24 @@
-unit usuario;
+unit usuario;1
+
+{ Unidad de tipo de interacción con usuario del submenú de contribuyentes. }
+
+{--------------------------------}
 
 interface
 
-    uses contribuyente in 'units/contribuyente.pas';
+    uses contribuyente in 'units/contribuyente.pas',
+         manejo_cadena_fechas in 'units/manejo_cadena_fechas.pas';
+
+{--------------------------------}
 
 implementation
-
-    // Retorna verdadero si un caracter es numérico.
-    function caracter_numerico(caracter : char): boolean;
-    begin
-        caracter_numerico := (('0' <= caracter) and (caracter <= '9'));
-    end;
-
-    // Retorna verdadero si una string es numérica.
-    function string_numerica(entrada : string): boolean;
-    var
-        i : byte;
-    begin
-        string_numerica := true;
-
-        for i := 1 to length(entrada) do
-        begin
-            if not(caracter_numerico(entrada[i])) then
-                string_numerica := false;
-        end;
-    end;
 
     // TODO: hacer bello.
     // Pide una entrada al usuario.
     // Verifica si cumple el límite de caracteres.
     // Verifica si es numerico en caso de ser necesario.
     // Repite hasta obtener una entrada válida.
-    function leer_entrada(mensaje : string; limite_caracteres : byte; numerico : boolean): string;
+    function leer_entrada(mensaje : string; limite : byte; numerico : boolean): string;
     var
         valido : boolean;
     begin
@@ -48,7 +35,7 @@ implementation
                 valido := false;
             
             // Verifica el límite de caracteres.
-            if length(leer_entrada) > limite_caracteres then
+            if not(limite_caracteres(leer_entrada, limite)) then
                 valido := false;
         until (valido);
     end;
