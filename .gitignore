@@ -1,5 +1,7 @@
 *.o
 *.ppu
 *.dat
+*.exe
 
+# ignorar ejecutable main en linux
 main
