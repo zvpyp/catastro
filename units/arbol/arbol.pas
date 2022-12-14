@@ -20,10 +20,10 @@ interface
     function crear_arbol(indice : cardinal; clave : string): t_arbol;
 
     // Añade un hijo izquierdo a un nodo.
-    procedure anidar_hijo_izq(arbol : t_arbol; indice : cardinal; clave : string);
+    procedure anidar_hijo_izq(var arbol : t_arbol; indice : cardinal; clave : string);
 
     // Añade un hijo derecho a un nodo.
-    procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal; clave : string);
+    procedure anidar_hijo_der(var arbol : t_arbol; indice : cardinal; clave : string);
 
     // Retorna verdadero si el nodo raíz posee hijo izquierdo.
     function tiene_hijo_izq(arbol : t_arbol): boolean;
@@ -35,13 +35,15 @@ interface
 
 implementation
 
-    function crear_arbol(indice : cardinal): t_arbol;
+    function crear_arbol(indice : cardinal; clave : string): t_arbol;
     begin
         crear_arbol.indice := indice;
-        crear_arbol.
+        crear_arbol.clave := clave;
+        crear_arbol.si := nil;
+        crear_arbol.sd := nil;
     end;
 
-    procedure anidar_hijo_izq(arbol : t_arbol; indice : cardinal; clave : string);
+    procedure anidar_hijo_izq(var arbol : t_arbol; indice : cardinal; clave : string);
     var
     hijo_izq : t_arbol;
     begin
@@ -50,7 +52,7 @@ implementation
         arbol.si^ := hijo_izq;
     end;
 
-    procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal; clave : string);
+    procedure anidar_hijo_der(var arbol : t_arbol; indice : cardinal; clave : string);
     var
     hijo_der : t_arbol;
     begin

@@ -5,15 +5,15 @@ unit arbol_contribuyentes;
 
 interface
 
-    uses arbol in 'units/arbol/arbol',
-         contribuyente in 'units/contribuyente.pas';
+    uses contribuyente in './units/contribuyente.pas',
+         arbol in 'units/arbol/arbol';
 
     // Retorna un árbol binario ordenado por nombre y apellido de cada contribuyente.
-    function arbol_ordenado_por_nombres(var archivo : t_archivo_contribuyentes
+    function arbol_ordenado_por_nombres(var archivo : t_archivo_contribuyentes;
                                             cantidad_contribuyentes : cardinal): t_arbol;
 
     // Retorna un árbol binario ordenado por dni de cada contribuyente.
-    function arbol_ordenado_por_dni(var archivo : t_archivo_contribuyentes
+    function arbol_ordenado_por_dni(var archivo : t_archivo_contribuyentes;
                                         cantidad_contribuyentes : cardinal): t_arbol;
 
 {--------------------------------}
@@ -45,9 +45,9 @@ implementation
             // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
             // Sino, lo agrega como hijo derecho.
             if tiene_hijo_der(arbol) then
-                sumar_por_dni(arbol.sd^, archivo, nuevo_contribuyente_indice)
+                sumar_por_nombre(arbol.sd^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_der(arbol, indice, nombre_completo_nuevo);
+                anidar_hijo_der(arbol, nuevo_contribuyente_indice, nombre_completo_nuevo);
         end
         // Caso en que sea menor
         else
@@ -55,9 +55,9 @@ implementation
             // Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
             // Sino, lo agrega como hijo izquierdo.
             if tiene_hijo_izq(arbol) then
-                sumar_por_dni(arbol.si^, archivo, nuevo_contribuyente_indice)
+                sumar_por_nombre(arbol.si^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_izq(arbol, indice, nombre_completo_nuevo);
+                anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nombre_completo_nuevo);
         end;
     end;
 
@@ -85,7 +85,7 @@ implementation
             if tiene_hijo_der(arbol) then
                 sumar_por_dni(arbol.sd^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_der(arbol, indice, nuevo_contribuyente.dni);
+                anidar_hijo_der(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.dni);
         end
         // Caso en que sea menor
         else
@@ -95,12 +95,12 @@ implementation
             if tiene_hijo_izq(arbol) then
                 sumar_por_dni(arbol.si^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_izq(arbol, indice, nuevo_contribuyente.dni);
+                anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.dni);
         end;
     end;
 
     
-    function arbol_ordenado_por_nombres(var archivo : t_archivo_contribuyentes
+    function arbol_ordenado_por_nombres(var archivo : t_archivo_contribuyentes;
                                             cantidad_contribuyentes : cardinal): t_arbol;
     var
         indice_actual : cardinal;
@@ -121,14 +121,17 @@ implementation
         end;
     end;
 
-    function arbol_ordenado_por_dni(var archivo : t_archivo_contribuyentes
+    function arbol_ordenado_por_dni(var archivo : t_archivo_contribuyentes;
                                         cantidad_contribuyentes : cardinal): t_arbol;
     var
         indice_actual : cardinal;
+        primer_contribuyente : t_contribuyente;
     begin
         // Creamos el árbol con el primer índice.
         indice_actual := 1;
-        arbol_ordenado_por_dni := crear_arbol(indice_actual);
+        seek(archivo, indice_actual);
+        read(archivo, primer_contribuyente);
+        arbol_ordenado_por_dni := crear_arbol(indice_actual, primer_contribuyente.dni);
 
         for indice_actual := 2 to cantidad_contribuyentes do
         begin
