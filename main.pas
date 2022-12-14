@@ -1,8 +1,8 @@
 program main;
 
 // Units utilizadas:
-// uses inserte_unit;
+// uses unit in 'ruta';
 
 begin
-    // Aquí todavía no hay nada :(
+    // Acá no hay nada :(
 end.
