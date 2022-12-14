@@ -33,9 +33,6 @@ implementation
         nombre_completo_actual : string;
     begin
 
-        nombre_completo_actual := contribuyente_actual.apellido + ' ' + contribuyente_actual.nombre;
-        nombre_completo_nuevo := nuevo_contribuyente.apellido + ' ' + nuevo_contribuyente.nombre;
-
         // lee el contribuyente en la posición que indica el árbol
         seek(archivo, arbol.indice);
         read(archivo, contribuyente_actual);
@@ -43,6 +40,9 @@ implementation
         // lee el contribuyente a agregar
         seek(archivo, nuevo_contribuyente_indice);
         read(archivo, nuevo_contribuyente);
+
+        nombre_completo_actual := contribuyente_actual.apellido + ' ' + contribuyente_actual.nombre;
+        nombre_completo_nuevo := nuevo_contribuyente.apellido + ' ' + nuevo_contribuyente.nombre;
 
         // Caso en que el nombre sea mayor:
         if (nombre_completo_actual < nombre_completo_nuevo) then
@@ -114,8 +114,7 @@ implementation
         indice_actual : cardinal;
     begin
         // Creamos el árbol con el primer índice.
-        seek(archivo, 1);
-        read(archivo, indice_actual);
+        indice_actual := 1;
         arbol_ordenado_por_nombres := crear_arbol(indice_actual);
 
         for indice_actual := 2 to cantidad_contribuyentes do
@@ -130,8 +129,7 @@ implementation
         indice_actual : cardinal;
     begin
         // Creamos el árbol con el primer índice.
-        seek(archivo, 1);
-        read(archivo, indice_actual);
+        indice_actual := 1;
         arbol_ordenado_por_dni := crear_arbol(indice_actual);
 
         for indice_actual := 2 to cantidad_contribuyentes do
