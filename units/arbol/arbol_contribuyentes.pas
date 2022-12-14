@@ -28,20 +28,15 @@ implementation
                                    nuevo_contribuyente_indice : cardinal);
     var
         nuevo_contribuyente : t_contribuyente;
-        contribuyente_actual : t_contribuyente;
         nombre_completo_nuevo : string;
         nombre_completo_actual : string;
     begin
-
-        // lee el contribuyente en la posición que indica el árbol
-        seek(archivo, arbol.indice);
-        read(archivo, contribuyente_actual);
 
         // lee el contribuyente a agregar
         seek(archivo, nuevo_contribuyente_indice);
         read(archivo, nuevo_contribuyente);
 
-        nombre_completo_actual := contribuyente_actual.apellido + ' ' + contribuyente_actual.nombre;
+        nombre_completo_actual := arbol.clave;
         nombre_completo_nuevo := nuevo_contribuyente.apellido + ' ' + nuevo_contribuyente.nombre;
 
         // Caso en que el nombre sea mayor:
@@ -52,7 +47,7 @@ implementation
             if tiene_hijo_der(arbol) then
                 sumar_por_dni(arbol.sd^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_der(arbol, indice);
+                anidar_hijo_der(arbol, indice, nombre_completo_nuevo);
         end
         // Caso en que sea menor
         else
@@ -62,7 +57,7 @@ implementation
             if tiene_hijo_izq(arbol) then
                 sumar_por_dni(arbol.si^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_izq(arbol, indice);
+                anidar_hijo_izq(arbol, indice, nombre_completo_nuevo);
         end;
     end;
 
@@ -74,26 +69,23 @@ implementation
                                 nuevo_contribuyente_indice : cardinal);
     var
         nuevo_contribuyente : t_contribuyente;
-        contribuyente_actual : t_contribuyente;
+        dni_actual : string;
     begin
-
-        // lee el contribuyente en la posición que indica el árbol
-        seek(archivo, arbol.indice);
-        read(archivo, contribuyente_actual);
+        dni_actual := arbol.clave;
 
         // lee el contribuyente a agregar
         seek(archivo, nuevo_contribuyente_indice);
         read(archivo, nuevo_contribuyente);
 
         // Caso en que el dni sea mayor:
-        if (contribuyente_actual.dni < nuevo_contribuyente.dni) then
+        if (dni_actual < nuevo_contribuyente.dni) then
         begin
             // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
             // Sino, lo agrega como hijo derecho.
             if tiene_hijo_der(arbol) then
                 sumar_por_dni(arbol.sd^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_der(arbol, indice);
+                anidar_hijo_der(arbol, indice, nuevo_contribuyente.dni);
         end
         // Caso en que sea menor
         else
@@ -103,7 +95,7 @@ implementation
             if tiene_hijo_izq(arbol) then
                 sumar_por_dni(arbol.si^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_izq(arbol, indice);
+                anidar_hijo_izq(arbol, indice, nuevo_contribuyente.dni);
         end;
     end;
 
@@ -112,10 +104,16 @@ implementation
                                             cantidad_contribuyentes : cardinal): t_arbol;
     var
         indice_actual : cardinal;
+        primer_contribuyente : t_contribuyente;
+        nombre_apellido_primero : string;
     begin
         // Creamos el árbol con el primer índice.
         indice_actual := 1;
-        arbol_ordenado_por_nombres := crear_arbol(indice_actual);
+        seek(archivo, indice_actual);
+        read(archivo, primer_contribuyente);
+        nombre_apellido_primero := primer_contribuyente.apellido + ' ' + primer_contribuyente.nombre;
+
+        arbol_ordenado_por_nombres := crear_arbol(indice_actual, nombre_apellido_primero);
 
         for indice_actual := 2 to cantidad_contribuyentes do
         begin

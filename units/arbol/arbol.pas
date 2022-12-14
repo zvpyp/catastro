@@ -11,18 +11,19 @@ interface
 
     t_arbol = record
         indice : cardinal;
+        clave : string;
         si : t_puntero_arbol;
         sd : t_puntero_arbol;
     end;
 
     // Retorna un arbol binario cuya raiz es el índice dado.
-    function crear_arbol(indice : cardinal): t_arbol;
+    function crear_arbol(indice : cardinal; clave : string): t_arbol;
 
     // Añade un hijo izquierdo a un nodo.
-    procedure anidar_hijo_izq(arbol : t_arbol; indice : cardinal);
+    procedure anidar_hijo_izq(arbol : t_arbol; indice : cardinal; clave : string);
 
     // Añade un hijo derecho a un nodo.
-    procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal);
+    procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal; clave : string);
 
     // Retorna verdadero si el nodo raíz posee hijo izquierdo.
     function tiene_hijo_izq(arbol : t_arbol): boolean;
@@ -37,23 +38,24 @@ implementation
     function crear_arbol(indice : cardinal): t_arbol;
     begin
         crear_arbol.indice := indice;
+        crear_arbol.
     end;
 
-    procedure anidar_hijo_izq(arbol : t_arbol; indice : cardinal);
+    procedure anidar_hijo_izq(arbol : t_arbol; indice : cardinal; clave : string);
     var
     hijo_izq : t_arbol;
     begin
         new(arbol.si);
-        hijo_izq := crear_arbol(indice);
+        hijo_izq := crear_arbol(indice, clave);
         arbol.si^ := hijo_izq;
     end;
 
-    procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal);
+    procedure anidar_hijo_der(arbol : t_arbol; indice : cardinal; clave : string);
     var
     hijo_der : t_arbol;
     begin
         new(arbol.sd);
-        hijo_der := crear_arbol(indice);
+        hijo_der := crear_arbol(indice, clave);
         arbol.sd^ := hijo_der;
     end;
 
