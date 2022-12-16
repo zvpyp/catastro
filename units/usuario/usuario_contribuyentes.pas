@@ -1,5 +1,8 @@
 unit usuario;
 
+//TODO:
+// Mejorar el diseño de todos los Writeln de estos procedimientos.
+
 { Unidad de tipo de interacción con usuario del submenú de contribuyentes. }
 
 {--------------------------------}
