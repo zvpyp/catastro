@@ -1,4 +1,4 @@
-unit usuario;
+unit usuario_terrenos;
 
 { Unidad de tipo de interacción con usuario del submenú de terrenos. }
 
