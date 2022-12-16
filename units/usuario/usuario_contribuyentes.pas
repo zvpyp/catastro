@@ -35,7 +35,7 @@ tcl : byte;
 nro, apellido, nombre, direccion, ciudad, dni, fecha_nac, tel, email : string;
 begin
   tlc := 1;
-  While tcl <> 0 do
+  While ((tcl <> 0) and (tcl < 11)) do
   begin
     Case tcl of
       1:
@@ -157,6 +157,10 @@ begin
     end;
     tcl := tcl + 1;
   end;
+  if tcl = 0 then
+    begin
+      crear_contribuyente.numero := -1;
+    end;
 end;
 
 Procedure borrar_contribuyente(contribuyente : t_contribuyente);
