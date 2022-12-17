@@ -1,7 +1,6 @@
 unit usuario_terrenos;
 
 //TODO:
-// Terminar procedimiento modificar_terreno -> Hacer que tmb modifique el avaluo
 // Hacer procedimiento borrar_terreno
 // Verificar que 'superficie' sea un número real.
 // Verificar que 'zona' y 'tipo_edificacion' sean enteros del 1 al 5.
@@ -155,9 +154,10 @@ Procedure modificar_terreno(var terreno : t_terreno); // Acomodar para terrenos
 var
 tcl : byte;
 nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario, superficie : string;
-avaluo, superficie, porc_zona, porc_edif, : real;
+avaluo, superficie, porc_zona, porc_edif, valor_m2 : real;
 zona, tipo_edificacion : 1..5;
 begin
+valor_m2 := 12308.6;
   While ((tcl <> 0) and (tcl < 8)) do
   begin
       Writeln('¿Qué desea modificar?')
@@ -248,14 +248,14 @@ begin
             end;
         end;
         begin
-            case zona of
+            case terreno.zona of
                 1: porc_zona := 1.5;
                 2: porc_zona := 1.1;
                 3: porc_zona := 0.7;
                 4: porc_zona := 0.4;
                 5: porc_zona := 0.1;
             end;
-            case tipo_edificacion of
+            case terreno.tipo_edificacion of
                 1: porc_edif := 1.7;
                 2: porc_edif := 1.3;
                 3: porc_edif := 1.1;
