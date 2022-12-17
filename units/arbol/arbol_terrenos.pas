@@ -27,6 +27,10 @@ Function arbol_ordenado_por_fecha_inscripcion(Var archivo : t_archivo_terrenos;
                                               cantidad_terrenos : cardinal): t_arbol
 ;
 
+Function arbol_ordenado_por_nro_plano(Var archivo : t_archivo_terrenos;
+                                              cantidad_terrenos : cardinal): t_arbol
+;
+
 {--------------------------------}
 
 Implementation
@@ -162,6 +166,73 @@ Begin
   For indice_actual := 2 To cantidad_terrenos Do
     Begin
       sumar_por_fecha_inscripcion(arbol_ordenado_por_fecha_inscripcion, archivo, indice_actual);
+    End;
+End;
+
+// Agrega un nodo a un arbol ordenado por nro de plano.
+// Su raíz será la posición en el archivo dado.
+// El valor se determina según el nro de plano del terreno dado.
+Procedure sumar_por_nro_plano(Var arbol: t_arbol;
+                           Var archivo : t_archivo_terrenos;
+                           nuevo_terreno_indice : cardinal);
+
+Var 
+  nuevo_terreno : t_terreno;
+  nro_plano_nuevo : string;
+  nro_plano_actual : string;
+Begin
+
+  // lee el terreno a agregar
+  seek(archivo, nuevo_terreno_indice);
+  read(archivo, nuevo_terreno);
+
+  nro_plano_actual := arbol.clave;
+  nro_plano_nuevo := nuevo_terreno.nro_plano;
+
+  // Caso en que el nro de contribuyente sea mayor:
+  If (nro_plano_actual < nro_plano_nuevo) Then
+    Begin
+
+ // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
+      // Sino, lo agrega como hijo derecho.
+      If tiene_hijo_der(arbol) Then
+        sumar_por_nro_plano(arbol.sd^, archivo, nuevo_terreno_indice)
+      Else
+        anidar_hijo_der(arbol, nuevo_terreno_indice, nro_plano_nuevo);
+    End
+    // Caso en que sea menor
+  Else
+    Begin
+
+// Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
+      // Sino, lo agrega como hijo izquierdo.
+      If tiene_hijo_izq(arbol) Then
+        sumar_por_nro_plano(arbol.si^, archivo, nuevo_terreno_indice)
+      Else
+        anidar_hijo_izq(arbol, nuevo_terreno_indice, nro_plano_nuevo);
+    End;
+End;
+
+Function arbol_ordenado_por_nro_plano(Var archivo : t_archivo_terrenos;
+                                    cantidad_terrenos : cardinal): t_arbol;
+
+Var 
+  indice_actual : cardinal;
+  primer_terreno : t_terreno;
+  nro_plano_primero : string;
+Begin
+  // Creamos el árbol con el primer índice.
+  indice_actual := 1;
+  seek(archivo, indice_actual);
+  read(archivo, primer_terreno);
+  nro_plano_primero := primer_terreno.nro_plano;
+
+  arbol_ordenado_por_nro_plano := crear_arbol(indice_actual,
+                                nro_plano_primero);
+
+  For indice_actual := 2 To cantidad_terrenos Do
+    Begin
+      sumar_por_nro_plano(arbol_ordenado_por_nro_plano, archivo, indice_actual);
     End;
 End;
 
