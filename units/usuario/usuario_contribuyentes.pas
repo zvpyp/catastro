@@ -12,18 +12,19 @@ interface
     uses contribuyente in 'units/contribuyente.pas',
          validacion_entradas in 'units/validacion_entradas.pas',
          arbol in 'units/arbol/arbol.pas',
-         contribuyentes_ABMC in 'units/contribuyentes_ABMC.pas';
+         contribuyentes_ABMC in 'units/contribuyentes_ABMC.pas',
+         crt;
 
 // Crea un contribuyente, si el nro de contribuyente proporcionado ya se encuentra en el archivo te da la opción de
 // 'regresar a la pantalla anterior', en ese caso el t_contribuyente se encontraría vacío, verificarlo al momento
 // de utilizar la función para el ALTA.
 Function crear_contribuyente(): t_contribuyente;
 
-Procedure borrar_contribuyente(contribuyente : t_contribuyente);
+Procedure borrar_contribuyente(var contribuyente : t_contribuyente);
 
-Procedure modificar_contribuyente(contribuyente : t_contribuyente);
+Procedure modificar_contribuyente(var contribuyente : t_contribuyente);
 
-Procedure consultar_contribuyente(contribuyente : t_contribuyente);
+Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 
 {--------------------------------}
 
@@ -163,12 +164,12 @@ begin
     end;
 end;
 
-Procedure borrar_contribuyente(contribuyente : t_contribuyente);
+Procedure borrar_contribuyente(var contribuyente : t_contribuyente);
 begin
   contribuyente.estado := false
 end;
 
-Procedure modificar_contribuyente(contribuyente : t_contribuyente);
+Procedure modificar_contribuyente(var contribuyente : t_contribuyente);
 var
 tcl : byte;
 modif : string;
@@ -303,7 +304,7 @@ begin
     end;
 end;
 
-Procedure consultar_contribuyente(contribuyente : t_contribuyente);
+Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 begin
   if contribuyente.estado then
     begin
@@ -315,7 +316,12 @@ begin
       Writeln('Fecha de nacimiento: ',contribuyente.fecha_nacimiento);
       Writeln('Teléfono: ',contribuyente.tel);
       Writeln('Email: ',contribuyente.email);
+      ReadKey;
     end
-    else Writeln('El usuario ha sido dado de baja');
+    else
+      begin 
+        Writeln('El usuario ha sido dado de baja');
+        ReadKey;
+      end;
 end;
 end.
