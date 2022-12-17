@@ -18,7 +18,7 @@ interface
 // Crea un contribuyente, si el nro de contribuyente proporcionado ya se encuentra en el archivo te da la opción de
 // 'regresar a la pantalla anterior', en ese caso el t_contribuyente se encontraría vacío, verificarlo al momento
 // de utilizar la función para el ALTA.
-Function crear_contribuyente(): t_contribuyente;
+Function crear_contribuyente(archivo : t_archivo_contribuyentes, arbol : t_arbol): t_contribuyente;
 
 Procedure borrar_contribuyente(var contribuyente : t_contribuyente);
 
@@ -29,10 +29,11 @@ Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 {--------------------------------}
 
 implementation
-
-Function crear_contribuyente(): t_contribuyente;
+// Pasar árbol ordenado por nro de contribuyente y archivo de contribuyentes.
+Function crear_contribuyente(archivo : t_archivo_contribuyentes ,arbol : t_arbol): t_contribuyente; 
 var
-tcl : byte;
+tcl, pos: byte;
+arbol_pos : t_arbol;
 nro, apellido, nombre, direccion, ciudad, dni, fecha_nac, tel, email : string;
 begin
   tlc := 1;
@@ -48,8 +49,10 @@ begin
         Writeln('El valor ingresado no es un número o supera los 15 caracteres, ingréselo nuevamente por favor');
         Readln(nro);
         end;
-        // Buscamos si el numero existe ya en el archivo (falta hacer funcion)
-        {if clave_esta_en_arbol() then
+        arbol_pos := buscar_por_clave(arbol, nro);
+        pos := arbol_pos.indice;
+        // Buscamos si el numero existe ya en el archivo.
+        While pos = 0 then
           begin
             Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
             Writeln('1. Ingresar otro numero de contribuyente');
@@ -58,7 +61,9 @@ begin
             Case tcl of
             1: Readln(nro);
             2: tcl := -1;
-          end;}
+            end;
+            pos := buscar_por_clave(arbol, nro);
+          end;
       end;
       2:
       begin
@@ -169,9 +174,9 @@ begin
   contribuyente.estado := false
 end;
 
-Procedure modificar_contribuyente(var contribuyente : t_contribuyente);
+Procedure modificar_contribuyente(var contribuyente : t_contribuyente, archivo : t_archivo_contribuyentes, arbol : t_arbol);
 var
-tcl : byte;
+tcl, pos : byte;
 modif : string;
 begin
   While tcl <> 0 do
@@ -198,17 +203,20 @@ begin
           Writeln('El valor ingresado no es un número o supera los 15 caracteres, ingréselo nuevamente por favor');
           Readln(modif);
           end;
-          // Buscamos si el numero existe ya en el archivo (falta hacer funcion)
-          {if clave_esta_en_arbol() then
-            begin
-              Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
-              Writeln('1. Ingresar otro numero de contribuyente');
-              Writeln('2. Regresar a la pantalla anterior');
-              Readln(tcl);
-              Case tcl of
-              1: Readln(nro);
-              2: tcl := -1;
-            end;}
+          pos := buscar_por_clave(arbol, nro);
+        // Buscamos si el numero existe ya en el archivo.
+        While pos = 0 then
+          begin
+            Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
+            Writeln('1. Ingresar otro numero de contribuyente');
+            Writeln('2. Regresar a la pantalla anterior');
+            Readln(tcl);
+            Case tcl of
+            1: Readln(nro);
+            2: tcl := -1;
+            end;
+            pos := buscar_por_clave(arbol, nro);
+          end;
           contribuyente.numero := modif;
         end;
         2:

@@ -19,7 +19,7 @@ interface
          crt;
 
 // Crea un terreno.
-Function crear_terreno(): t_terreno;
+Function crear_terreno(archivo : t_archivo_terrenos ,arbol : t_arbol): t_terreno;
 
 Procedure borrar_terreno(var terreno : t_terreno);
 
@@ -31,9 +31,10 @@ Procedure consultar_terreno(var terreno : t_terreno);
 
 implementation
 
-Function crear_terreno(): t_terreno;
+// Pasar árbol ordenado por nro de plano y archivo de terrenos.
+Function crear_terreno(archivo : t_archivo_terrenos ,arbol : t_arbol): t_terreno;
 var
-tcl : byte;
+tcl, pos : byte;
 nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario, superficie : string;
 avaluo, superficie, valor_m2, porc_zona, porc_edif : real;
 zona, tipo_edificacion : 1..5;
@@ -55,25 +56,27 @@ begin
       end;
       2:
       begin
-
         Writeln('Número de plano:');
         Readln(nro_plano);
         While ((not limite_caracteres(nro_plano,15)) or (not string_numerica(nro_plano))) do
           begin
           Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
           Readln(nro_plano);
-          end; // Verificar que el numero de plano sea único.
-            // Buscamos si el numero existe ya en el archivo (falta hacer funcion)
-        {if clave_esta_en_arbol() then
+          end;
+          pos := buscar_por_clave(arbol, nro_plano);
+        // Buscamos si el numero existe ya en el archivo.
+        While pos = 0 then
           begin
-            Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
-            Writeln('1. Ingresar otro numero de contribuyente');
+            Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
+            Writeln('1. Ingresar otro numero de plano');
             Writeln('2. Regresar a la pantalla anterior');
             Readln(tcl);
             Case tcl of
-            1: Readln(nro);
+            1: Readln(nro_plano);
             2: tcl := -1;
-          end;}
+            end;
+            pos := buscar_por_clave(arbol, nro_plano);
+          end;
         end;
       3:
       begin
