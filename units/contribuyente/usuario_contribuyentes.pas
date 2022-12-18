@@ -1,6 +1,7 @@
 unit usuario_contribuyentes;
 
 //TODO:
+// Falta que se modifique el super árbol cuando se crea, borra o modifica.
 // Mejorar el diseño de todos los Writeln de estos procedimientos.
 
 { Unidad de tipo de interacción con usuario del submenú de contribuyentes. }
@@ -18,11 +19,11 @@ interface
 // Crea un contribuyente, si el nro de contribuyente proporcionado ya se encuentra en el archivo te da la opción de
 // 'regresar a la pantalla anterior', en ese caso el t_contribuyente se encontraría vacío, verificarlo al momento
 // de utilizar la función para el ALTA.
-Function crear_contribuyente(archivo : t_archivo_contribuyentes, arbol : t_arbol): t_contribuyente;
+Function crear_contribuyente(archivo : t_archivo_contribuyentes; arbol : t_arbol): t_contribuyente;
 
 Procedure borrar_contribuyente(var contribuyente : t_contribuyente);
 
-Procedure modificar_contribuyente(var contribuyente : t_contribuyente);
+Procedure modificar_contribuyente(var contribuyente : t_contribuyente; archivo : t_archivo_contribuyentes; arbol : t_arbol);
 
 Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 
@@ -30,7 +31,7 @@ Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 
 implementation
 // Pasar árbol ordenado por nro de contribuyente y archivo de contribuyentes.
-Function crear_contribuyente(archivo : t_archivo_contribuyentes ,arbol : t_arbol): t_contribuyente; 
+Function crear_contribuyente(archivo : t_archivo_contribuyentes; arbol : t_arbol): t_contribuyente; 
 var
 tcl, pos: byte;
 arbol_pos : t_arbol;
@@ -62,7 +63,8 @@ begin
             1: Readln(nro);
             2: tcl := -1;
             end;
-            pos := buscar_por_clave(arbol, nro);
+            arbol_pos := buscar_por_clave(arbol, nro);
+            pos := arbol_pos.indice;
           end;
       end;
       2:
@@ -174,10 +176,11 @@ begin
   contribuyente.estado := false
 end;
 
-Procedure modificar_contribuyente(var contribuyente : t_contribuyente, archivo : t_archivo_contribuyentes, arbol : t_arbol);
+Procedure modificar_contribuyente(var contribuyente : t_contribuyente; archivo : t_archivo_contribuyentes; arbol : t_arbol);
 var
 tcl, pos : byte;
 modif : string;
+arbol_pos : t_arbol;
 begin
   While tcl <> 0 do
     begin
@@ -203,8 +206,9 @@ begin
           Writeln('El valor ingresado no es un número o supera los 15 caracteres, ingréselo nuevamente por favor');
           Readln(modif);
           end;
-          pos := buscar_por_clave(arbol, nro);
         // Buscamos si el numero existe ya en el archivo.
+          arbol_pos := buscar_por_clave(arbol, modif);
+          pos := arbol_pos.indice;
         While pos = 0 then
           begin
             Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
@@ -212,10 +216,11 @@ begin
             Writeln('2. Regresar a la pantalla anterior');
             Readln(tcl);
             Case tcl of
-            1: Readln(nro);
+            1: Readln(modif);
             2: tcl := -1;
             end;
-            pos := buscar_por_clave(arbol, nro);
+            arbol_pos := buscar_por_clave(arbol, modif);
+            pos := arbol_pos.indice;
           end;
           contribuyente.numero := modif;
         end;

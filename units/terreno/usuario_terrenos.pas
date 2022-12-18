@@ -19,22 +19,23 @@ interface
          crt;
 
 // Crea un terreno.
-Function crear_terreno(archivo : t_archivo_terrenos ,arbol : t_arbol): t_terreno;
+Function crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol): t_terreno;
 
 Procedure borrar_terreno(var terreno : t_terreno);
 
 Procedure modificar_terreno(var terreno : t_terreno);
 
-Procedure consultar_terreno(var terreno : t_terreno);
+Procedure consultar_terreno(var terreno : t_terreno; archivo : t_archivo_terrenos; arbol : t_arbol);
 
 {--------------------------------}
 
 implementation
 
 // Pasar árbol ordenado por nro de plano y archivo de terrenos.
-Function crear_terreno(archivo : t_archivo_terrenos ,arbol : t_arbol): t_terreno;
+Function crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol): t_terreno;
 var
 tcl, pos : byte;
+arbol_pos : t_arbol;
 nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario, superficie : string;
 avaluo, superficie, valor_m2, porc_zona, porc_edif : real;
 zona, tipo_edificacion : 1..5;
@@ -63,8 +64,9 @@ begin
           Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
           Readln(nro_plano);
           end;
-          pos := buscar_por_clave(arbol, nro_plano);
         // Buscamos si el numero existe ya en el archivo.
+          arbol_pos := buscar_por_clave(arbol, nro_plano);
+          pos := arbol_pos.indice;
         While pos = 0 then
           begin
             Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
@@ -75,7 +77,8 @@ begin
             1: Readln(nro_plano);
             2: tcl := -1;
             end;
-            pos := buscar_por_clave(arbol, nro_plano);
+            arbol_pos := buscar_por_clave(arbol, nro_plano);
+            pos := arbol_pos.indice;
           end;
         end;
       3:
@@ -155,7 +158,8 @@ end;
 
 Procedure modificar_terreno(var terreno : t_terreno); // Acomodar para terrenos
 var
-tcl : byte;
+tcl, pos : byte;
+arbol_pos : t_arbol;
 nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario, superficie : string;
 avaluo, superficie, porc_zona, porc_edif, valor_m2 : real;
 zona, tipo_edificacion : 1..5;
@@ -194,17 +198,22 @@ valor_m2 := 12308.6;
                     Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
                     Readln(nro_plano);
                 end; // Verificar que el numero de plano sea único.
-                    // Buscamos si el numero existe ya en el archivo (falta hacer funcion)
-                {if clave_esta_en_arbol() then
-                begin
-                    Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
-                    Writeln('1. Ingresar otro numero de contribuyente');
-                    Writeln('2. Regresar a la pantalla anterior');
-                    Readln(tcl);
-                    Case tcl of
-                    1: Readln(nro);
-                    2: tcl := -1;
-                end;}
+                    arbol_pos := buscar_por_clave(arbol, nro_plano);
+                    pos := arbol_pos.indice;
+                  While pos = 0 then
+                    begin
+                      Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
+                      Writeln('1. Ingresar otro numero de plano');
+                      Writeln('2. Regresar a la pantalla anterior');
+                      Readln(tcl);
+                      Case tcl of
+                      1: Readln(nro_plano);
+                      2: tcl := 0;
+                      end;
+                      arbol_pos := buscar_por_clave(arbol, nro_plano);
+                      pos := arbol_pos.indice;
+                    end;
+                  end;
                 terreno.nro_plano := nro_plano;
             end;
             3:
@@ -283,10 +292,4 @@ begin
       Writeln('Tipo de edificación: ',terreno.tipo_edificacion);
       ReadKey;
 end;
-// TODO:
-// procedure crear_terreno();
-// procedure borrar_terreno();
-// procedure modificar_terreno();
-// procedure consultar_terreno();
-
 end.
