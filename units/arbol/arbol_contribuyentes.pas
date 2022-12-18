@@ -140,4 +140,10 @@ implementation
         end;
     end;
 
+    //TODO:
+    //procedure agregar_listas_por_contribuyente(var arbol : t_arbol;
+    //                                           archivo_terrenos : t_archivo_terrenos; 
+    //                                           cantidad_terrenos : cardinal);
+    // pasa por todos los terrenos y los agrega según el contribuyente.
+
 end.
