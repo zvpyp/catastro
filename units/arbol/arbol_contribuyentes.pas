@@ -47,7 +47,7 @@ implementation
             if tiene_hijo_der(arbol) then
                 sumar_por_nombre(arbol.sd^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_der(arbol, nuevo_contribuyente_indice, nombre_completo_nuevo);
+                anidar_hijo_der(arbol, nuevo_contribuyente_indice, nombre_completo_nuevo, nuevo_contribuyente.activo);
         end
         // Caso en que sea menor
         else
@@ -57,7 +57,7 @@ implementation
             if tiene_hijo_izq(arbol) then
                 sumar_por_nombre(arbol.si^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nombre_completo_nuevo);
+                anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nombre_completo_nuevo, nuevo_contribuyente.activo);
         end;
     end;
 
@@ -85,7 +85,7 @@ implementation
             if tiene_hijo_der(arbol) then
                 sumar_por_dni(arbol.sd^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_der(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.dni);
+                anidar_hijo_der(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.dni, nuevo_contribuyente.activo);
         end
         // Caso en que sea menor
         else
@@ -95,7 +95,7 @@ implementation
             if tiene_hijo_izq(arbol) then
                 sumar_por_dni(arbol.si^, archivo, nuevo_contribuyente_indice)
             else
-                anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.dni);
+                anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.dni, nuevo_contribuyente.activo);
         end;
     end;
 
@@ -113,7 +113,7 @@ implementation
         read(archivo, primer_contribuyente);
         nombre_apellido_primero := primer_contribuyente.apellido + ' ' + primer_contribuyente.nombre;
 
-        arbol_ordenado_por_nombres := crear_arbol(indice_actual, nombre_apellido_primero);
+        arbol_ordenado_por_nombres := crear_arbol(indice_actual, nombre_apellido_primero, primer_contribuyente.activo);
 
         for indice_actual := 2 to cantidad_contribuyentes do
         begin
@@ -131,7 +131,7 @@ implementation
         indice_actual := 1;
         seek(archivo, indice_actual);
         read(archivo, primer_contribuyente);
-        arbol_ordenado_por_dni := crear_arbol(indice_actual, primer_contribuyente.dni);
+        arbol_ordenado_por_dni := crear_arbol(indice_actual, primer_contribuyente.dni, primer_contribuyente.activo);
 
         for indice_actual := 2 to cantidad_contribuyentes do
         begin

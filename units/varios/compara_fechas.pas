@@ -8,17 +8,18 @@ interface
 function fecha_es_mayor(fecha1 : string; fecha2 : string) : boolean;
 
 implementation
-
+// AAAA-MM-DD
 function fecha_es_mayor(fecha1 : string; fecha2 : string) : boolean;
 var
 anio1, mes1, dia1, anio2, mes2, dia2 : string;
 begin
-anio1 := Copy(fecha1,7,4);
-mes1 := Copy(fecha1,4,2);
-dia1 := Copy(fecha1,1,2);
-anio2 := Copy(fecha2,7,4);
-mes2 := Copy(fecha2,4,2);
-dia2 := Copy(fecha2,1,2);
+anio1 := Copy(fecha1,1,4);
+mes1 := Copy(fecha1,6,2);
+dia1 := Copy(fecha1,9,2);
+anio2 := Copy(fecha2,1,4);
+mes2 := Copy(fecha2,6,2);
+dia2 := Copy(fecha2,9,2);
+
 
 if anio1 > anio2 then
   fecha_es_mayor := true
