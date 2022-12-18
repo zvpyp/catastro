@@ -6,7 +6,8 @@ unit arbol_contribuyentes;
 interface
 
     uses contribuyente in './units/contribuyente.pas',
-         arbol in 'units/arbol/arbol';
+         arbol in 'units/arbol/arbol',
+         terreno in 'units/terreno/terreno.pas';
 
     // Retorna un árbol binario ordenado por nombre y apellido de cada contribuyente.
     function arbol_ordenado_por_nombres(var archivo : t_archivo_contribuyentes;
