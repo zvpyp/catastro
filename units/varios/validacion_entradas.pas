@@ -6,11 +6,13 @@ unit validacion_entradas;
 
 interface
 
+uses sysutils, crt;
+
     // Retorna verdadero si una string solo contiene caracteres numéricos.
     function string_numerica(entrada : string): boolean;
 
     // Retorna verdadero si la string no supera un límite de caracteres.
-    function limite_caracteres(entrada : string, limite : byte): boolean;
+    function limite_caracteres(entrada : string; limite : byte): boolean;
 
     // Retorna verdadero si la string es una fecha valida
     function es_fecha_valida(entrada : string): boolean;
@@ -38,7 +40,7 @@ implementation
         end;
     end;
 
-    function limite_caracteres(entrada : string, limite : byte): boolean;
+    function limite_caracteres(entrada : string; limite : byte): boolean;
     begin
         limite_caracteres := length(entrada) <= limite;
     end;
@@ -66,7 +68,7 @@ implementation
             es_formato_fecha := false;
         
         // Chequea que los separadores sean '-' o '/'
-        if not((entrada[5] = entrada[8]) and ((string[5] = '-') or (string[5] = '/'))) then
+        if not((entrada[5] = entrada[8]) and ((entrada[5] = '-') or (entrada[5] = '/'))) then
             es_formato_fecha := false;
     end;
 
@@ -74,7 +76,7 @@ implementation
     // Se asume que la variable ingresada siempre será numérica, no negativa y de caracteres exactos.
     function es_bisiesto(ano : string): boolean;
     var
-        ano_int := cardinal;
+        ano_int : cardinal;
     begin
         es_bisiesto := false;
 
@@ -85,7 +87,7 @@ implementation
         begin
             if (ano_int mod 400) = 0 then
                 es_bisiesto := true;
-        end;
+        end
         // Caso de año no secular
         else
         begin
@@ -133,7 +135,7 @@ implementation
         if StrToInt(mes) = 2 then
         begin
             if es_bisiesto(ano) and (dia_int <= 29) then
-                es_dia_valido := true;
+                es_dia_valido := true
             else
             begin
                 if dia_int <= 28 then
@@ -175,7 +177,7 @@ implementation
                 es_fecha_valida := false;
 
             // Verifica día válido
-            if not(es_dia_valido(dia, mes ano)) then
+            if not(es_dia_valido(dia, mes, ano)) then
                 es_fecha_valida := false;
         end
         else
