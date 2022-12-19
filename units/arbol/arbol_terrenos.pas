@@ -12,9 +12,9 @@ Unit arbol_terrenos;
 
 Interface
 
-Uses terreno in './units/terreno.pas',
+Uses terreno in './units/terreno/terreno.pas',
 arbol in 'units/arbol/arbol.pas',
-compara_fechas in 'units/compara_fechas.pas';
+compara_fechas in 'units/varios/compara_fechas.pas';
 
 // Retorna un árbol binario ordenado por numero de contribuyente asociado
 // a cada terreno.

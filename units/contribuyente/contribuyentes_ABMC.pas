@@ -1,74 +1,163 @@
-// Agregar opción de cancelar cuando se quiere borrar un contribuyente y se escribe
-// un número de contribuyente que no se encuentra en el archivo.
+// Falta agregar que en alta, baja y modificación también se modifique el árbol, para no generarlo de 0 todas las veces.
 
 
 Unit contribuyentes_ABMC;
 
 Interface
 
-Uses contribuyente in 'units/contribuyente.pas',
-     usuario_contribuyentes in 'units/usuario/usuario_contribuyentes',
-     validacion_entradas in 'units/validacion_entradas.pas',
-     contador_datos in 'units/contador_datos.pas',
-     crt;
+Uses contribuyente in 'units/contribuyente/contribuyente.pas',
+     usuario_contribuyentes in 'units/contribuyente/usuario_contribuyentes',
+     validacion_entradas in 'units/varios/validacion_entradas.pas',
+     contador_datos in 'units/varios/contador_datos.pas',
+     arbol in 'units/arbol/arbol.pas',
+     crt, sysutils;
 
-Procedure alta_contribuyente(var archivo : t_archivo_contribuyentes);
+// Pasar archivo de contribuyentes y arbol ordenado por nro de contribuyente.
+Procedure alta_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol; var archivo_contador : t_archivo_contador);
 
-Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes);
+// Pasar archivo de contribuyentes y arbol ordenado por nro de contribuyente.
+Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol);
 
-Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes);
+Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol);
 
-Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes);
+Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes; var arbol_nombre : t_arbol; var arbol_numero : t_arbol);
 
 Implementation
 
-Procedure alta_contribuyente(var archivo : t_archivo_contribuyentes);
+// Agregar que se modifique el arbol.
+Procedure alta_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol; var archivo_contador : t_archivo_contador);
 var
 contribuyente_nuevo : t_contribuyente;
 begin
     abrir_archivo_contribuyentes(archivo);
 
-    contribuyente_nuevo := crear_contribuyente();
+    crear_contribuyente(archivo, arbol, contribuyente_nuevo);
 
-    escribir_contribuyente(archivo, contribuyente_nuevo, cantidad_contribuyentes(archivo));
+    abrir_archivo_contador(archivo_contador);
+
+    if (contribuyente_nuevo.numero <> '') then
+    escribir_contribuyente(archivo, contribuyente_nuevo, cantidad_contribuyentes(archivo_contador));
 end;
 
-Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes);
+Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol);
 var
 contribuyente_baja : t_contribuyente;
 nro_contribuyente_baja : string;
-pos : byte;
+arbol_pos : t_arbol;
+pos, tcl : int16;
 begin
   abrir_archivo_contribuyentes(archivo);
 
   Writeln('Introduzca el número de contribuyente del usuario que desea dar de baja: ');
   Readln(nro_contribuyente_baja);
   While ((not limite_caracteres(nro_contribuyente_baja,15)) or (not string_numerica(nro_contribuyente_baja))) do
-        begin
+    begin
         Writeln('El valor ingresado no es un número o supera los 15 caracteres, ingréselo nuevamente por favor');
         Readln(nro_contribuyente_baja);
-        end;
     end;
-    // Buscamos el contribuyente (falta hacer función)  FALTA METER EN UN WHILE.
-    // pos := pos_en_arbol(arbol, nro_contribuyente_baja);
-    // if pos = 0 then
-    // begin
-    //  Writeln('No existe contribuyente con ese número, por favor ingrese un nro existente');
-    //  Readln(nro_contribuyente_baja); 
-    // end
-    // else
+    arbol_pos := buscar_por_clave(arbol, nro_contribuyente_baja);
+    pos := arbol_pos.indice;
+    // Buscamos si el numero existe ya en el archivo.
+    While (pos = 0) and (tcl <> -1) do
         begin
-         leer_contribuyente(archivo,contribuyente_baja,pos);
-         if contribuyente_baja.activo then
-         contribuyente_baja.activo := false
-         else Writeln('El usuario ya ha sido dado de baja');
-         Readkey;
+            Writeln('No existe ningún usuario con este número de contribuyente, que desea hacer?');
+            Writeln('1. Ingresar otro numero de contribuyente');
+            Writeln('2. Regresar a la pantalla anterior');
+            Readln(tcl);
+            Case tcl of
+            1: Readln(nro_contribuyente_baja);
+            2: tcl := -1;
+            end;
+            arbol_pos := buscar_por_clave(arbol, nro_contribuyente_baja);
+            pos := arbol_pos.indice;
         end;
+          if tcl <> -1 then
+            begin
+                contribuyente_baja := leer_contribuyente(archivo, pos);
+                borrar_contribuyente(contribuyente_baja);
+                escribir_contribuyente(archivo, contribuyente_baja, pos);
+            end;
+        cerrar_archivo_contribuyentes(archivo);
 end;
 
-Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes);
+Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol);
+var
+contribuyente_modificado : t_contribuyente;
+nro_contribuyente_modificado : string;
+arbol_pos : t_arbol;
+pos, tcl : int16;
+begin
+  abrir_archivo_contribuyentes(archivo);
 
-Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes);
+  Writeln('Introduzca el número de contribuyente del usuario que desea modificar: ');
+  Readln(nro_contribuyente_modificado);
+  While ((not limite_caracteres(nro_contribuyente_modificado,15)) or (not string_numerica(nro_contribuyente_modificado))) do
+    begin
+        Writeln('El valor ingresado no es un número o supera los 15 caracteres, ingréselo nuevamente por favor');
+        Readln(nro_contribuyente_modificado);
+    end;
+    arbol_pos := buscar_por_clave(arbol, nro_contribuyente_modificado);
+    pos := arbol_pos.indice;
+    // Buscamos si el numero existe ya en el archivo.
+    While (pos = 0) and (tcl <> -1) do
+        begin
+            Writeln('No existe ningún usuario con este número de contribuyente, que desea hacer?');
+            Writeln('1. Ingresar otro número de contribuyente');
+            Writeln('2. Regresar a la pantalla anterior');
+            Readln(tcl);
+            Case tcl of
+            1: Readln(nro_contribuyente_modificado);
+            2: tcl := -1;
+            end;
+            arbol_pos := buscar_por_clave(arbol, nro_contribuyente_modificado);
+            pos := arbol_pos.indice;
+        end;
+          if tcl <> -1 then
+            begin
+                contribuyente_modificado := leer_contribuyente(archivo, pos);
+                modificar_contribuyente(contribuyente_modificado, archivo, arbol);
+                escribir_contribuyente(archivo, contribuyente_modificado, pos);
+            end;
+        cerrar_archivo_contribuyentes(archivo);
 
+end;
+
+// Pasar arbol ordenado
+Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes; var arbol_nombre : t_arbol; var arbol_numero : t_arbol);
+var
+contribuyente_consultado : t_contribuyente;
+nro_contribuyente_consultado, nombre_contribuyente_consultado : string;
+nombre_consultado, apellido_consultado : string;
+arbol_pos : t_arbol;
+pos, tcl : int16;
+begin
+  abrir_archivo_contribuyentes(archivo);
+  Writeln('Cómo desea realizar la consulta?');
+  Writeln('1. Por nombre completo');
+  Writeln('2. Por número de contribuyente');
+  Readln(tcl);
+  Case tcl of
+    1:
+    begin
+        Writeln('Apellido: ');
+        Readln(apellido_consultado);
+        Writeln('Nombre: ');
+        Readln(nombre_consultado);
+        nombre_contribuyente_consultado := apellido_consultado + ' ' + nombre_consultado;
+        arbol_pos := buscar_por_clave(arbol_nombre, nombre_contribuyente_consultado);
+        pos := arbol_pos.indice;
+    end;
+    2:
+    begin
+        Writeln('Nro de contribuyente: ');
+        Readln(nro_contribuyente_consultado);
+        arbol_pos := buscar_por_clave(arbol_numero, nro_contribuyente_consultado);
+        pos := arbol_pos.indice;
+    end;
+  end;
+  contribuyente_consultado := leer_contribuyente(archivo, pos);
+  consultar_contribuyente(contribuyente_consultado);
+  cerrar_archivo_contribuyentes(archivo);
+end;
 
 end.

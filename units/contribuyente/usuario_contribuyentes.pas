@@ -13,12 +13,12 @@ interface
     uses contribuyente in 'units/contribuyente/contribuyente.pas',
          validacion_entradas in 'units/varios/validacion_entradas.pas',
          arbol in 'units/arbol/arbol.pas',
-         crt;
+         crt, sysutils;
 
 // Crea un contribuyente, si el nro de contribuyente proporcionado ya se encuentra en el archivo te da la opción de
 // 'regresar a la pantalla anterior', en ese caso el t_contribuyente se encontraría vacío, verificarlo al momento
 // de utilizar la función para el ALTA.
-Procedure crear_contribuyente(var archivo : t_archivo_contribuyentes; arbol : t_arbol; nuevo_contribuyente : t_contribuyente);
+Procedure crear_contribuyente(var archivo : t_archivo_contribuyentes; arbol : t_arbol; var nuevo_contribuyente : t_contribuyente);
 
 Procedure borrar_contribuyente(var contribuyente : t_contribuyente);
 
@@ -30,7 +30,7 @@ Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 
 implementation
 // Pasar árbol ordenado por nro de contribuyente y archivo de contribuyentes.
-Procedure crear_contribuyente(var archivo : t_archivo_contribuyentes; arbol : t_arbol; nuevo_contribuyente : t_contribuyente); 
+Procedure crear_contribuyente(var archivo : t_archivo_contribuyentes; arbol : t_arbol; var nuevo_contribuyente : t_contribuyente); 
 var
 tcl, pos: int16;
 arbol_pos : t_arbol;
@@ -52,7 +52,7 @@ begin
         arbol_pos := buscar_por_clave(arbol, nro);
         pos := arbol_pos.indice;
         // Buscamos si el numero existe ya en el archivo.
-        While pos = 0 do
+        While (pos <> 0) and (tcl <> -1) do
           begin
             Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?');
             Writeln('1. Ingresar otro numero de contribuyente');
@@ -164,10 +164,6 @@ begin
     end;
     tcl := tcl + 1;
   end;
-  if tcl = 0 then
-    begin
-      nuevo_contribuyente.numero := '-1';
-    end;
 end;
 
 Procedure borrar_contribuyente(var contribuyente : t_contribuyente);

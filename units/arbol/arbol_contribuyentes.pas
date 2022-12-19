@@ -5,7 +5,7 @@ unit arbol_contribuyentes;
 
 interface
 
-    uses contribuyente in './units/contribuyente.pas',
+    uses contribuyente in './units/contribuyente/contribuyente.pas',
          arbol in 'units/arbol/arbol',
          terreno in 'units/terreno/terreno.pas';
 
