@@ -23,9 +23,17 @@ interface
             tam : cardinal;
         end;
     
+    function lista_vacia_terrenos(lista : t_lista_terrenos): boolean;
+    function fin_lista_terrenos(lista : t_lista_terrenos): boolean;
+    procedure siguiente_lista_terrenos(var lista : t_lista_terrenos);
+    procedure primero_lista_terrenos(var lista : t_lista_terrenos);
+    procedure recuperar_lista_terrenos(lista : t_lista_terrenos; var recuperado : t_terreno);
+    procedure enlistar_terreno(var lista : t_lista_terrenos; terreno : t_terreno);
+    procedure desenlistar_terreno(var lista : t_lista_terrenos; buscado : string);
 
-
-    
+    // A partir de un archivo de terrenos, retorna una lista ordenada por número de plano.
+    function lista_terrenos_desde_archivo(var archivo : t_archivo_terrenos;
+                                              cantidad_terrenos : cardinal): t_lista_terrenos;
     
 {--------------------------------}
 
@@ -130,6 +138,22 @@ implementation
                     lista.tam := lista.tam - 1;
                 end;
             end;
+        end;
+    end;
+
+    function lista_terrenos_desde_archivo(var archivo : t_archivo_terrenos;
+                                              cantidad_terrenos : cardinal): t_lista_terrenos;
+    var
+        terreno_actual : t_terreno;
+        i : cardinal;
+    begin
+        crear_lista_terrenos(lista_terrenos_desde_archivo);
+
+        for i := 1 to cantidad_terrenos do
+        begin
+            terreno_actual := leer_terreno(archivo, i);
+
+            enlistar_terreno(lista_terrenos_desde_archivo, terreno_actual);
         end;
     end;
     

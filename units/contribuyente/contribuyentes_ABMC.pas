@@ -26,11 +26,11 @@ Procedure alta_contribuyente(var archivo : t_archivo_contribuyentes);
 var
 contribuyente_nuevo : t_contribuyente;
 begin
-    abrir_archivo_contribuyentes(archivo);
-
     contribuyente_nuevo := crear_contribuyente();
 
     escribir_contribuyente(archivo, contribuyente_nuevo, cantidad_contribuyentes(archivo));
+
+    contar_contribuyente(archivo);
 end;
 
 Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes);
