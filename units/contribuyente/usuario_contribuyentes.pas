@@ -10,20 +10,19 @@ unit usuario_contribuyentes;
 
 interface
 
-    uses contribuyente in 'units/contribuyente.pas',
-         validacion_entradas in 'units/validacion_entradas.pas',
+    uses contribuyente in 'units/contribuyente/contribuyente.pas',
+         validacion_entradas in 'units/varios/validacion_entradas.pas',
          arbol in 'units/arbol/arbol.pas',
-         contribuyentes_ABMC in 'units/contribuyentes_ABMC.pas',
          crt;
 
 // Crea un contribuyente, si el nro de contribuyente proporcionado ya se encuentra en el archivo te da la opción de
 // 'regresar a la pantalla anterior', en ese caso el t_contribuyente se encontraría vacío, verificarlo al momento
 // de utilizar la función para el ALTA.
-Function crear_contribuyente(archivo : t_archivo_contribuyentes; arbol : t_arbol): t_contribuyente;
+Procedure crear_contribuyente(var archivo : t_archivo_contribuyentes; arbol : t_arbol; nuevo_contribuyente : t_contribuyente);
 
 Procedure borrar_contribuyente(var contribuyente : t_contribuyente);
 
-Procedure modificar_contribuyente(var contribuyente : t_contribuyente; archivo : t_archivo_contribuyentes; arbol : t_arbol);
+Procedure modificar_contribuyente(var contribuyente : t_contribuyente; var archivo : t_archivo_contribuyentes; arbol : t_arbol);
 
 Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 
@@ -31,13 +30,13 @@ Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 
 implementation
 // Pasar árbol ordenado por nro de contribuyente y archivo de contribuyentes.
-Function crear_contribuyente(archivo : t_archivo_contribuyentes; arbol : t_arbol): t_contribuyente; 
+Procedure crear_contribuyente(var archivo : t_archivo_contribuyentes; arbol : t_arbol; nuevo_contribuyente : t_contribuyente); 
 var
-tcl, pos: byte;
+tcl, pos: int16;
 arbol_pos : t_arbol;
 nro, apellido, nombre, direccion, ciudad, dni, fecha_nac, tel, email : string;
 begin
-  tlc := 1;
+  tcl := 1;
   While ((tcl <> 0) and (tcl < 11)) do
   begin
     Case tcl of
@@ -53,9 +52,9 @@ begin
         arbol_pos := buscar_por_clave(arbol, nro);
         pos := arbol_pos.indice;
         // Buscamos si el numero existe ya en el archivo.
-        While pos = 0 then
+        While pos = 0 do
           begin
-            Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
+            Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?');
             Writeln('1. Ingresar otro numero de contribuyente');
             Writeln('2. Regresar a la pantalla anterior');
             Readln(tcl);
@@ -151,40 +150,41 @@ begin
       end;
       10:
       begin
-        crear_contribuyente.numero := nro;
-        crear_contribuyente.apellido := apellido;
-        crear_contribuyente.nombre := nombre;
-        crear_contribuyente.direccion := direccion;
-        crear_contribuyente.ciudad := ciudad;
-        crear_contribuyente.dni := dni;
-        crear_contribuyente.fecha_nacimiento := fecha_nac;
-        crear_contribuyente.tel := tel;
-        crear_contribuyente.email := email;
-        crear_contribuyente.activo := true;
+        nuevo_contribuyente.numero := nro;
+        nuevo_contribuyente.apellido := apellido;
+        nuevo_contribuyente.nombre := nombre;
+        nuevo_contribuyente.direccion := direccion;
+        nuevo_contribuyente.ciudad := ciudad;
+        nuevo_contribuyente.dni := dni;
+        nuevo_contribuyente.fecha_nacimiento := fecha_nac;
+        nuevo_contribuyente.tel := tel;
+        nuevo_contribuyente.email := email;
+        nuevo_contribuyente.activo := true;
       end;
     end;
     tcl := tcl + 1;
   end;
   if tcl = 0 then
     begin
-      crear_contribuyente.numero := -1;
+      nuevo_contribuyente.numero := '-1';
     end;
 end;
 
 Procedure borrar_contribuyente(var contribuyente : t_contribuyente);
 begin
-  contribuyente.estado := false
+  contribuyente.activo := false
 end;
 
-Procedure modificar_contribuyente(var contribuyente : t_contribuyente; archivo : t_archivo_contribuyentes; arbol : t_arbol);
+Procedure modificar_contribuyente(var contribuyente : t_contribuyente; var archivo : t_archivo_contribuyentes; arbol : t_arbol);
 var
-tcl, pos : byte;
+tcl, pos : int16;
 modif : string;
 arbol_pos : t_arbol;
 begin
+  tcl := -1;
   While tcl <> 0 do
     begin
-      Writeln('¿Qué desea modificar?')
+      Writeln('¿Qué desea modificar?');
       Writeln('0. Cancelar');
       Writeln('1. Número de contribuyente');
       Writeln('2. Apellido');
@@ -209,9 +209,9 @@ begin
         // Buscamos si el numero existe ya en el archivo.
           arbol_pos := buscar_por_clave(arbol, modif);
           pos := arbol_pos.indice;
-        While pos = 0 then
+        While pos = 0 do
           begin
-            Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?')
+            Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?');
             Writeln('1. Ingresar otro numero de contribuyente');
             Writeln('2. Regresar a la pantalla anterior');
             Readln(tcl);
@@ -304,7 +304,7 @@ begin
         end;
         9:
         begin
-          Wrimodifn('Email:');
+          WriteLn('Email:');
           Readln(modif);
           While (not limite_caracteres(modif,40)) do
             begin
@@ -319,7 +319,7 @@ end;
 
 Procedure consultar_contribuyente(var contribuyente : t_contribuyente);
 begin
-  if contribuyente.estado then
+  if contribuyente.activo then
     begin
       Writeln('Número de contribuyente: ',contribuyente.numero);
       Writeln('Nombre completo: ',contribuyente.apellido,' ',contribuyente.nombre);
