@@ -3,6 +3,8 @@ program main;
 // Units utilizadas:
 uses contribuyente in 'units/contribuyente/contribuyente.pas',
      terreno in 'units/terreno/terreno.pas',
+     arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas',
+     arbol_terrenos in 'units/arbol/arbol_terrenos.pas',
      lista_terrenos in 'units/terreno/lista_terrenos.pas';
 
 var
@@ -14,6 +16,7 @@ var
     arbol_contribuyentes_nombre : t_arbol;
     
     arbol_terrenos_nro_plano : t_arbol;
+    lista_terrenos_fecha : t_lista_terrenos;
 
 { VARIABLES DE TESTEO }
 
@@ -33,10 +36,10 @@ begin
 
     // Generar el árbol de terrenos y la lista de terrenos
     arbol_terrenos_nro_plano := (archivo_terrenos, cantidad_terrenos(archivo_contador));
-    lista_terrenos_nro_plano := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
+    lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
 
-    // TODO:
     // Añadir los correspondientes terrenos a cada contribuyente del árbol.
+    agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
 
     { LINEAS DE TESTEO }
 

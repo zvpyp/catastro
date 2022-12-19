@@ -18,6 +18,19 @@ interface
     function arbol_ordenado_por_dni(var archivo : t_archivo_contribuyentes;
                                         cantidad_contribuyentes : cardinal): t_arbol;
 
+    // Realiza un recorrido preorden de los árboles, luego añade los elementos de la lista que le corresponden.
+    procedure agregar_listas_por_contribuyente(var arbol_por_nombres : t_arbol;
+                                               lista_terrenos : t_lista_terrenos);
+    
+    // Agrega un solo terreno al contribuyente que le corresponde, dado un árbol.
+    // Para encontrarlo, hace un recorrido inorden.
+    // el argumento "encontrado" debe pasarse como false.
+    procedure agregar_terreno_a_contribuyente(var arbol_por_nombres : t_arbol;
+                                              terreno : t_terreno;
+                                              var encontrado : boolean);
+    
+    
+
 {--------------------------------}
 
 implementation
@@ -146,33 +159,35 @@ implementation
         end;
     end;
 
-
-    // TODO : ESTO NO FUNCIONA PORQUE LA CLAVE ES EL NOMBRE, MIENTRAS QUE EL TERRENO SOLAMENTE TIENE
-    //        NUMERO DE CONTRIBUYENTE. HAY QUE BUSCAR LA MANERA TAL QUE SE PUEDA OBTENER EL NUMERO
-    //        DE CONTRIBUYENTE.
-    procedure agregar_terreno_a_contribuyente(var arbol_por_nombres: t_arbol;
-                                              terreno : t_terreno);
-    var
-        arbol_actual : t_arbol;
+    procedure agregar_terreno_a_contribuyente(var arbol_por_nombres : t_arbol;
+                                              terreno : t_terreno;
+                                              var encontrado : boolean);
     begin
-        arbol_actual := arbol_por_nombres;
-
-        while (terreno.nro_contribuyente <> arbol_actual.clave) do
+        if (terreno.nro_contribuyente = arbol_por_nombres.nro_contribuyente) then
         begin
-            // Caso en que nro_contribuyente sea menor
-            if (terreno.nro_contribuyente < arbol_actual.clave) then
-                arbol_actual := arbol_actual^.si;
-            // Caso en que nro_contribuyente sea mayor
-            else
-                arbol_actual := arbol_actual^.sd;
-            end;
+            enlistar_terreno(arbol_por_nombres.lista, terreno);
+            encontrado := true;
+        end
+        else
+        begin
+            if not(encontrado) then
+            begin
+                if tiene_hijo_izq(arbol_por_nombres) then
+                    agregar_terreno_a_contribuyente(arbol_ordenado_por_nombres.si^, terreno, encontrado);
 
-            enlistar_terreno(arbol_actual.lista, terreno);
+                if tiene_hijo_der(arbol_por_nombres) then
+                    agregar_terreno_a_contribuyente(arbol_ordenado_por_nombres.sd^, terreno, encontrado);
+            end;
+        end;
+        
+
     end;
 
-    // Pasa por todos los terrenos y los agrega por contribuyente.
-    procedure agregar_listas_por_contribuyente(var arbol_por_nombres : t_arbol;
-                                               lista : t_lista_terrenos);
+
+    // a partir de una lista de terrenos, añade a la raíz de un árbol
+    // los contribuyentes que le corresponden.
+    procedure agregar_terrenos_a_contribuyente(var arbol_por_nombres: t_arbol;
+                                              lista : t_lista_terrenos);
     var
         terreno_actual : t_terreno;
     begin
@@ -182,10 +197,29 @@ implementation
         begin
             recuperar_lista_terrenos(lista, terreno_actual);
 
-            agregar_terreno_a_contribuyente(arbol_por_nombres, terreno_actual);
+            if (terreno_actual.nro_contribuyente = arbol_por_nombres.nro_contribuyente) then
+            begin
+                enlistar_terreno(arbol_por_nombres.lista, terreno_actual);
+            end;
 
             siguiente_lista_terrenos(lista);
         end;
+    end;
+
+    procedure agregar_listas_por_contribuyente(var arbol_por_nombres : t_arbol;
+                                               lista_terrenos : t_lista_terrenos);
+    var
+        terreno_actual : t_terreno;
+    begin
+        if tiene_hijo_izq(arbol_por_nombres) then
+            agregar_listas_por_contribuyente(arbol_por_nombres.si^);
+        
+        // con el nodo actual
+
+        agregar_terrenos_a_contribuyente(arbol_por_nombres, lista_terrenos);
+
+        if tiene_hijo_der(arbol_por_nombres) then
+            agregar_listas_por_contribuyente(arbol_por_nombres.sd^);
     end;
 
 end.
