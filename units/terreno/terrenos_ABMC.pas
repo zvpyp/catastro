@@ -16,7 +16,7 @@ Uses terreno in 'units/terreno/terreno.pas',
 Procedure alta_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol; var archivo_contador : t_archivo_contador);
 
 // Pasar archivo de terrenos y arbol ordenado por nro de contribuyente.
-Procedure baja_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol);
+Procedure baja_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol; var archivo_contador : t_archivo_contador);
 
 // Pasar arbol ordenado por nro de plano y archivo de terrenos.
 Procedure mod_terreno(var archivo : t_archivo_terrenos);
@@ -37,7 +37,7 @@ begin
 end;
 
 // Pasar arbol ordenado por nro de plano y archivo de terrenos.
-Procedure baja_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol);
+Procedure baja_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol; var archivo_contador : t_archivo_contador);
 var
 tcl : int16;
 nro_plano_baja : string;
@@ -69,10 +69,11 @@ begin
     end;
   if tcl <> -1 then
     begin
-        ultimo_terreno := leer_terreno(archivo, cantidad_terrenos());
+        ultimo_terreno := leer_terreno(archivo, cantidad_terrenos(archivo_contador));
         escribir_terreno(archivo, ultimo_terreno, pos);
         // Disminuir tamaño del archivo contador de terrenos
         Writeln('Terreno dado de baja con éxito');
+        readkey;
     end;         
 end;
 
