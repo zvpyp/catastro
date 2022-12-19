@@ -154,19 +154,25 @@ Var
   primer_terreno : t_terreno;
   fecha_inscripcion_primero : string;
 Begin
-  // Creamos el árbol con el primer índice.
-  indice_actual := 1;
-  seek(archivo, indice_actual);
-  read(archivo, primer_terreno);
-  fecha_inscripcion_primero := primer_terreno.fecha_inscripcion;
+  if cantidad_terrenos > 0 then
+  begin
+    // Creamos el árbol con el primer índice.
+    indice_actual := 1;
+    seek(archivo, indice_actual);
+    read(archivo, primer_terreno);
+    fecha_inscripcion_primero := primer_terreno.fecha_inscripcion;
 
-  arbol_ordenado_por_fecha_inscripcion := crear_arbol(indice_actual,
-                                fecha_inscripcion_primero);
+    arbol_ordenado_por_fecha_inscripcion := crear_arbol(indice_actual,
+                                  fecha_inscripcion_primero);
+  end;
 
+  if cantidad_terrenos > 1 then
+  begin
   For indice_actual := 2 To cantidad_terrenos Do
     Begin
       sumar_por_fecha_inscripcion(arbol_ordenado_por_fecha_inscripcion, archivo, indice_actual);
     End;
+  end;
 End;
 
 // Agrega un nodo a un arbol ordenado por nro de plano.
@@ -221,19 +227,26 @@ Var
   primer_terreno : t_terreno;
   nro_plano_primero : string;
 Begin
-  // Creamos el árbol con el primer índice.
-  indice_actual := 1;
-  seek(archivo, indice_actual);
-  read(archivo, primer_terreno);
-  nro_plano_primero := primer_terreno.nro_plano;
 
-  arbol_ordenado_por_nro_plano := crear_arbol(indice_actual,
-                                nro_plano_primero);
+  if cantidad_terrenos > 0 then
+  begin
+    // Creamos el árbol con el primer índice.
+    indice_actual := 1;
+    seek(archivo, indice_actual);
+    read(archivo, primer_terreno);
+    nro_plano_primero := primer_terreno.nro_plano;
 
-  For indice_actual := 2 To cantidad_terrenos Do
+    arbol_ordenado_por_nro_plano := crear_arbol(indice_actual,
+                                  nro_plano_primero);
+  end;
+
+  if cantidad_terrenos > 1 then
+  begin
+    For indice_actual := 2 To cantidad_terrenos Do
     Begin
       sumar_por_nro_plano(arbol_ordenado_por_nro_plano, archivo, indice_actual);
     End;
+  end;
 End;
 
 End.
