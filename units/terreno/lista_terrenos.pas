@@ -173,6 +173,7 @@ implementation
         begin
             recuperar_lista_terrenos(lista, actual);
             enlistar_terreno(generar_vector_por_zona[actual.zona], actual);
+            siguiente_lista_terrenos(lista);
         end;
     end;
     
