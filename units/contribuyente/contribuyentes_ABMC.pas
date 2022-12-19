@@ -33,10 +33,11 @@ begin
 
     crear_contribuyente(archivo, arbol, contribuyente_nuevo);
 
-    abrir_archivo_contador(archivo_contador);
-
     if (contribuyente_nuevo.numero <> '') then
-    escribir_contribuyente(archivo, contribuyente_nuevo, cantidad_contribuyentes(archivo_contador));
+    begin
+      escribir_contribuyente(archivo, contribuyente_nuevo, cantidad_contribuyentes(archivo_contador));
+      contar_contribuyente(archivo);
+    end;
 end;
 
 Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol);
@@ -46,7 +47,6 @@ nro_contribuyente_baja : string;
 arbol_pos : t_arbol;
 pos, tcl : int16;
 begin
-  abrir_archivo_contribuyentes(archivo);
 
   Writeln('Introduzca el número de contribuyente del usuario que desea dar de baja: ');
   Readln(nro_contribuyente_baja);
@@ -77,7 +77,6 @@ begin
                 borrar_contribuyente(contribuyente_baja);
                 escribir_contribuyente(archivo, contribuyente_baja, pos);
             end;
-        cerrar_archivo_contribuyentes(archivo);
 end;
 
 Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes; var arbol : t_arbol);
@@ -131,7 +130,6 @@ nombre_consultado, apellido_consultado : string;
 arbol_pos : t_arbol;
 pos, tcl : int16;
 begin
-  abrir_archivo_contribuyentes(archivo);
   Writeln('Cómo desea realizar la consulta?');
   Writeln('1. Por nombre completo');
   Writeln('2. Por número de contribuyente');
@@ -157,7 +155,6 @@ begin
   end;
   contribuyente_consultado := leer_contribuyente(archivo, pos);
   consultar_contribuyente(contribuyente_consultado);
-  cerrar_archivo_contribuyentes(archivo);
 end;
 
 end.

@@ -10,6 +10,7 @@ interface
          compara_fechas in './units/varios/compara_fechas.pas';
 
     type
+
         t_puntero_terreno = ^t_nodo_terreno;
 
         t_nodo_terreno = record
@@ -22,10 +23,23 @@ interface
             actual : t_puntero_terreno;
             tam : cardinal;
         end;
-    
 
-
+        t_vector_listas = array [1..5] of t_lista_terrenos;
     
+    function lista_vacia_terrenos(lista : t_lista_terrenos): boolean;
+    function fin_lista_terrenos(lista : t_lista_terrenos): boolean;
+    procedure siguiente_lista_terrenos(var lista : t_lista_terrenos);
+    procedure primero_lista_terrenos(var lista : t_lista_terrenos);
+    procedure recuperar_lista_terrenos(lista : t_lista_terrenos; var recuperado : t_terreno);
+    procedure enlistar_terreno(var lista : t_lista_terrenos; terreno : t_terreno);
+    procedure desenlistar_terreno(var lista : t_lista_terrenos; buscado : string);
+
+    // A partir de un archivo de terrenos, retorna una lista ordenada por número de plano.
+    function lista_terrenos_desde_archivo(var archivo : t_archivo_terrenos;
+                                              cantidad_terrenos : cardinal): t_lista_terrenos;
+    
+    // A partir de una lista, genera un array cuya lísta de índice i contiene terrenos de la zona i.
+    function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
     
 {--------------------------------}
 
@@ -130,6 +144,36 @@ implementation
                     lista.tam := lista.tam - 1;
                 end;
             end;
+        end;
+    end;
+
+    function lista_terrenos_desde_archivo(var archivo : t_archivo_terrenos;
+                                              cantidad_terrenos : cardinal): t_lista_terrenos;
+    var
+        terreno_actual : t_terreno;
+        i : cardinal;
+    begin
+        crear_lista_terrenos(lista_terrenos_desde_archivo);
+
+        for i := 1 to cantidad_terrenos do
+        begin
+            terreno_actual := leer_terreno(archivo, i);
+
+            enlistar_terreno(lista_terrenos_desde_archivo, terreno_actual);
+        end;
+    end;
+
+    function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
+    var
+        actual : t_terreno;
+    begin
+        primero_lista_terrenos(lista);
+
+        while not(fin_lista_terrenos(lista)) do
+        begin
+            recuperar_lista_terrenos(lista, actual);
+            enlistar_terreno(generar_vector_por_zona[actual.zona], actual);
+            siguiente_lista_terrenos(lista);
         end;
     end;
     

@@ -13,7 +13,7 @@ interface
         indice : cardinal;
         clave : string;
         estado : boolean;
-        //lista : t_lista_terrenos;
+        lista : t_lista_terrenos;
         si : t_puntero_arbol;
         sd : t_puntero_arbol;
     end;

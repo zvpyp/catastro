@@ -47,8 +47,7 @@ Procedure abrir_archivo_terrenos(Var archivo : t_archivo_terrenos);
 Begin
   assign(archivo, ruta_terrenos);
 
-        {$I-}
-  reset(archivo) {$I+};
+  {$I-} reset(archivo) {$I+};
 
   // Si el archivo no existe, lo crea.
   If ioresult <> 0 Then rewrite(archivo);
