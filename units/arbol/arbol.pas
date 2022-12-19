@@ -79,15 +79,16 @@ implementation
 
     function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
     begin
-        buscar_por_clave.indice := 0;
+        buscar_por_clave := crear_arbol(0,'',false);
 
         if arbol.clave = clave then
             buscar_por_clave := arbol
         else
         begin
-            if clave < arbol.clave then
+            if (clave < arbol.clave) and (tiene_hijo_izq(arbol)) then
                 buscar_por_clave(arbol.si^, clave)
             else
+            if tiene_hijo_der(arbol) then
                 buscar_por_clave(arbol.sd^, clave);
         end;
     end;

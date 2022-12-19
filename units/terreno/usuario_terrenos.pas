@@ -13,17 +13,17 @@ unit usuario_terrenos;
 
 interface
 
-    uses terreno in 'units/terreno.pas',
-         validacion_entradas in 'units/validacion_entradas.pas',
+    uses terreno in 'units/terreno/terreno.pas',
+         validacion_entradas in 'units/varios/validacion_entradas.pas',
          arbol in 'units/arbol/arbol.pas',
          crt;
 
 // Crea un terreno.
-Function crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol): t_terreno;
+Procedure crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol; var nuevo_terreno : t_terreno);
 
 Procedure borrar_terreno(var terreno : t_terreno);
 
-Procedure modificar_terreno(var terreno : t_terreno);
+Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; arbol : t_arbol);
 
 Procedure consultar_terreno(var terreno : t_terreno; archivo : t_archivo_terrenos; arbol : t_arbol);
 
@@ -32,9 +32,9 @@ Procedure consultar_terreno(var terreno : t_terreno; archivo : t_archivo_terreno
 implementation
 
 // Pasar árbol ordenado por nro de plano y archivo de terrenos.
-Function crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol): t_terreno;
+Procedure crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol; var nuevo_terreno : t_terreno);
 var
-tcl, pos : byte;
+tcl, pos : int16;
 arbol_pos : t_arbol;
 nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario, superficie : string;
 avaluo, superficie, valor_m2, porc_zona, porc_edif : real;
@@ -67,7 +67,7 @@ begin
         // Buscamos si el numero existe ya en el archivo.
           arbol_pos := buscar_por_clave(arbol, nro_plano);
           pos := arbol_pos.indice;
-        While pos = 0 then
+        While (pos <> 0) and (tcl <> -1) do
           begin
             Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
             Writeln('1. Ingresar otro numero de plano');
@@ -137,26 +137,30 @@ begin
         end;
         avaluo := (valor_m2 * superficie * porc_zona * porc_edif);
 
-        crear_terreno.nro_contribuyente := nro_contribuyente;
-        crear_terreno.nro_plano := nro_plano;
-        crear_terreno.avaluo := avaluo;
-        crear_terreno.fecha_inscripcion := fecha_inscripcion;
-        crear_terreno.domicilio_parcelario := domicilio_parcelario;
-        crear_terreno.superficie := superficie;
-        crear_terreno.zona := zona;
-        crear_terreno.tipo_edificacion := tipo_edificacion;
+        nuevo_terreno.nro_contribuyente := nro_contribuyente;
+        nuevo_terreno.nro_plano := nro_plano;
+        nuevo_terreno.avaluo := avaluo;
+        nuevo_terreno.fecha_inscripcion := fecha_inscripcion;
+        nuevo_terreno.domicilio_parcelario := domicilio_parcelario;
+        nuevo_terreno.superficie := superficie;
+        nuevo_terreno.zona := zona;
+        nuevo_terreno.tipo_edificacion := tipo_edificacion;
       end;
     end;
     tcl := tcl + 1;
   end;
+  if tcl = 0 then
+    begin
+      nuevo_terreno.nro_contribuyente := '-1';
+    end;
 end;
 
 Procedure borrar_terreno(var terreno : t_terreno); // Acomodar para terrenos
 begin
-  // Hay que ver como hacer esto
+  // Hay que ver cómo hacer esto
 end;
 
-Procedure modificar_terreno(var terreno : t_terreno); // Acomodar para terrenos
+Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; arbol : t_arbol);
 var
 tcl, pos : byte;
 arbol_pos : t_arbol;
