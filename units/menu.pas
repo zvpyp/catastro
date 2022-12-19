@@ -37,14 +37,6 @@ interface
         // Teclas que retorna: arriba, abajo, izquierda, derecha, enter, escape.
         function leer_opcion(): string;
 
-        // Escribe el menú con una interfaz bonita.
-        procedure mostrar_menu(menu : t_menu);
-
-        // BORRAR ESTOS DOS:
-        procedure opcion_siguiente(var menu : t_menu);
-
-        procedure opcion_anterior(var menu : t_menu);
-
 {--------------------------------}
 
 implementation
@@ -129,6 +121,7 @@ implementation
             menu.actual := menu.cabecera;
         end;
 
+        // Escribe el menú con una interfaz bonita.
         procedure mostrar_menu(menu : t_menu);
         begin
             inicio_menu(menu);
@@ -144,6 +137,38 @@ implementation
 
                 menu.actual := menu.actual^.siguiente;
             end;
+        end;
+
+        // Espera a que el usuario seleccione una opción
+        // luego la retorna.
+        // Escape siempre retorna 0;
+        function seleccion_menu(menu : t_menu) : byte;
+        var
+            opt : string;
+        begin
+            opt := '';
+
+            // en caso de escape, es 0 por predeterminado.
+            seleccion_menu := 0;
+
+            while (opt <> 'enter') and (opt <> 'escape') do
+            begin
+                mostrar_menu(menu);
+
+                opt : leer_opcion();
+
+                if opt = 'abajo' then
+                    opcion_siguiente(menu_nuevo);
+                
+                if opt = 'arriba' then
+                    opcion_anterior(menu_nuevo);
+                
+                clrscr;
+            end;
+
+            // si se usó enter, retorna el índice correspondiente
+            if opt = 'enter' then
+                seleccion_menu := menu.seleccionada^.indice;
         end;
 
 end.
