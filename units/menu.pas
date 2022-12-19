@@ -27,20 +27,11 @@ interface
             tam : byte;
         end;
 
-        // Genera un menú sin opciones.
-        function crear_menu(mensaje_superior : string): t_menu;
-
-        // añade una opción al menú.
-        procedure agregar_opcion(var menu : t_menu; mensaje : string);
-
-        // Espera a que el usuario elija una opción válida, y la retorna como una string de 3 letras.
-        // Teclas que retorna: arriba, abajo, izquierda, derecha, enter, escape.
-        function leer_opcion(): string;
-
 {--------------------------------}
 
 implementation
 
+        // Retorna un menú sin opciones.
         function crear_menu(mensaje_superior : string): t_menu;
         begin
             crear_menu.mensaje_superior := mensaje_superior;
@@ -51,6 +42,7 @@ implementation
             crear_menu.tam := 0;
         end;
 
+        // retorna una opción
         function crear_opcion(mensaje : string; indice : byte): t_opcion;
         begin
             crear_opcion.mensaje := mensaje;
@@ -59,6 +51,7 @@ implementation
             crear_opcion.siguiente := nil;
         end;
 
+        // añade una opción al menú.
         procedure agregar_opcion(var menu : t_menu; mensaje : string);
         var
             puntero_auxiliar : t_puntero_opcion;
@@ -83,6 +76,8 @@ implementation
             menu.ultima := puntero_auxiliar;
         end;
 
+        // Espera a que el usuario elija una opción válida, y la retorna como una string de 3 letras.
+        // Teclas que retorna: arriba, abajo, izquierda, derecha, enter, escape.
         function leer_opcion(): string;
         var
             boton_presionado : byte;
