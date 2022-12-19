@@ -10,6 +10,7 @@ interface
          compara_fechas in './units/varios/compara_fechas.pas';
 
     type
+
         t_puntero_terreno = ^t_nodo_terreno;
 
         t_nodo_terreno = record
@@ -22,6 +23,8 @@ interface
             actual : t_puntero_terreno;
             tam : cardinal;
         end;
+
+        t_vector_listas = array [1..5] of t_lista_terrenos;
     
     function lista_vacia_terrenos(lista : t_lista_terrenos): boolean;
     function fin_lista_terrenos(lista : t_lista_terrenos): boolean;
@@ -34,6 +37,9 @@ interface
     // A partir de un archivo de terrenos, retorna una lista ordenada por número de plano.
     function lista_terrenos_desde_archivo(var archivo : t_archivo_terrenos;
                                               cantidad_terrenos : cardinal): t_lista_terrenos;
+    
+    // A partir de una lista, genera un array cuya lísta de índice i contiene terrenos de la zona i.
+    function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
     
 {--------------------------------}
 
@@ -154,6 +160,19 @@ implementation
             terreno_actual := leer_terreno(archivo, i);
 
             enlistar_terreno(lista_terrenos_desde_archivo, terreno_actual);
+        end;
+    end;
+
+    function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
+    var
+        actual : t_terreno;
+    begin
+        primero_lista_terrenos(lista);
+
+        while not(fin_lista_terrenos(lista)) do
+        begin
+            recuperar_lista_terrenos(lista, actual);
+            enlistar_terreno(generar_vector_por_zona[actual.zona], actual);
         end;
     end;
     

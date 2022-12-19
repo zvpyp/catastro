@@ -30,6 +30,12 @@ interface
     // Suma un terreno a los datos.
     procedure contar_terreno(var archivo : t_archivo_contador);
 
+    // Resta un contribuyente a los datos.
+    procedure restar_contribuyente(var archivo : t_archivo_contador);
+
+    // Resta un terreno a los datos.
+    procedure restar_terreno(var archivo : t_archivo_contador);
+
     // Devuelve la cantidad de contribuyentes del archivo.
     function cantidad_contribuyentes(var archivo : t_archivo_contador): cardinal;
 
