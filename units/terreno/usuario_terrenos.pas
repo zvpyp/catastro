@@ -21,8 +21,6 @@ interface
 // Crea un terreno.
 Procedure crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol; var nuevo_terreno : t_terreno);
 
-Procedure borrar_terreno(var terreno : t_terreno);
-
 Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; arbol : t_arbol);
 
 Procedure consultar_terreno(var terreno : t_terreno; archivo : t_archivo_terrenos; arbol : t_arbol);
@@ -153,11 +151,6 @@ begin
     begin
       nuevo_terreno.nro_contribuyente := '-1';
     end;
-end;
-
-Procedure borrar_terreno(var terreno : t_terreno); // Acomodar para terrenos
-begin
-  // Hay que ver cómo hacer esto
 end;
 
 Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; arbol : t_arbol);

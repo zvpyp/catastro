@@ -40,10 +40,44 @@ begin
     escribir_terreno(archivo, terreno_nuevo, cantidad_terrenos(archivo_contador) + 1);
 end;
 
+// Pasar arbol ordenado por nro de plano y archivo de terrenos.
 Procedure baja_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol);
 var
+tcl : int16;
+nro_plano_baja : string;
+arbol_pos : t_arbol;
+pos : byte;
+ultimo_terreno : t_terreno;
 begin
-  
+  Writeln('Número de plano: ');
+  Readln(nro_plano_baja);
+  While ((not limite_caracteres(nro_plano_baja,15)) or (not string_numerica(nro_plano_baja))) do
+    begin
+      Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
+      Readln(nro_plano_baja);
+    end;
+  arbol_pos := buscar_por_clave(arbol, nro_plano_baja);
+  pos := arbol_pos.indice;
+  While (pos <> 0) and (tcl <> -1) do
+    begin
+        Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
+        Writeln('1. Ingresar otro numero de plano');
+        Writeln('2. Regresar a la pantalla anterior');
+        Readln(tcl);
+        Case tcl of
+            1: Readln(nro_plano_baja);
+            2: tcl := -1;
+        end;
+            arbol_pos := buscar_por_clave(arbol, nro_plano_baja);
+            pos := arbol_pos.indice;
+    end;
+  if tcl <> -1 then
+    begin
+        ultimo_terreno := leer_terreno(archivo, cantidad_terrenos());
+        escribir_terreno(archivo, ultimo_terreno, pos);
+        // Disminuir tamaño del archivo contador de terrenos
+        Writeln('Terreno dado de baja con éxito');
+    end;         
 end;
 
 // Pasar arbol ordenado por nro de plano y archivo de terrenos.
