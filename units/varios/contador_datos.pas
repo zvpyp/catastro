@@ -7,7 +7,7 @@ unit contador_datos;
 
 interface
     const
-        ruta_archivo_contador = './contador_datos.dat'
+        ruta_archivo_contador = './contador_datos.dat';
 
     type
     t_contador_datos = record
@@ -31,10 +31,10 @@ interface
     procedure contar_terreno(var archivo : t_archivo_contador);
 
     // Devuelve la cantidad de contribuyentes del archivo.
-    function cantidad_contribuyentes(var archivo_ t_archivo_contador): cardinal;
+    function cantidad_contribuyentes(var archivo : t_archivo_contador): cardinal;
 
     // Devuelve la cantidad de terrenos del archivo.
-    function cantidad_terrenos(var archivo_ t_archivo_contador): cardinal;
+    function cantidad_terrenos(var archivo : t_archivo_contador): cardinal;
 
 {--------------------------------}
 
@@ -92,7 +92,7 @@ implementation
         write(archivo, contador_aux);
     end;
 
-    function cantidad_contribuyentes(var archivo_ t_archivo_contador): cardinal;
+    function cantidad_contribuyentes(var archivo : t_archivo_contador): cardinal;
     var
         contador_aux : t_contador_datos;
     begin
@@ -102,7 +102,7 @@ implementation
         cantidad_contribuyentes := contador_aux.contribuyentes;
     end;
 
-    function cantidad_terrenos(var archivo_ t_archivo_contador): cardinal;
+    function cantidad_terrenos(var archivo : t_archivo_contador): cardinal;
     var
         contador_aux : t_contador_datos;
     begin
