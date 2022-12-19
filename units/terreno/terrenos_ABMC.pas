@@ -30,11 +30,7 @@ Procedure alta_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol; va
 var
 terreno_nuevo : t_terreno;
 begin
-    abrir_archivo_terrenos(archivo);
-
     crear_terreno(archivo, arbol, terreno_nuevo);
-
-    abrir_archivo_contador(archivo_contador);
 
     if (terreno_nuevo.numero <> '') then
     escribir_terreno(archivo, terreno_nuevo, cantidad_terrenos(archivo_contador) + 1);
@@ -88,7 +84,6 @@ nro_terreno_modificado : string;
 arbol_pos : t_arbol;
 pos, tcl : int16;
 begin
-  abrir_archivo_contribuyentes(archivo);
 
   Writeln('Introduzca el número de plano del terreno que desea modificar: ');
   Readln(nro_terreno_modificado);
@@ -119,7 +114,6 @@ begin
                 modificar_terreno(terreno_modificado, archivo, arbol);
                 escribir_terreno(archivo, terreno_modificado, pos);
             end;
-        cerrar_archivo_terrenos(archivo);
 
 end;
 
@@ -130,7 +124,6 @@ nro_plano_consultado : string;
 arbol_pos : t_arbol;
 pos, tcl : int16;
 begin
-  abrir_archivo_terrenos(archivo);
   Writeln('Número de plano: ')
   Readln(nro_plano_consultado);
   arbol_pos := buscar_por_clave(arbol, nro_plano_consultado);
@@ -138,7 +131,6 @@ begin
   
   terreno_consultado := leer_terreno(archivo, pos);
   consultar_terreno(terreno_consultado);
-  cerrar_archivo_terrenos(archivo);
 end;
 
 end.

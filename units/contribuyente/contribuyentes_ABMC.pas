@@ -29,8 +29,6 @@ Procedure alta_contribuyente(var archivo : t_archivo_contribuyentes; var arbol :
 var
 contribuyente_nuevo : t_contribuyente;
 begin
-    abrir_archivo_contribuyentes(archivo);
-
     crear_contribuyente(archivo, arbol, contribuyente_nuevo);
 
     if (contribuyente_nuevo.numero <> '') then
@@ -86,7 +84,6 @@ nro_contribuyente_modificado : string;
 arbol_pos : t_arbol;
 pos, tcl : int16;
 begin
-  abrir_archivo_contribuyentes(archivo);
 
   Writeln('Introduzca el número de contribuyente del usuario que desea modificar: ');
   Readln(nro_contribuyente_modificado);
@@ -117,7 +114,6 @@ begin
                 modificar_contribuyente(contribuyente_modificado, archivo, arbol);
                 escribir_contribuyente(archivo, contribuyente_modificado, pos);
             end;
-        cerrar_archivo_contribuyentes(archivo);
 
 end;
 
