@@ -31,11 +31,19 @@ interface
         function crear_menu(mensaje_superior : string): t_menu;
 
         // añade una opción al menú.
-        procedure agregar_opcion(var menu : t_menu; opcion : t_opcion);
+        procedure agregar_opcion(var menu : t_menu; mensaje : string);
 
         // Espera a que el usuario elija una opción válida, y la retorna como una string de 3 letras.
         // Teclas que retorna: arriba, abajo, izquierda, derecha, enter, escape.
         function leer_opcion(): string;
+
+        // Escribe el menú con una interfaz bonita.
+        procedure mostrar_menu(menu : t_menu);
+
+        // BORRAR ESTOS DOS:
+        procedure opcion_siguiente(var menu : t_menu);
+
+        procedure opcion_anterior(var menu : t_menu);
 
 {--------------------------------}
 
@@ -55,20 +63,27 @@ implementation
         begin
             crear_opcion.mensaje := mensaje;
             crear_opcion.indice := indice;
+            crear_opcion.anterior := nil;
+            crear_opcion.siguiente := nil;
         end;
 
-        procedure agregar_opcion(var menu : t_menu; mensaje : string; indice : byte);
+        procedure agregar_opcion(var menu : t_menu; mensaje : string);
         var
             puntero_auxiliar : t_puntero_opcion;
         begin
+            
+            menu.tam := menu.tam + 1;
 
             new(puntero_auxiliar);
-            puntero_auxiliar^ := crear_opcion(mensaje, indice);
+            puntero_auxiliar^ := crear_opcion(mensaje, menu.tam);
 
-            puntero_auxiliar^.anterior := menu.ultimo;
+            puntero_auxiliar^.anterior := menu.ultima;
 
             if menu.cabecera = nil then
+            begin
                 menu.cabecera := puntero_auxiliar;
+                menu.seleccionada := menu.cabecera;
+            end;
 
             if menu.ultima <> nil then
                 menu.ultima^.siguiente := puntero_auxiliar;
@@ -97,19 +112,19 @@ implementation
             end;
         end;
 
-        procedure opcion_siguiente(menu : t_menu);
+        procedure opcion_siguiente(var menu : t_menu);
         begin
             if menu.seleccionada^.siguiente <> nil then
                 menu.seleccionada := menu.seleccionada^.siguiente;
         end;
 
-        procedure opcion_anterior(menu : t_menu);
+        procedure opcion_anterior(var menu : t_menu);
         begin
             if menu.seleccionada^.anterior <> nil then
                 menu.seleccionada := menu.seleccionada^.anterior;
         end;
 
-        procedure inicio_menu(menu : t_menu);
+        procedure inicio_menu(var menu : t_menu);
         begin
             menu.actual := menu.cabecera;
         end;
@@ -123,14 +138,12 @@ implementation
             while menu.actual <> nil do
             begin
                 if menu.actual^.indice = menu.seleccionada^.indice then
-                    writeln('>', menu.actual^.mensaje);
+                    writeln('>', menu.actual^.mensaje)
                 else
-                    writeln('  ',menu.actual^.mensaje);
+                    writeln(' ',menu.actual^.mensaje);
 
-                menu.seleccionada := menu.seleccionada^.siguiente;
+                menu.actual := menu.actual^.siguiente;
             end;
-
-            inicio_menu(menu);
         end;
 
 end.
