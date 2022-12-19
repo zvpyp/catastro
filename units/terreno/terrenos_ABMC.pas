@@ -75,6 +75,8 @@ begin
     begin
         ultimo_terreno := leer_terreno(archivo, cantidad_terrenos());
         escribir_terreno(archivo, ultimo_terreno, pos);
+        // Disminuir tamaño del archivo contador de terrenos
+        Writeln('Terreno dado de baja con éxito');
     end;         
 end;
 
