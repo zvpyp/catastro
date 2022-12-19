@@ -37,7 +37,7 @@ begin
     abrir_archivo_contador(archivo_contador);
 
     if (terreno_nuevo.numero <> '') then
-    escribir_terreno(archivo, terreno_nuevo, cantidad_terrenos(archivo_contador));
+    escribir_terreno(archivo, terreno_nuevo, cantidad_terrenos(archivo_contador) + 1);
 end;
 
 Procedure baja_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol);

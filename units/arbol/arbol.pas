@@ -13,6 +13,7 @@ interface
         indice : cardinal;
         clave : string;
         estado : boolean;
+        nro_contribuyente : string;
         lista : t_lista_terrenos;
         si : t_puntero_arbol;
         sd : t_puntero_arbol;
@@ -40,30 +41,31 @@ interface
 
 implementation
 
-    function crear_arbol(indice : cardinal; clave : string; estado : boolean): t_arbol;
+    function crear_arbol(indice : cardinal; clave : string; estado : boolean; nro_contribuyente : string): t_arbol;
     begin
         crear_arbol.indice := indice;
         crear_arbol.clave := clave;
         crear_arbol.estado := estado;
+        crear_arbol.nro_contribuyente := nro_contribuyente;
         crear_arbol.si := nil;
         crear_arbol.sd := nil;
     end;
 
-    procedure anidar_hijo_izq(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean);
+    procedure anidar_hijo_izq(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean; nro_contribuyente : string);
     var
     hijo_izq : t_arbol;
     begin
         new(arbol.si);
-        hijo_izq := crear_arbol(indice, clave, estado);
+        hijo_izq := crear_arbol(indice, clave, estado, nro_contribuyente);
         arbol.si^ := hijo_izq;
     end;
 
-    procedure anidar_hijo_der(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean);
+    procedure anidar_hijo_der(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean; nro_contribuyente : string);
     var
     hijo_der : t_arbol;
     begin
         new(arbol.sd);
-        hijo_der := crear_arbol(indice, clave, estado);
+        hijo_der := crear_arbol(indice, clave, estado, nro_contribuyente);
         arbol.sd^ := hijo_der;
     end;
 

@@ -35,7 +35,7 @@ begin
 
     if (contribuyente_nuevo.numero <> '') then
     begin
-      escribir_contribuyente(archivo, contribuyente_nuevo, cantidad_contribuyentes(archivo_contador));
+      escribir_contribuyente(archivo, contribuyente_nuevo, cantidad_contribuyentes(archivo_contador) + 1);
       contar_contribuyente(archivo);
     end;
 end;
