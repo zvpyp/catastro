@@ -114,6 +114,7 @@ implementation
         end;
     end;
 
+    // TODO:
     function busqueda_contribuyente(var arbol : t_arbol): t_contribuyente;
     begin
         
