@@ -17,6 +17,17 @@ uses
 
 {---------------Listados---------------}
 
+// A partir de un árbol ordenado por nombres, cada uno de sus nodos (contribuyente) teniendo la lista que le corresponde,
+// Muestra en pantalla las propiedades de cada contribuyente.
+// Para ello, hace un recorrido preorden, y por cada nodo hace un recorrido secuencial.
+procedure listado_contribuyentes_propiedades(arbol : t_arbol);
+
+// Muestra todas las zonas y los terrenos que les corresponden.
+procedure listado_zona_terrenos(terrenos_por_zona : t_vector_listas);
+
+// Muestra las inscripciones de terrenos que hubo en un año determinado.
+procedure listado_inscripciones_anio(lista : t_lista_terrenos; anio : string);
+
 {---------------Estadísticas---------------}
 
 // Muestra la cantidad de contribuyentes dados de baja.
@@ -36,9 +47,6 @@ implementation
 {-----------------Listados-----------------}
 
 // TODO: hacer lindo.
-// A partir de un árbol ordenado por nombres, cada uno de sus nodos (contribuyente) teniendo la lista que le corresponde,
-// Muestra en pantalla las propiedades de cada contribuyente.
-// Para ello, hace un recorrido preorden, y por cada nodo hace un recorrido secuencial.
 procedure listado_contribuyentes_propiedades(arbol : t_arbol);
 var
     terreno_actual : t_terreno;
@@ -210,5 +218,17 @@ begin
     writeln('Entre ', fecha1, ' y ', fecha2, ' se inscribieron ', contador, ' terrenos :)');
 
 end;
+
+    // TODO:
+    // Hacer un recorrido preorden sobre el árbol potoca
+    // retornar la cantidad de propietarios con más de una propiedad.
+    function cant_propietarios_mult_propiedades(): cardinal;
+    begin
+        
+    end;
+
+    // TODO: Hacer un procedimiento que llame a la función anterior
+    // Y luego calcule el porcentaje de propietarios con más de una propiedad sobre el total
+    // Para calcular el total, usar la lista de propiedaes (usando su .tam).
 
 end.
