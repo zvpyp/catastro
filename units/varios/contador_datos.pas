@@ -7,7 +7,7 @@ unit contador_datos;
 
 interface
     const
-        ruta_archivo_contador = './contador_datos.dat'
+        ruta_archivo_contador = './contador_datos.dat';
 
     type
     t_contador_datos = record
@@ -30,6 +30,17 @@ interface
     // Suma un terreno a los datos.
     procedure contar_terreno(var archivo : t_archivo_contador);
 
+    // Resta un contribuyente a los datos.
+    procedure restar_contribuyente(var archivo : t_archivo_contador);
+
+    // Resta un terreno a los datos.
+    procedure restar_terreno(var archivo : t_archivo_contador);
+
+    // Devuelve la cantidad de contribuyentes del archivo.
+    function cantidad_contribuyentes(var archivo : t_archivo_contador): cardinal;
+
+    // Devuelve la cantidad de terrenos del archivo.
+    function cantidad_terrenos(var archivo : t_archivo_contador): cardinal;
 
 {--------------------------------}
 
@@ -87,7 +98,34 @@ implementation
         write(archivo, contador_aux);
     end;
 
-    function cantidad_contribuyentes(var archivo_ t_archivo_contador): cardinal;
+    procedure restar_contribuyente(var archivo : t_archivo_contador);
+    var
+        contador_aux : t_contador_datos;
+    begin
+        seek(archivo, 1);
+        read(archivo, contador_aux);
+
+        contador_aux.contribuyentes := contador_aux.contribuyentes - 1;
+
+        seek(archivo, 1);
+        write(archivo, contador_aux);
+    end;
+
+    procedure restar_terreno(var archivo : t_archivo_contador);
+    var
+        contador_aux : t_contador_datos;
+    begin
+        seek(archivo, 1);
+        read(archivo, contador_aux);
+
+        contador_aux.terrenos := contador_aux.terrenos - 1;
+
+        seek(archivo, 1);
+        write(archivo, contador_aux);
+    end;
+
+
+    function cantidad_contribuyentes(var archivo : t_archivo_contador): cardinal;
     var
         contador_aux : t_contador_datos;
     begin
@@ -97,7 +135,7 @@ implementation
         cantidad_contribuyentes := contador_aux.contribuyentes;
     end;
 
-    function cantidad_terrenos(var archivo_ t_archivo_contador): cardinal;
+    function cantidad_terrenos(var archivo : t_archivo_contador): cardinal;
     var
         contador_aux : t_contador_datos;
     begin
