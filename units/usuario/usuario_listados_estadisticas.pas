@@ -21,11 +21,31 @@ Procedure propietarios_dados_de_baja(var archivo_contribuyentes : t_archivo_cont
 // su % respecto al total.
 Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var archivo_contador : t_archivo_contador);
 
-{--------------------------------}
+{------------------------------------------}
 
 implementation
 
-{---------------Listados---------------}
+{-----------------Listados-----------------}
+
+// TODO: hacer lindo.
+procedure listado_zona_terrenos(terrenos_por_zona : t_vector_listas);
+var
+    i : 1..5;
+    lista := lista_terrenos;
+begin
+    for i := 1 to 5 do
+    begin
+        writeln('ZONA ', i);
+        lista := terrenos_por_zona[i];
+        primero_lista_terrenos(lista);
+        while not(fin_lista_terrenos(lista)) do
+        begin
+            writeln(lista.actual^.info.domicilio_parcelario, ' $', lista.actual^.info.avaluo);
+            siguiente_lista_terrenos(terrenos_por_zona[i]);
+        end;
+        readkey;
+    end;
+end;
 
 {---------------Estadísticas---------------}
 
@@ -101,13 +121,6 @@ end;
 // AÑADIR RECORRIDO PREORDEN SOBRE EL ARBOL DE CONTRIBUYENTES:
 // procedure listado_contribuyentes_propiedades();
 
-// HACER RECORRIDO EN LISTA POR FECHAS JEJEJE
-// procedure listado_fecha_inscripciones();
-
-// PRIMERO HAY QUE CREAR UN ARRAY DE TERRENOS
-// QUE CONTENGA UN RECORD DE ESTILO ZONA1, ZONA2, ZONA3...
-// LUEGO RECORRERLO Y LISTO (ENTENDISTE EL CHISTE?¿¿¿!¿)
-// procedure listado_zona_terrenos();
 
 // DESPUÉS DE TODAS, ESTA ES LA MÁS FÁCIL XD.
 // procedure mostrar_estadisticas();

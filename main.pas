@@ -42,8 +42,6 @@ begin
 
     { LINEAS DE TESTEO }
 
-    
-
     { <<<<<<<<>>>>>>>> }
 
     // Cerrar los archivos utilizados.
