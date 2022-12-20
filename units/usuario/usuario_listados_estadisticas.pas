@@ -10,7 +10,10 @@ uses
     contribuyente in 'units/contribuyente/contribuyente.pas',
     contador_datos in 'units/varios/contador_datos.pas',
     compara_fechas in 'units/varios/compara_fechas.pas',
-    lista_terrenos in 'units/varios/lista_terrenos.pas';
+    lista_terrenos in 'units/varios/lista_terrenos.pas',
+    arbol in 'units/arbol/arbol.pas',
+    terreno in 'units/terreno/terreno.pas',
+    arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas';
 
 {---------------Listados---------------}
 
@@ -31,6 +34,30 @@ procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, 
 implementation
 
 {-----------------Listados-----------------}
+
+// TODO: hacer lindo.
+// A partir de un árbol ordenado por nombres, cada uno de sus nodos (contribuyente) teniendo la lista que le corresponde,
+// Muestra en pantalla las propiedades de cada contribuyente.
+// Para ello, hace un recorrido preorden, y por cada nodo hace un recorrido secuencial.
+procedure listado_contribuyentes_propiedades(arbol : t_arbol);
+var
+    terreno_actual : t_terreno;
+begin
+    if tiene_hijo_izq(arbol) then
+        listado_contribuyentes_propiedades(arbol.si^);
+
+    writeln(arbol.clave);
+    primero_lista_terrenos(arbol.lista);
+    while not(fin_lista_terrenos(arbol.lista)) do
+    begin
+        recuperar_lista_terrenos(arbol.lista, terreno_actual);
+        writeln(terreno_actual.domicilio_parcelario, ' $', terreno_actual.avaluo);
+        siguiente_lista_terrenos(arbol.lista);
+    end;
+
+    if tiene_hijo_der(arbol) then
+        listado_contribuyentes_propiedades(arbol.sd^);
+end;
 
 // TODO: hacer lindo.
 procedure listado_zona_terrenos(terrenos_por_zona : t_vector_listas);
@@ -183,14 +210,5 @@ begin
     writeln('Entre ', fecha1, ' y ', fecha2, ' se inscribieron ', contador, ' terrenos :)');
 
 end;
-
-{---------------------------------------------}
-// TODO:
-// AÑADIR RECORRIDO PREORDEN SOBRE EL ARBOL DE CONTRIBUYENTES:
-// procedure listado_contribuyentes_propiedades();
-
-
-// DESPUÉS DE TODAS, ESTA ES LA MÁS FÁCIL XD.
-// procedure mostrar_estadisticas();
 
 end.
