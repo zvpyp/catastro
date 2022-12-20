@@ -40,6 +40,9 @@ Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var arch
 // Escribe en pantalla cuántas inscripciones se dieron entre dos fechas. El orden no importa B).
 procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, fecha2 : string);
 
+// Recibe árbol con las listas cargadas y el archivo contador. Muestra en pantalla el porcentaje de propietarios con más de una propiedad.
+procedure porc_propietarios_mult_propiedades(arbol : t_arbol; archivo_contador : t_archivo_contador);
+
 {------------------------------------------}
 
 implementation
@@ -234,7 +237,6 @@ begin
         cant_propietarios_mult_propiedades := cant_propietarios_mult_propiedades + cant_propietarios_mult_propiedades(arbol.sd^);
 end;
 
-// Recibe árbol con las listas cargadas y el archivo contador.
 procedure porc_propietarios_mult_propiedades(arbol : t_arbol; archivo_contador : t_archivo_contador);
 var
     total_propietarios, propietarios_mult : cardinal;
