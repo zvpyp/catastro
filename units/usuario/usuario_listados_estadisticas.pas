@@ -15,7 +15,7 @@ uses
     terreno in 'units/terreno/terreno.pas',
     arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas';
 
-{---------------Listados---------------}
+{-----------------Listados-----------------}
 
 // A partir de un árbol ordenado por nombres, cada uno de sus nodos (contribuyente) teniendo la lista que le corresponde,
 // Muestra en pantalla las propiedades de cada contribuyente.
@@ -39,6 +39,9 @@ Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var arch
 
 // Escribe en pantalla cuántas inscripciones se dieron entre dos fechas. El orden no importa B).
 procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, fecha2 : string);
+
+// Recibe árbol con las listas cargadas y el archivo contador. Muestra en pantalla el porcentaje de propietarios con más de una propiedad.
+procedure porc_propietarios_mult_propiedades(arbol : t_arbol; archivo_contador : t_archivo_contador);
 
 {------------------------------------------}
 
@@ -88,8 +91,9 @@ begin
 end;
 
 procedure listado_inscripciones_anio(lista : t_lista_terrenos; anio : string);
-fecha1, fecha2 : string;
-terreno_actual : t_terreno;
+var
+    fecha1, fecha2 : string;
+    terreno_actual : t_terreno;
 begin
     fecha1 := anio + '-01-01';
     fecha2 := anio + '-12-31';
@@ -117,8 +121,8 @@ end;
 
 Procedure propietarios_dados_de_baja(var archivo_contribuyentes : t_archivo_contribuyentes; var archivo_contador : t_archivo_contador);
 var
-i, fin, dados_de_baja : cardinal;
-contribuyente_aux : t_contribuyente; 
+    i, fin, dados_de_baja : cardinal;
+    contribuyente_aux : t_contribuyente; 
 begin
     dados_de_baja := 0;
     fin := cantidad_contribuyentes(t_archivo_contador);
@@ -137,8 +141,8 @@ end;
 
 Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var archivo_contador : t_archivo_contador);
 var
-i, fin, edif_1, edif_2, edif_3, edif_4, edif_5 : cardinal;
-contribuyente_aux : t_contribuyente; 
+    i, fin, edif_1, edif_2, edif_3, edif_4, edif_5 : cardinal;
+    contribuyente_aux : t_contribuyente; 
 begin
     edif_1 := 0;
     edif_2 := 0;
@@ -183,9 +187,10 @@ begin
 end;
 
 procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, fecha2 : string);
-aux_fecha : string;
-terreno_actual : t_terreno;
-contador : cardinal;
+var
+    aux_fecha : string;
+    terreno_actual : t_terreno;
+    contador : cardinal;
 begin
     primero_lista_terrenos(lista);
 
@@ -219,13 +224,36 @@ begin
 
 end;
 
+function cant_propietarios_mult_propiedades(arbol : t_arbol): cardinal;
+var
+begin
+    if arbol.lista.tam > 1 then 
+        cant_propietarios_mult_propiedades := cant_propietarios_mult_propiedades + 1;
+
+    if tiene_hijo_izq(arbol) then
+        cant_propietarios_mult_propiedades := cant_propietarios_mult_propiedades + cant_propietarios_mult_propiedades(arbol.si^);
+
+    if tiene_hizo_der(arbol) then
+        cant_propietarios_mult_propiedades := cant_propietarios_mult_propiedades + cant_propietarios_mult_propiedades(arbol.sd^);
+end;
+
+procedure porc_propietarios_mult_propiedades(arbol : t_arbol; archivo_contador : t_archivo_contador);
+var
+    total_propietarios, propietarios_mult : cardinal;
+begin
+  total_propietarios := cantidad_contribuyentes(archivo_contador);
+  propietarios_mult := cant_propietarios_mult_propiedades(arbol);
+
+  if (total_propietarios <> 0) or (propietarios_mult <> 0) then
+    begin
+    if propietarios_mult <> 0 then
+    Writeln('De los ',total_propietarios,' propietarios, ',propietarios_mult,', un' ,(propietarios_mult * 100 / total_propietarios),'% tienen más de una propiedad.')
+    else Writeln('Ningún propietario tiene más de una propiedad');
+    end;
+end;
     // TODO:
     // Hacer un recorrido preorden sobre el árbol potoca
     // retornar la cantidad de propietarios con más de una propiedad.
-    function cant_propietarios_mult_propiedades(): cardinal;
-    begin
-        
-    end;
 
     // TODO: Hacer un procedimiento que llame a la función anterior
     // Y luego calcule el porcentaje de propietarios con más de una propiedad sobre el total
