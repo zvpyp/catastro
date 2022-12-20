@@ -37,6 +37,9 @@ interface
     // Retorna el índice del elemento buscado, según su clave.
     function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
 
+    // Borra la raiz del árbol que se le pase.
+    procedure borrar_raiz(var arbol : t_arbol);
+
 {--------------------------------}
 
 implementation
@@ -95,7 +98,7 @@ implementation
         end;
     end;
 
-    procedure borrar_raiz(arbol : t_arbol);
+    procedure borrar_raiz(var arbol : t_arbol);
     var
         izq_auxiliar : t_puntero_arbol;
         der_auxiliar : t_puntero_arbol;

@@ -8,7 +8,7 @@
 Unit arbol_terrenos;
 { Unidad de árboles binarios que ordenan terrenos. }
 
-{--------------------------------}
+{--------------------------------------------------------------------------------------}
 
 Interface
 
@@ -19,19 +19,38 @@ compara_fechas in 'units/varios/compara_fechas.pas';
 // Retorna un árbol binario ordenado por numero de contribuyente asociado
 // a cada terreno.
 Function arbol_ordenado_por_nro_contribuyente(Var archivo : t_archivo_terrenos;
-                                              cantidad_terrenos : cardinal): t_arbol
-;
+                                              cantidad_terrenos : cardinal): t_arbol;
 
 // Retorna un árbol binario ordenado por fecha de inscripcion de cada terreno.
 Function arbol_ordenado_por_fecha_inscripcion(Var archivo : t_archivo_terrenos;
-                                              cantidad_terrenos : cardinal): t_arbol
-;
+                                                  cantidad_terrenos : cardinal): t_arbol;
 
+// Retorna un árbol binario ordenado por número de plano de cada terreno.
 Function arbol_ordenado_por_nro_plano(Var archivo : t_archivo_terrenos;
-                                              cantidad_terrenos : cardinal): t_arbol
-;
+                                          cantidad_terrenos : cardinal): t_arbol;
 
-{--------------------------------}
+// Agrega un nodo a un arbol ordenado por nro de contribuyente.
+// Su raíz será la posición en el archivo dado.
+// El valor se determina según el nro de contributente del terreno dado.
+Procedure sumar_por_nro_contribuyente(Var arbol: t_arbol;
+                                      Var archivo : t_archivo_terrenos;
+                                          nuevo_terreno_indice : cardinal);
+
+// Agrega un nodo a un arbol ordenado por fecha de inscripción.
+// Su raíz será la posición en el archivo dado.
+// El valor se determina según la fecha de inscripción del terreno dado.
+Procedure sumar_por_fecha_inscripcion(Var arbol: t_arbol;
+                                      Var archivo : t_archivo_terrenos;
+                                          nuevo_terreno_indice : cardinal);
+
+// Agrega un nodo a un arbol ordenado por nro de plano.
+// Su raíz será la posición en el archivo dado.
+// El valor se determina según el nro de plano del terreno dado.
+Procedure sumar_por_nro_plano(Var arbol: t_arbol;
+                              Var archivo : t_archivo_terrenos;
+                                  nuevo_terreno_indice : cardinal);
+
+{--------------------------------------------------------------------------------------}
 
 Implementation
 
@@ -59,7 +78,7 @@ Begin
   If (nro_contribuyente_actual < nro_contribuyente_nuevo) Then
     Begin
 
- // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
+      // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
       // Sino, lo agrega como hijo derecho.
       If tiene_hijo_der(arbol) Then
         sumar_por_nro_contribuyente(arbol.sd^, archivo, nuevo_terreno_indice)
@@ -70,7 +89,7 @@ Begin
   Else
     Begin
 
-// Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
+      // Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
       // Sino, lo agrega como hijo izquierdo.
       If tiene_hijo_izq(arbol) Then
         sumar_por_nro_contribuyente(arbol.si^, archivo, nuevo_terreno_indice)
@@ -127,7 +146,7 @@ Begin
   If fecha_es_mayor(fecha_inscripcion_nuevo, fecha_inscripcion_actual) Then
     Begin
 
- // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
+      // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
       // Sino, lo agrega como hijo derecho.
       If tiene_hijo_der(arbol) Then
         sumar_por_fecha_inscripcion(arbol.sd^, archivo, nuevo_terreno_indice)
@@ -138,7 +157,7 @@ Begin
   Else
     Begin
 
-// Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
+      // Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
       // Sino, lo agrega como hijo izquierdo.
       If tiene_hijo_izq(arbol) Then
         sumar_por_fecha_inscripcion(arbol.si^, archivo, nuevo_terreno_indice)
@@ -199,7 +218,7 @@ Begin
   If (nro_plano_actual < nro_plano_nuevo) Then
     Begin
 
- // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
+      // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
       // Sino, lo agrega como hijo derecho.
       If tiene_hijo_der(arbol) Then
         sumar_por_nro_plano(arbol.sd^, archivo, nuevo_terreno_indice)
@@ -210,7 +229,7 @@ Begin
   Else
     Begin
 
-// Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
+      // Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
       // Sino, lo agrega como hijo izquierdo.
       If tiene_hijo_izq(arbol) Then
         sumar_por_nro_plano(arbol.si^, archivo, nuevo_terreno_indice)

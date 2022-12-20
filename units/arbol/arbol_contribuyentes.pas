@@ -1,6 +1,9 @@
 unit arbol_contribuyentes;
 { Unidad de árboles binarios que ordenan contribuyentes. }
 
+// TODO
+// Crear un árbol ordenado por nro de contribuyente.
+
 {--------------------------------}
 
 interface
@@ -18,6 +21,10 @@ interface
     function arbol_ordenado_por_dni(var archivo : t_archivo_contribuyentes;
                                         cantidad_contribuyentes : cardinal): t_arbol;
 
+    // Retorna un árbol binario ordenado por nro de cada contribuyente.
+    function arbol_ordenado_por_nro(var archivo : t_archivo_contribuyentes; // Falta hacerlo
+                                        cantidad_contribuyentes : cardinal): t_arbol;
+
     // Realiza un recorrido preorden de los árboles, luego añade los elementos de la lista que le corresponden.
     procedure agregar_listas_por_contribuyente(var arbol_por_nombres : t_arbol;
                                                lista_terrenos : t_lista_terrenos);
@@ -27,8 +34,27 @@ interface
     // el argumento "encontrado" debe pasarse como false.
     procedure agregar_terreno_a_contribuyente(var arbol_por_nombres : t_arbol;
                                               terreno : t_terreno;
-                                              var encontrado : boolean);
     
+    // Agrega un nodo a un árbol ordenado por nombres.
+    // Su raíz será la posición en el archivo dado.
+    // El valor se determina según el nombre del contribuyente dado.
+    procedure sumar_por_nombre(var arbol: t_arbol;
+                               var archivo : t_archivo_contribuyentes;
+                                   nuevo_contribuyente_indice : cardinal);
+
+    // Agrega un nodo a un arbol ordenado por DNI.
+    // Su raíz será la posición en el archivo dado.
+    // El valor se determina según el dni del contribuyente dado.
+    procedure sumar_por_dni(var arbol: t_arbol;
+                            var archivo : t_archivo_contribuyentes;
+                                nuevo_contribuyente_indice : cardinal);
+
+    // Agrega un nodo a un arbol ordenado por nro de contribuyente.
+    // Su raíz será la posición en el archivo dado.
+    // El valor se determina según el nro de contribuyente del contribuyente dado.
+    procedure sumar_por_nro(var arbol: t_arbol;
+                            var archivo : t_archivo_contribuyentes;
+                                nuevo_contribuyente_indice : cardinal);
     
 
 {--------------------------------}
@@ -114,6 +140,41 @@ implementation
         end;
     end;
 
+    procedure sumar_por_nro(var arbol: t_arbol;
+                            var archivo : t_archivo_contribuyentes;
+                                nuevo_contribuyente_indice : cardinal);
+    var
+        nuevo_contribuyente : t_contribuyente;
+        nro_actual : string;
+    begin
+        nro_actual := arbol.clave;
+
+        // lee el contribuyente a agregar
+        seek(archivo, nuevo_contribuyente_indice);
+        read(archivo, nuevo_contribuyente);
+
+        // Caso en que el nro sea mayor:
+        if (nro_actual < nuevo_contribuyente.numero) then
+        begin
+            // Verifica si el árbol tiene hijo derecho y repite el proceso recursivamente.
+            // Sino, lo agrega como hijo derecho.
+            if tiene_hijo_der(arbol) then
+                sumar_por_nro(arbol.sd^, archivo, nuevo_contribuyente_indice)
+            else
+                anidar_hijo_der(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.numero, nuevo_contribuyente.activo, nuevo_contribuyente.numero);
+        end
+        // Caso en que sea menor
+        else
+        begin
+            // Verifica si el árbol tiene hijo izquierdo y repite el proceso recursivamente.
+            // Sino, lo agrega como hijo izquierdo.
+            if tiene_hijo_izq(arbol) then
+                sumar_por_nro(arbol.si^, archivo, nuevo_contribuyente_indice)
+            else
+                anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.numero, nuevo_contribuyente.activo, nuevo_contribuyente.numero);
+        end;
+    end;
+
     // TODO:
     function busqueda_contribuyente(var arbol : t_arbol): t_contribuyente;
     begin
@@ -168,6 +229,28 @@ implementation
             end;
         end;
     end;
+
+    function arbol_ordenado_por_nro(var archivo : t_archivo_contribuyentes; // Falta hacerlo
+                                        cantidad_contribuyentes : cardinal): t_arbol;
+    var
+        indice_actual : cardinal;
+        primer_contribuyente : t_contribuyente;
+    begin
+        // Creamos el árbol con el primer índice.
+        indice_actual := 1;
+        seek(archivo, indice_actual);
+        read(archivo, primer_contribuyente);
+        arbol_ordenado_por_nro := crear_arbol(indice_actual, primer_contribuyente.numero, primer_contribuyente.activo, primer_contribuyente.numero);
+
+        if cantidad_contribuyentes > 1 then
+        begin
+            for indice_actual := 2 to cantidad_contribuyentes do
+            begin
+                sumar_por_nro(arbol_ordenado_por_nro, archivo, indice_actual);
+            end;
+        end;
+    end;
+
 
     procedure agregar_terreno_a_contribuyente(var arbol_por_nombres : t_arbol;
                                               terreno : t_terreno;
