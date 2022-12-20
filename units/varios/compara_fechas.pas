@@ -5,7 +5,16 @@ interface
 // Las fechas deben tener el formato aaaa-mm-dd
 
 // Retorna verdadero si fecha 1 es mayor que fecha 2
+// Equivalente en el resto de procedimientos.
 function fecha_es_mayor(fecha1 : string; fecha2 : string) : boolean;
+
+function fecha_es_igual(fecha1 : string; fecha2 : string) : boolean;
+
+function fecha_es_menor(fecha1 : string; fecha2 : string) : boolean;
+
+function fecha_es_mayor_igual(fecha1 : string; fecha2 : string) : boolean;
+
+function fecha_es_menor_igual(fecha1 : string; fecha2 : string) : boolean;
 
 implementation
 function fecha_es_mayor(fecha1 : string; fecha2 : string) : boolean;
@@ -38,6 +47,26 @@ else
     end
   else fecha_es_mayor := false;
 
+end;
+
+function fecha_es_menor(fecha1 : string; fecha2 : string) : boolean;
+begin
+  fecha_es_menor := fecha_es_mayor(fecha2, fecha1);
+end;
+
+function fecha_es_igual(fecha1 : string; fecha2 : string) : boolean;
+begin
+  fecha_es_igual := not(fecha_es_menor(fecha1, fecha2) or fecha_es_mayor(fecha1, fecha2));
+end;
+
+function fecha_es_mayor_igual(fecha1 : string; fecha2 : string) : boolean;
+begin
+  fecha_es_mayor_igual := fecha_es_mayor(fecha1, fecha2) or fecha_es_igual(fecha1, fecha2);
+end;
+
+function fecha_es_menor_igual(fecha1 : string; fecha2 : string) : boolean;
+begin
+  fecha_es_menor_igual := fecha_es_mayor_igual(fecha2, fecha1);
 end;
 
 end.
