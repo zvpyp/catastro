@@ -1,5 +1,10 @@
 # Catastro
 
+## Table of contents / Índice
+
+1. [English](#English)
+2. [Español](#Español)
+
 ## English
 
 ### What is this?
@@ -26,7 +31,7 @@ Enter catastro's folder and compile _main.pas_.
 
 ##### Note:
 
-If you use windows, you might have to change the _slashes_ (/) for _backslashes_ (\\) in all _.pas_ files before compiling.
+If you use windows, you might have to change the _slashes_ (/) with _backslashes_ (\\) in all _.pas_ files before compiling.
 
 ```
 cd catastro/
