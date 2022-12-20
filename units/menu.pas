@@ -8,81 +8,162 @@ interface
 
     uses crt;
 
-    // Muestra el menú principal. Devuelve la opción elegida.
-    function menu_principal(): char;
+    type
+        t_puntero_opcion = ^t_opcion;
 
-    // Muestra un submenú de AMBC genérico. Devuelve la opción elegida.
-    function submenu_ambc(submenu_nombre : string): char;
+        t_opcion = record
+            mensaje : string;
+            indice : byte;
+            anterior : t_puntero_opcion;
+            siguiente : t_puntero_opcion;
+        end;
 
-    // Muestra el submenú de listados y estadísticas. Devuelve la opción elegida.
-    function submenu_listados_estadisticas(): char;
+        t_menu = record
+            mensaje_superior : string;
+            cabecera : t_puntero_opcion;
+            actual : t_puntero_opcion;
+            seleccionada : t_puntero_opcion;
+            ultima : t_puntero_opcion;
+            tam : byte;
+        end;
 
 {--------------------------------}
 
 implementation
 
-    // Escribe un mensaje a partir de las coordenadas x, y.
-    procedure escribir_alineado(mensaje : string; x : byte, y : byte);
-    begin
-        gotoxy(x, y);
-        writeln(mensaje);
-    end;
+        // Retorna un menú sin opciones.
+        function crear_menu(mensaje_superior : string): t_menu;
+        begin
+            crear_menu.mensaje_superior := mensaje_superior;
+            crear_menu.cabecera := nil;
+            crear_menu.actual := nil;
+            crear_menu.seleccionada := nil;
+            crear_menu.ultima := nil;
+            crear_menu.tam := 0;
+        end;
 
-    // Pide una entrada al usuario entre dos valores ASCII hasta obtener un valor válido.
-    // Luego lo retorna.
-    function pedir_input(valido_desde : char, valido_hasta : char): char;
-    var
-    begin
-        repeat
-            pedir_input := readkey;
-        until ((valido_desde <= pedir_input) and (pedir_input <= valido_hasta));
-    end;
+        // retorna una opción
+        function crear_opcion(mensaje : string; indice : byte): t_opcion;
+        begin
+            crear_opcion.mensaje := mensaje;
+            crear_opcion.indice := indice;
+            crear_opcion.anterior := nil;
+            crear_opcion.siguiente := nil;
+        end;
 
-    // TODO: hacerlo más lindo.
-    function menu_principal(): char;
-    begin
-        writeln('Seleccione una opción para continuar:');
-        writeln();
+        // añade una opción al menú.
+        procedure agregar_opcion(var menu : t_menu; mensaje : string);
+        var
+            puntero_auxiliar : t_puntero_opcion;
+        begin
+            
+            menu.tam := menu.tam + 1;
 
-        writeln('1 - Contribuyentes');
-        writeln('2 - Terrenos');
-        writeln('3 - Listados y estadísticas');
-        writeln();
-        writeln('4 - Salir')
+            new(puntero_auxiliar);
+            puntero_auxiliar^ := crear_opcion(mensaje, menu.tam);
 
-        menu_principal = pedir_input('1', '4');
-    end;
+            puntero_auxiliar^.anterior := menu.ultima;
 
-    // TODO: hacerlo más lindo.
-    function submenu_ambc(submenu_nombre : string): char;
-    begin
-        writeln('Usted se encuentra en el menú de ', submenu_nombre, ':');
-        writeln();
+            if menu.cabecera = nil then
+            begin
+                menu.cabecera := puntero_auxiliar;
+                menu.seleccionada := menu.cabecera;
+            end;
 
-        writeln('1 - Agregar');
-        writeln('2 - Borrar');
-        writeln('3 - Modificar');
-        writeln('4 - Consultar');
-        writeln();
-        writeln('5 - Regresar');
+            if menu.ultima <> nil then
+                menu.ultima^.siguiente := puntero_auxiliar;
 
-        submenu_ambc = pedir_input('1', '5');
-    end;
-    
-    // TODO: hacerlo más lindo.
-    function submenu_listados_estadisticas(): char;
-    begin
-        writeln('Usted se encuentra en el menú de listados y estadísticas:');
-        writeln();
+            menu.ultima := puntero_auxiliar;
+        end;
 
-        writeln('1 - Lista de contribuyentes y sus propiedades');
-        writeln('2 - Lista de inscripciones por año');
-        writeln('3 - Lista de terrenos por zona');
-        writeln('4 - Estadísticas');
-        writeln();
-        writeln('5 - Regresar');
+        // Espera a que el usuario elija una opción válida, y la retorna como una string de 3 letras.
+        // Teclas que retorna: arriba, abajo, izquierda, derecha, enter, escape.
+        function leer_opcion(): string;
+        var
+            boton_presionado : byte;
+        begin
+            boton_presionado := 0;
 
-        submenu_listados_estadisticas = pedir_input('1', '5');
-    end;
+            // Espera a que se presione una tecla válida
+            while (boton_presionado <> 13) and (boton_presionado <> 27) and
+                  (boton_presionado <> 72) and (boton_presionado <> 80) do
+            begin
+                boton_presionado := ord(readkey);
+            end;
+
+            case boton_presionado of
+                13: leer_opcion := 'enter';
+                27: leer_opcion := 'escape';
+                72: leer_opcion := 'arriba';
+                80: leer_opcion := 'abajo';
+            end;
+        end;
+
+        procedure opcion_siguiente(var menu : t_menu);
+        begin
+            if menu.seleccionada^.siguiente <> nil then
+                menu.seleccionada := menu.seleccionada^.siguiente;
+        end;
+
+        procedure opcion_anterior(var menu : t_menu);
+        begin
+            if menu.seleccionada^.anterior <> nil then
+                menu.seleccionada := menu.seleccionada^.anterior;
+        end;
+
+        procedure inicio_menu(var menu : t_menu);
+        begin
+            menu.actual := menu.cabecera;
+        end;
+
+        // Escribe el menú con una interfaz bonita.
+        procedure mostrar_menu(menu : t_menu);
+        begin
+            inicio_menu(menu);
+
+            writeln(menu.mensaje_superior);
+
+            while menu.actual <> nil do
+            begin
+                if menu.actual^.indice = menu.seleccionada^.indice then
+                    writeln('>', menu.actual^.mensaje)
+                else
+                    writeln(' ',menu.actual^.mensaje);
+
+                menu.actual := menu.actual^.siguiente;
+            end;
+        end;
+
+        // Espera a que el usuario seleccione una opción
+        // luego la retorna.
+        // Escape siempre retorna 0;
+        function seleccion_menu(menu : t_menu) : byte;
+        var
+            opt : string;
+        begin
+            opt := '';
+
+            // en caso de escape, es 0 por predeterminado.
+            seleccion_menu := 0;
+
+            while (opt <> 'enter') and (opt <> 'escape') do
+            begin
+                mostrar_menu(menu);
+
+                opt : leer_opcion();
+
+                if opt = 'abajo' then
+                    opcion_siguiente(menu_nuevo);
+                
+                if opt = 'arriba' then
+                    opcion_anterior(menu_nuevo);
+                
+                clrscr;
+            end;
+
+            // si se usó enter, retorna el índice correspondiente
+            if opt = 'enter' then
+                seleccion_menu := menu.seleccionada^.indice;
+        end;
 
 end.
