@@ -57,7 +57,7 @@ begin
     arbol_terrenos_nro_contribuyente := arbol_ordenado_por_nro_contribuyente(archivo_terrenos, cantidad_terrenos(archivo_contador));
     arbol_terrenos_fecha_inscripcion := arbol_ordenado_por_fecha_inscripcion(archivo_terrenos, cantidad_terrenos(archivo_contador));
     arbol_terrenos_nro_plano := arbol_ordenado_por_nro_plano(archivo_terrenos, cantidad_terrenos(archivo_contador));
-    lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
+    //lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
     
 
     // Añadir los correspondientes terrenos a cada contribuyente del árbol.

@@ -108,20 +108,24 @@ begin
     begin
         // Obtenemos el terreno a dar de baja.
         terreno_baja := leer_terreno(archivo, pos);
-        // Buscamos los árboles.
+        {// Buscamos los árboles.
         arbol_nro_contribuyente_baja := buscar_por_clave(arbol_nro_contribuyente, terreno_baja.nro_contribuyente);
         arbol_fecha_baja := buscar_por_clave(arbol_fecha, terreno_baja.fecha_inscripcion);
         arbol_nro_plano_baja := buscar_por_clave(arbol_nro_plano, terreno_baja.nro_plano);
         // Borramos los árboles.
         borrar_raiz(arbol_nro_contribuyente_baja);
         borrar_raiz(arbol_fecha_baja);
-        borrar_raiz(arbol_nro_plano_baja);
+        borrar_raiz(arbol_nro_plano_baja);}
         // Obtenemos el último terreno del archivo.
         ultimo_terreno := leer_terreno(archivo, cantidad_terrenos(archivo_contador));
         // Sobrescribimos el terreno a borrar por el último terreno.
         escribir_terreno(archivo, ultimo_terreno, pos);
         // Disminuímos el tamaño del archivo contador de terrenos.
         restar_terreno(archivo_contador);
+        // Creamos los nuevos árboles.
+        arbol_nro_contribuyente := arbol_ordenado_por_nro_contribuyente(archivo, cantidad_terrenos(archivo_contador));
+        arbol_fecha := arbol_ordenado_por_fecha_inscripcion(archivo, cantidad_terrenos(archivo_contador));
+        arbol_nro_plano := arbol_ordenado_por_nro_plano(archivo, cantidad_terrenos(archivo_contador));
         // Creamos una nueva lista.
         lista_terrenos := lista_terrenos_desde_archivo(archivo,cantidad_terrenos(archivo_contador));
         Writeln('Terreno dado de baja con éxito');
@@ -169,21 +173,25 @@ begin
           // Obtenemos el terreno a modificar.
           terreno_modificado := leer_terreno(archivo, pos);
           // Buscamos los árboles.
-          arbol_nro_contribuyente_mod := buscar_por_clave(arbol_nro_contribuyente, terreno_modificado.nro_contribuyente);
+          {arbol_nro_contribuyente_mod := buscar_por_clave(arbol_nro_contribuyente, terreno_modificado.nro_contribuyente);
           arbol_fecha_mod := buscar_por_clave(arbol_fecha, terreno_modificado.fecha_inscripcion);
           arbol_nro_plano_mod := buscar_por_clave(arbol_nro_plano, terreno_modificado.nro_plano);
           // Borramos los árboles.
           borrar_raiz(arbol_nro_contribuyente_mod);
           borrar_raiz(arbol_fecha_mod);
-          borrar_raiz(arbol_nro_plano_mod);
+          borrar_raiz(arbol_nro_plano_mod);}
           // Modificamos el terreno.
           modificar_terreno(terreno_modificado, archivo, arbol_nro_plano);
           // Guardamos el terreno modificado en el archivo.
           escribir_terreno(archivo, terreno_modificado, pos);
-          // Agregamos el terreno a los árboles.
+          {// Agregamos el terreno a los árboles.
           sumar_por_nro_contribuyente(arbol_nro_contribuyente, archivo, pos);
           sumar_por_fecha_inscripcion(arbol_fecha, archivo, pos);
-          sumar_por_nro_plano(arbol_nro_plano, archivo, pos); 
+          sumar_por_nro_plano(arbol_nro_plano, archivo, pos); }
+          // Creamos los nuevos árboles.
+          arbol_nro_contribuyente := arbol_ordenado_por_nro_contribuyente(archivo, cantidad_terrenos(archivo_contador));
+          arbol_fecha := arbol_ordenado_por_fecha_inscripcion(archivo, cantidad_terrenos(archivo_contador));
+          arbol_nro_plano := arbol_ordenado_por_nro_plano(archivo, cantidad_terrenos(archivo_contador));
           // Creamos una nueva lista.
           lista_terrenos := lista_terrenos_desde_archivo(archivo,cantidad_terrenos(archivo_contador));
           Writeln('Terreno modificado con éxito');
