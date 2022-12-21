@@ -64,6 +64,8 @@ begin
     arbol_nro_contribuyente := arbol_ordenado_por_nro_contribuyente(archivo, cantidad_terrenos(archivo_contador));
     arbol_fecha := arbol_ordenado_por_fecha_inscripcion(archivo, cantidad_terrenos(archivo_contador));
     arbol_nro_plano := arbol_ordenado_por_nro_plano(archivo, cantidad_terrenos(archivo_contador));
+    // Creamos la lista
+    lista_terrenos := lista_terrenos_desde_archivo(archivo,cantidad_terrenos(archivo_contador));
     Writeln('Terreno dado de alta con éxito');
     Readkey;
     end;
