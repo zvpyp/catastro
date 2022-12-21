@@ -76,45 +76,41 @@ begin
                 opcion_submenu := menu_ABMC('alta');
 
                 case opcion_submenu of
-                1:  begin   //Alta de contribuyentes.
-                        alta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni, archivo_contador);
-                    end;
-                2:  begin   //Alta de terrenos.
-                        alta_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
-                    end;
+                1:  //Alta de contribuyentes.
+                    alta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni, archivo_contador);
+
+                2:  //Alta de terrenos.
+                    alta_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
+
         // Opción de baja.
         2:  repeat
 
                 opcion_submenu := menu_ABMC('baja');
 
                 case opcion_submenu of
-                1:  begin   //Baja de contribuyentes.
-                        baja_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
-                        
-                    end;
-                2:  begin   //Baja de terrenos.
-                        baja_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
-                        
-                    end;
+                1:  //Baja de contribuyentes.
+                    baja_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
+
+                2:  //Baja de terrenos.
+                    baja_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
+
         // Opción de modificación.
         3:  repeat
 
                 opcion_submenu := menu_ABMC('modificación');
 
                 case opcion_submenu of
-                1:  begin   //Modificación de contribuyentes.
-                       mod_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
-                    end;
-                2:  begin   //Modificación de terrenos.
-                       mod_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
-                        
-                    end;
+                1:  //Modificación de contribuyentes.
+                    mod_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
+
+                2:  //Modificación de terrenos.
+                    mod_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -124,13 +120,11 @@ begin
                 opcion_submenu := menu_ABMC('consulta');
 
                 case opcion_submenu of
-                1:  begin   //Consulta de contribuyentes.
-                        consulta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
-                    end;
-                2:  begin   //Consulta de terrenos.
-                        consulta_terreno(archivo_terrenos, arbol_terrenos_nro_plano);
-                        
-                    end;
+                1:  //Consulta de contribuyentes.
+                    consulta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
+
+                2:  //Consulta de terrenos.
+                    consulta_terreno(archivo_terrenos, arbol_terrenos_nro_plano);
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
