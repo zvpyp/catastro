@@ -29,6 +29,7 @@ Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes;
                              var arbol_dni : t_arbol);
 
 Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes;
+                            var archivo_contador : t_archivo_contador;
                             var arbol_nro : t_arbol;
                             var arbol_nombre : t_arbol;
                             var arbol_dni : t_arbol);
@@ -49,18 +50,17 @@ contribuyente_nuevo : t_contribuyente;
 indice : cardinal;
 begin
     indice := cantidad_contribuyentes(archivo_contador) + 1;
-    crear_contribuyente(archivo_contribuyentes, arbol_nro, contribuyente_nuevo);
-
+    crear_contribuyente(archivo_contribuyentes, archivo_contador, arbol_nro, contribuyente_nuevo);
     if (contribuyente_nuevo.numero <> '') then
     begin
       // Guarda el contribuyente en el archivo.
       escribir_contribuyente(archivo_contribuyentes, contribuyente_nuevo, indice);
-      // Modifica todos los árboles.
-      sumar_por_nro(arbol_nro, archivo_contribuyentes, indice);
-      sumar_por_nombre(arbol_nombre, archivo_contribuyentes, indice);
-      sumar_por_dni(arbol_dni, archivo_contribuyentes, indice);
       // Aumenta la cantidad de contribuyentes.
       contar_contribuyente(archivo_contador);
+      // Modifica todos los árboles.
+      arbol_nro := arbol_ordenado_por_nro(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
+      arbol_nombre := arbol_ordenado_por_nombres(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
+      arbol_dni := arbol_ordenado_por_dni(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
     end;
 end;
 
@@ -118,6 +118,7 @@ begin
 end;
 
 Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes;
+                            var archivo_contador : t_archivo_contador;
                             var arbol_nro : t_arbol;
                             var arbol_nombre : t_arbol;
                             var arbol_dni : t_arbol);
@@ -153,7 +154,7 @@ begin
     begin
       // Obtenemos el contribuyente viejo, sin modificar.
       contribuyente_modificado := leer_contribuyente(archivo, pos);
-      // Buscamos las claves.
+      {// Buscamos las claves.
       clave_nombre := contribuyente_modificado.apellido + ' ' + contribuyente_modificado.nombre;
       clave_dni := contribuyente_modificado.dni;
       // Buscamos los árboles.
@@ -162,19 +163,23 @@ begin
       // Borramos los árboles.
       borrar_raiz(arbol_nro_mod);
       borrar_raiz(arbol_nombre_mod);
-      borrar_raiz(arbol_dni_mod);
+      borrar_raiz(arbol_dni_mod);}
       // Modificamos el contribuyente.
       modificar_contribuyente(contribuyente_modificado, archivo, arbol_nro);
       // Guardamos el contribuente.
       escribir_contribuyente(archivo, contribuyente_modificado, pos);
-      // Obtenemos las nuevas claves.
+      {// Obtenemos las nuevas claves.
       nro_contribuyente_modificado := contribuyente_modificado.numero;
       clave_nombre := contribuyente_modificado.apellido + ' ' + contribuyente_modificado.nombre;
       clave_dni := contribuyente_modificado.dni;
       // Añadimos las nuevas claves a los árboles.
       sumar_por_nro(arbol_nro, archivo, pos);
       sumar_por_nombre(arbol_nombre, archivo, pos);
-      sumar_por_dni(arbol_dni, archivo, pos);
+      sumar_por_dni(arbol_dni, archivo, pos);}
+      // Creamos los nuevos árboles.
+      arbol_nro := arbol_ordenado_por_nro(archivo, cantidad_contribuyentes(archivo_contador));
+      arbol_nombre := arbol_ordenado_por_nombres(archivo, cantidad_contribuyentes(archivo_contador));
+      arbol_dni := arbol_ordenado_por_dni(archivo, cantidad_contribuyentes(archivo_contador));
     end;
 
 end;

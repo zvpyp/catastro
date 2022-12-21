@@ -186,6 +186,10 @@ implementation
         primer_contribuyente : t_contribuyente;
         nombre_apellido_primero : string;
     begin
+        // si no hay contribuyentes, crea un árbol completamente vacío.
+
+        arbol_ordenado_por_nombres := crear_arbol(0, '0', false, '0');
+
         // Creamos el árbol con el primer índice.
         if  cantidad_contribuyentes > 0 then
         begin
@@ -212,6 +216,9 @@ implementation
         indice_actual : cardinal;
         primer_contribuyente : t_contribuyente;
     begin
+        // si no hay contribuyentes, crea un árbol completamente vacío.
+        arbol_ordenado_por_dni := crear_arbol(0, '0', false, '0');
+
         if  cantidad_contribuyentes > 0 then
         begin
             // Creamos el árbol con el primer índice.

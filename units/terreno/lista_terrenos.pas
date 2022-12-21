@@ -156,13 +156,15 @@ implementation
         i : cardinal;
     begin
         crear_lista_terrenos(lista_terrenos_desde_archivo);
+        if cantidad_terrenos > 0 then
+         begin
+            for i := 1 to cantidad_terrenos do
+            begin
+                terreno_actual := leer_terreno(archivo, i);
 
-        for i := 1 to cantidad_terrenos do
-        begin
-            terreno_actual := leer_terreno(archivo, i);
-
-            enlistar_terreno(lista_terrenos_desde_archivo, terreno_actual);
-        end;
+                enlistar_terreno(lista_terrenos_desde_archivo, terreno_actual);
+            end;
+         end;
     end;
 
     function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
