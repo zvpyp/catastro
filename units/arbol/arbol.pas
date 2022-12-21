@@ -41,8 +41,8 @@ interface
     // Retorna el índice del elemento buscado, según su clave.
     function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
 
-    // Borra la raiz del árbol que se le pase.
-    procedure borrar_raiz(var arbol : t_arbol);
+    // Borra la raiz del puntero del árbol que se le pase.
+    procedure borrar_raiz(var arbol : t_puntero_arbol);
 
 {--------------------------------}
 
@@ -86,48 +86,63 @@ implementation
         tiene_hijo_der := (arbol.sd <> nil);
     end;
 
-    function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
+    function buscar_por_clave(arbol : t_puntero_arbol; clave : string): t_puntero_arbol;
     begin
-        buscar_por_clave := crear_arbol(0,'',false, '');
+        buscar_por_clave := nil;
 
-        if arbol.clave = clave then
+        if arbol^.clave = clave then
             buscar_por_clave := arbol
         else
         begin
-            if (clave < arbol.clave) and (tiene_hijo_izq(arbol)) then
-                buscar_por_clave := buscar_por_clave(arbol.si^, clave)
+            if (clave < arbol^.clave) and (tiene_hijo_izq(arbol^)) then
+                buscar_por_clave := buscar_por_clave(arbol^.si, clave)
             else
-            if tiene_hijo_der(arbol) then
-                buscar_por_clave := buscar_por_clave(arbol.sd^, clave);
+            if tiene_hijo_der(arbol^) then
+                buscar_por_clave := buscar_por_clave(arbol^.sd, clave);
         end;
     end;
 
-    procedure borrar_raiz(var arbol : t_arbol);
+    procedure borrar_raiz(var arbol : t_puntero_arbol);
     var
         izq_auxiliar : t_puntero_arbol;
         der_auxiliar : t_puntero_arbol;
         arbol_actual : t_puntero_arbol;
     begin
-        izq_auxiliar := arbol.si;
-        der_auxiliar := arbol.sd;
+        izq_auxiliar := arbol^.si;
+        der_auxiliar := arbol^.sd;
 
-        arbol.indice := izq_auxiliar^.indice;
-        arbol.clave := izq_auxiliar^.clave;
-        arbol.estado := izq_auxiliar^.estado;
-        arbol.si := izq_auxiliar^.si;
-        arbol.sd := izq_auxiliar^.sd;
-
-        arbol_actual := arbol.sd;
-
-        while (arbol_actual^.sd <> nil) do
+        // Caso que tenga hijo izquierdo
+        if tiene_hijo_izq(arbol^) then
         begin
-            arbol_actual := arbol_actual^.sd;
+            arbol := izq_auxiliar;
+
+            arbol_actual := arbol^.sd;
+
+            while (arbol_actual^.sd <> nil) do
+            begin
+                arbol_actual := arbol_actual^.sd;
+            end;
+
+            arbol_actual := der_auxiliar;
+        end
+        else
+        begin
+            // Caso en que solo tenga hijos derechos.
+            if tiene_hijo_der(arbol) then
+            begin
+                arbol.indice := der_auxiliar^.indice;
+                arbol.clave := der_auxiliar^.clave;
+                arbol.estado := der_auxiliar^.estado;
+                arbol.si := der_auxiliar^.si;
+                arbol.sd := der_auxiliar^.sd;
+
+                dispose(der_auxiliar);
+            end
+            // Caso que sea una hoja.
+            else
+                dispose(arbol);
         end;
 
-        arbol_actual := der_auxiliar;
-
-        dispose(der_auxiliar);
-        dispose(izq_auxiliar);
     end;
 
 end.

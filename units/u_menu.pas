@@ -41,6 +41,12 @@ interface
     function menu_listados(): byte;
 
     function menu_estadisticas(): byte;
+
+    // Opciones de consulta por DNI o por nombre y apellido.
+    function menu_consulta(): byte;
+
+    // Utilizado en el menú de consulta. Aparece si el contribuyente buscado no existe.
+    function menu_contribuyente_inexistente(): byte;
 {--------------------------------}
 
 implementation
@@ -155,6 +161,8 @@ implementation
         var
             opt : string;
         begin
+            clrscr;
+
             opt := '';
 
             // en caso de escape, es 0 por predeterminado.
@@ -270,6 +278,27 @@ implementation
             agregar_opcion(menu, 'Volver');                     // 10
 
             menu_modificar_contribuyente := seleccion_menu(menu);
+        end;
+
+        function menu_consulta(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('¿Cómo desea realizar la consulta?');
+            agregar_opcion(menu, 'Por nombre completo');        // 1
+            agregar_opcion(menu, 'Por DNI');                    // 2
+            agregar_opcion(menu, 'Volver');                     // 3
+
+            menu_consulta := seleccion_menu(menu);
+        end;
+
+        function menu_contribuyente_inexistente(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('No existe ningún usuario con este número de contribuyente. ¿Qué desea hacer?');
+            agregar_opcion(menu, 'Ingresar otro número de contribuyente');  // 1
+            agregar_opcion(menu, 'Volver a la pantalla anterior');          // 2
         end;
 
 end.

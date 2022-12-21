@@ -12,6 +12,7 @@ Uses contribuyente in 'units/contribuyente/contribuyente.pas',
      contador_datos in 'units/varios/contador_datos.pas',
      arbol in 'units/arbol/arbol.pas',
      arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas',
+     u_menu in 'units/u_menu.pas',
      crt, sysutils;
 
 // Pasar archivo de contribuyentes y arbol ordenado por nro de contribuyente, nombre y dni.
@@ -134,23 +135,21 @@ begin
         Writeln('El valor ingresado no es un número o supera los 15 caracteres, ingréselo nuevamente por favor');
         Readln(nro_contribuyente_modificado);
     end;
+
   arbol_nro_mod := buscar_por_clave(arbol_nro, nro_contribuyente_modificado);
   pos := arbol_nro_mod.indice;
   // Buscamos si el numero existe ya en el archivo.
-  While (pos = 0) and (tcl <> -1) do
+  While (pos = 0) and (tcl <> 2) and (tcl <> 0) do
     begin
-      Writeln('No existe ningún usuario con este número de contribuyente, que desea hacer?');
-      Writeln('1. Ingresar otro número de contribuyente');
-      Writeln('2. Regresar a la pantalla anterior');
-      Readln(tcl);
-      Case tcl of
-        1: Readln(nro_contribuyente_modificado);
-        2: tcl := -1;
-      end;
+
+      tcl := menu_contribuyente_inexistente();
+
+      if tcl = 1 then
+        Readln(nro_contribuyente_modificado);
       arbol_nro_mod := buscar_por_clave(arbol_nro, nro_contribuyente_modificado);
       pos := arbol_nro_mod.indice;
     end;
-  if tcl <> -1 then
+  if (tcl <> 0) and (tcl <> 2) then // 0 es salir por escape, 2 es salir por opción "volver"
     begin
       // Obtenemos el contribuyente viejo, sin modificar.
       contribuyente_modificado := leer_contribuyente(archivo, pos);
@@ -191,10 +190,7 @@ var
   arbol_pos : t_arbol;
   pos, tcl : int16;
 begin
-  Writeln('Cómo desea realizar la consulta?');
-  Writeln('1. Por nombre completo');
-  Writeln('2. Por DNI');
-  Readln(tcl);
+  tcl := menu_consulta;
   Case tcl of
     1:
     begin
@@ -214,8 +210,11 @@ begin
         pos := arbol_pos.indice;
     end;
   end;
-  contribuyente_consultado := leer_contribuyente(archivo, pos);
-  consultar_contribuyente(contribuyente_consultado);
+  if (tcl <> 3) and (tcl <> 0) then
+  begin
+    contribuyente_consultado := leer_contribuyente(archivo, pos);
+    consultar_contribuyente(contribuyente_consultado);
+  end;
 end;
 
 end.

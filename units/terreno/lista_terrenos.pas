@@ -9,7 +9,7 @@ unit lista_terrenos;
 interface
 
     uses terreno in 'units/terreno/terreno.pas',
-         compara_fechas in 'units/varios/compara_fechas.pas';
+         compara_fechas in './units/varios/compara_fechas.pas';
 
     type
 

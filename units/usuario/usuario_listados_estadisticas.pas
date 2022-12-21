@@ -16,7 +16,7 @@ uses
     arbol in 'units/arbol/arbol.pas',
     terreno in 'units/terreno/terreno.pas',
     arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas',
-    validacion_entradas in 'units/varios/validacion_entradas.pas',
+    validacion_entradas in './units/varios/validacion_entradas.pas',
     crt;
 
 {-----------------Listados-----------------}
