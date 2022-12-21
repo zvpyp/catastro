@@ -81,7 +81,7 @@ begin
         end;
       3:
       begin
-        Writeln('Fecha de inscripción (dd/mm/aaaa):'); // Cambiar es_fecha_valida pq acepta aaaa/mm/dd
+        Writeln('Fecha de inscripción (aaaa-mm-dd):');
         Readln(fecha_inscripcion);
         While (not es_fecha_valida(fecha_inscripcion)) do
           begin
@@ -162,18 +162,9 @@ avaluo, superficie, porc_zona, porc_edif, valor_m2 : real;
 zona, tipo_edificacion : 1..5;
 begin
 valor_m2 := 12308.6;
-  While ((tcl <> 0) and (tcl < 8)) do
-  begin
-      Writeln('¿Qué desea modificar?')
-      Writeln('0. Cancelar');
-      Writeln('1. Número de contribuyente');
-      Writeln('2. Número de plano');
-      Writeln('3. Fecha de inscripción');
-      Writeln('4. Domicilio parcelario');
-      Writeln('5. Superficie');
-      Writeln('6. Zona');
-      Writeln('7. Tipo de edificación');
-      Readln(tcl);
+  repeat
+    tcl := menu_modificar_terreno();
+
     Case tcl of
         1:
         begin
@@ -186,95 +177,94 @@ valor_m2 := 12308.6;
             end;
             terreno.nro_contribuyente := nro_contribuyente;
         end;
-            2:
-            begin
-                Writeln('Número de plano:');
-                Readln(nro_plano);
-                While ((not limite_caracteres(nro_plano,15)) or (not string_numerica(nro_plano))) do
-                begin
-                    Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
-                    Readln(nro_plano);
-                end; // Verificar que el numero de plano sea único.
+          2:
+          begin
+              Writeln('Número de plano:');
+              Readln(nro_plano);
+              While ((not limite_caracteres(nro_plano,15)) or (not string_numerica(nro_plano))) do
+              begin
+                  Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
+                  Readln(nro_plano);
+              end; // Verificar que el numero de plano sea único.
+                  arbol_pos := buscar_por_clave(arbol, nro_plano);
+                  pos := arbol_pos.indice;
+                While pos = 0 then
+                  begin
+                    Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
+                    Writeln('1. Ingresar otro numero de plano');
+                    Writeln('2. Regresar a la pantalla anterior');
+                    Readln(tcl);
+                    Case tcl of
+                    1: Readln(nro_plano);
+                    2: tcl := 0;
+                    end;
                     arbol_pos := buscar_por_clave(arbol, nro_plano);
                     pos := arbol_pos.indice;
-                  While pos = 0 then
-                    begin
-                      Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
-                      Writeln('1. Ingresar otro numero de plano');
-                      Writeln('2. Regresar a la pantalla anterior');
-                      Readln(tcl);
-                      Case tcl of
-                      1: Readln(nro_plano);
-                      2: tcl := 0;
-                      end;
-                      arbol_pos := buscar_por_clave(arbol, nro_plano);
-                      pos := arbol_pos.indice;
-                    end;
                   end;
-                terreno.nro_plano := nro_plano;
-            end;
-            3:
-            begin
-                Writeln('Fecha de inscripción (dd/mm/aaaa):'); // Cambiar es_fecha_valida pq acepta aaaa/mm/dd
-                Readln(fecha_inscripcion);
-                While (not es_fecha_valida(fecha_inscripcion)) do
-                begin
-                    Writeln('El valor ingresado no cumple con el formato, recuerde que debe ser dd/mm/aaaa, por ejemplo: 23/07/2020');
-                    Readln(fecha_inscripcion);
                 end;
-                terreno.fecha_inscripcion := fecha_inscripcion;
-            end;
-            4:
-            begin
-                Writeln('Domicilio parcelario:');
-                Readln(domicilio_parcelario);
-                While (not limite_caracteres(domicilio_parcelario,30)) do
-                begin
-                    Writeln('El valor ingresado supera los 30 caracteres, ingréselo nuevamente por favor');
-                    Readln(domicilio_parcelario);
-                end;
-                terreno.domicilio_parcelario := domicilio_parcelario;
-            end;
-            5:
-            begin
-                Writeln('Superficie (en m2): ');
-                Readln(superficie);
-                // Verificar que sea un número
+              terreno.nro_plano := nro_plano;
+          end;
+          3:
+          begin
+              Writeln('Fecha de inscripción (aaaa-mm-dd):');
+              Readln(fecha_inscripcion);
+              While (not es_fecha_valida(fecha_inscripcion)) do
+              begin
+                  Writeln('El valor ingresado no cumple con el formato, recuerde que debe ser dd/mm/aaaa, por ejemplo: 23/07/2020');
+                  Readln(fecha_inscripcion);
+              end;
+              terreno.fecha_inscripcion := fecha_inscripcion;
+          end;
+          4:
+          begin
+              Writeln('Domicilio parcelario:');
+              Readln(domicilio_parcelario);
+              While (not limite_caracteres(domicilio_parcelario,30)) do
+              begin
+                  Writeln('El valor ingresado supera los 30 caracteres, ingréselo nuevamente por favor');
+                  Readln(domicilio_parcelario);
+              end;
+              terreno.domicilio_parcelario := domicilio_parcelario;
+          end;
+          5:
+          begin
+              Writeln('Superficie (en m2): ');
+              Readln(superficie);
+              // Verificar que sea un número
 
-                terreno.superficie := superficie;
-            end;
-            6:
-            begin
-                Writeln('Zona (1 a 5): ');
-                Readln(zona);
-                // Verificar que sea un nro entero del 1 al 5
-            end;
-            7:
-            begin
-                Writeln('Tipo de edificación (1 a 5): ');
-                Readln(tipo_edificacion);
-                // Verificar que sea un nro entero del 1 al 5
-            end;
-        end;
-        begin
-            case terreno.zona of
-                1: porc_zona := 1.5;
-                2: porc_zona := 1.1;
-                3: porc_zona := 0.7;
-                4: porc_zona := 0.4;
-                5: porc_zona := 0.1;
-            end;
-            case terreno.tipo_edificacion of
-                1: porc_edif := 1.7;
-                2: porc_edif := 1.3;
-                3: porc_edif := 1.1;
-                4: porc_edif := 0.8;
-                5: porc_edif := 0.5;
-            end;
-            terreno.avaluo := (valor_m2 * superficie * porc_zona * porc_edif);
-        end;
-        end;
+              terreno.superficie := superficie;
+          end;
+          6:
+          begin
+              Writeln('Zona (1 a 5): ');
+              Readln(zona);
+              // Verificar que sea un nro entero del 1 al 5
+          end;
+          7:
+          begin
+              Writeln('Tipo de edificación (1 a 5): ');
+              Readln(tipo_edificacion);
+              // Verificar que sea un nro entero del 1 al 5
+          end;
     end;
+    begin
+        case terreno.zona of
+            1: porc_zona := 1.5;
+            2: porc_zona := 1.1;
+            3: porc_zona := 0.7;
+            4: porc_zona := 0.4;
+            5: porc_zona := 0.1;
+        end;
+        case terreno.tipo_edificacion of
+            1: porc_edif := 1.7;
+            2: porc_edif := 1.3;
+            3: porc_edif := 1.1;
+            4: porc_edif := 0.8;
+            5: porc_edif := 0.5;
+        end;
+        terreno.avaluo := (valor_m2 * superficie * porc_zona * porc_edif);
+    end;
+  until ((tcl = 0) or (tcl = 8)); // Opciones de salir según menu_modificar_terreno
 end;
 
 Procedure consultar_terreno(terreno : t_terreno); // Acomodar para terrenos

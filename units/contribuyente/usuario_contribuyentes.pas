@@ -13,6 +13,7 @@ interface
     uses contribuyente in 'units/contribuyente/contribuyente.pas',
          validacion_entradas in 'units/varios/validacion_entradas.pas',
          arbol in 'units/arbol/arbol.pas',
+         u_menu in 'units/u_menu.pas',
          crt, sysutils;
 
 // Crea un contribuyente, si el nro de contribuyente proporcionado ya se encuentra en el archivo te da la opción de
@@ -120,7 +121,7 @@ begin
       end;
       7:
       begin
-        Writeln('Fecha de nacimiento (dd/mm/aaaa):'); // Cambiar es_fecha_valida pq acepta aaaa/mm/dd
+        Writeln('Fecha de nacimiento (aaaa-mm-dd):');
         Readln(fecha_nac);
         While (not es_fecha_valida(fecha_nac)) do
           begin
@@ -177,21 +178,8 @@ tcl, pos : int16;
 modif : string;
 arbol_pos : t_arbol;
 begin
-  tcl := -1;
-  While tcl <> 0 do
-    begin
-      Writeln('¿Qué desea modificar?');
-      Writeln('0. Cancelar');
-      Writeln('1. Número de contribuyente');
-      Writeln('2. Apellido');
-      Writeln('3. Nombre');
-      Writeln('4. Dirección');
-      Writeln('5. Ciudad');
-      Writeln('6. DNI');
-      Writeln('7. Fecha de nacimiento');
-      Writeln('8. Teléfono');
-      Writeln('9. Email');
-      Readln(tcl);
+    repeat
+      tcl := menu_modificar_contribuyente();
       Case tcl of
         1:
         begin
@@ -278,7 +266,7 @@ begin
         end;
         7:
         begin
-          Writeln('Fecha de nacimiento (dd/mm/aaaa):'); // Cambiar es_fecha_valida pq acepta aaaa/mm/dd
+          Writeln('Fecha de nacimiento (aaaa-mm-dd):');
           Readln(modif);
           While (not es_fecha_valida(modif)) do
             begin
@@ -310,7 +298,7 @@ begin
           contribuyente.email := modif;
         end;
       end;
-    end;
+    until ((tcl = 0) or (tcl = 10)); // Opciones de salir según menu_modificar_contribuyente
 end;
 
 Procedure consultar_contribuyente(var contribuyente : t_contribuyente);

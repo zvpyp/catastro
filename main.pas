@@ -22,6 +22,9 @@ var
     arbol_terrenos_nro_plano : t_arbol;
     lista_terrenos_fecha : t_lista_terrenos;
 
+    opcion_principal : byte; // utilizado para la interacción con el menú principal.
+    opcion_submenu : byte; // utilizado para los submenús del menú principal.
+
 { VARIABLES DE TESTEO }
 
 
@@ -46,11 +49,121 @@ begin
     if cantidad_contribuyentes(archivo_contador) > 0 then
         agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
 
-    menu_principal();
 
-    { LINEAS DE TESTEO }
+    { Loop principal}
 
-    { <<<<<<<<>>>>>>>> }
+    repeat
+        opcion_principal := menu_principal();
+
+        case opcion_principal of
+
+        // Opción de alta.
+        1:  repeat
+
+                opcion_submenu := menu_ABMC('alta');
+
+                case opcion_submenu of
+                1:  begin
+                        //TODO: Alta de contribuyentes.
+                    end;
+                2:  begin
+                        //TODO: Alta de terrenos.
+                    end;
+                end;
+            
+            until ((opcion_submenu = 0) or (opcion_submenu = 3));
+        // Opción de baja.
+        2:  repeat
+
+                opcion_submenu := menu_ABMC('baja');
+
+                case opcion_submenu of
+                1:  begin
+                        //TODO: Baja de contribuyentes.
+                    end;
+                2:  begin
+                        //TODO: Baja de terrenos.
+                    end;
+                end;
+            
+            until ((opcion_submenu = 0) or (opcion_submenu = 3));
+        // Opción de modificación.
+        3:  repeat
+
+                opcion_submenu := menu_ABMC('modificación');
+
+                case opcion_submenu of
+                1:  begin
+                        //TODO: Modificación de contribuyentes.
+                    end;
+                2:  begin
+                        //TODO: Modificación de terrenos.
+                    end;
+                end;
+            
+            until ((opcion_submenu = 0) or (opcion_submenu = 3));
+        // Opción de consulta.
+        4:  repeat
+
+                opcion_submenu := menu_ABMC('consulta');
+
+                case opcion_submenu of
+                1:  begin
+                        //TODO: Consulta de contribuyentes.
+                    end;
+                2:  begin
+                        //TODO: Consulta de terrenos.
+                    end;
+                end;
+            
+            until ((opcion_submenu = 0) or (opcion_submenu = 3));
+        // Opción de listados.
+        5:  repeat
+            
+                opcion_submenu := menu_listados();
+
+                case opcion_submenu of
+                1:  begin
+                        //TODO: Lista de contribuyentes con sus propiedades valorizadas.
+                    end;
+                2:  begin
+                        //TODO: Lista de inscripciones en un año.
+                    end;
+                3:  begin
+                        //TODO: Lista de terrenos por zona.
+                    end;
+                4:  begin
+                        //TODO: Imprimir comprobante.
+                    end;
+                end;
+
+            until ((opcion_submenu = 0) or (opcion_submenu = 5));
+        // Opción de estadísticas.
+        6:  repeat
+
+                opcion_submenu := menu_estadisticas();
+
+                case opcion_submenu of
+                1:  begin
+                        //TODO: Mostrar cantidad de inscripciones entre dos fechas.
+                    end;
+                2:  begin
+                        //TODO: Mostrar porcentaje de propietarios con más de una propiedad.
+                    end;
+                3:  begin
+                        //TODO: Mostrar porcentaje de propietarios por tipo de edificación.
+                    end;
+                4:  begin
+                        //TODO: Mostrar cantidad de propietarios dados de baja.
+                    end;
+                end;
+            
+            until ((opcion_submenu = 0) or (opcion_submenu = 5));
+        end;
+        
+    until ((opcion_principal = 0) or (opcion_principal = 7)); // 0 es salir por escape, 7 es por selección
+
+    clrscr;
 
     // Cerrar los archivos utilizados.
     cerrar_archivo_contribuyentes(archivo_contribuyentes);
