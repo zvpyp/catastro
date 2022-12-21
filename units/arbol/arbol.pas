@@ -41,9 +41,8 @@ interface
     // Retorna el índice del elemento buscado, según su clave.
     function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
 
-    // Borra la raiz del puntero del árbol que se le pase.
-    // Obsoleto.
-    procedure borrar_raiz(var arbol : t_puntero_arbol);
+    // TODO: Obsoleto. Borrar cuando se modifique contribuyentes ABMC.
+    procedure borrar_raiz(var arbol : t_arbol);
 
 {--------------------------------}
 
@@ -102,48 +101,28 @@ implementation
         end;
     end;
 
-    // Obsoleto.
-    procedure borrar_raiz(var arbol : t_puntero_arbol);
+    // Obsoleto. No funciona.
+    procedure borrar_raiz(var arbol : t_arbol);
     var
         izq_auxiliar : t_puntero_arbol;
         der_auxiliar : t_puntero_arbol;
         arbol_actual : t_puntero_arbol;
     begin
-        izq_auxiliar := arbol^.si;
-        der_auxiliar := arbol^.sd;
-
-        // Caso que tenga hijo izquierdo
-        if tiene_hijo_izq(arbol^) then
+        izq_auxiliar := arbol.si;
+        der_auxiliar := arbol.sd;
+        arbol.indice := izq_auxiliar^.indice;
+        arbol.clave := izq_auxiliar^.clave;
+        arbol.estado := izq_auxiliar^.estado;
+        arbol.si := izq_auxiliar^.si;
+        arbol.sd := izq_auxiliar^.sd;
+        arbol_actual := arbol.sd;
+        while (arbol_actual^.sd <> nil) do
         begin
-            arbol := izq_auxiliar;
-
-            arbol_actual := arbol^.sd;
-
-            while (arbol_actual^.sd <> nil) do
-            begin
-                arbol_actual := arbol_actual^.sd;
-            end;
-
-            arbol_actual := der_auxiliar;
-        end
-        else
-        begin
-            // Caso en que solo tenga hijos derechos.
-            if tiene_hijo_der(arbol) then
-            begin
-                arbol.indice := der_auxiliar^.indice;
-                arbol.clave := der_auxiliar^.clave;
-                arbol.estado := der_auxiliar^.estado;
-                arbol.si := der_auxiliar^.si;
-                arbol.sd := der_auxiliar^.sd;
-
-                dispose(der_auxiliar);
-            end
-            // Caso que sea una hoja.
-            else
-                dispose(arbol);
+            arbol_actual := arbol_actual^.sd;
         end;
-
+        arbol_actual := der_auxiliar;
+        dispose(der_auxiliar);
+        dispose(izq_auxiliar);
     end;
 
 end.

@@ -14,6 +14,7 @@ uses arbol in 'units/arbol/arbol.pas',
      usuario_listados_estadisticas in 'units/usuario/usuario_listados_estadisticas.pas',
      contribuyentes_ABMC in 'units/contribuyente/contribuyentes_ABMC.pas',
      terrenos_ABMC in 'units/terreno/terrenos_ABMC.pas',
+     comprobante in 'units/usuario/comprobante.pas',
      crt;
 
 var
@@ -145,9 +146,9 @@ begin
                         vector_terrenos_por_zona := generar_vector_por_zona(lista_terrenos_fecha);
                         listado_zona_terrenos(vector_terrenos_por_zona);
                     end;
-                4:  begin
-                        //TODO: Imprimir comprobante.
-                    end;
+
+                4:  // Imprimir comprobante.
+                    consultar_comprobante(lista_terrenos_fecha);
                 end;
 
             until ((opcion_submenu = 0) or (opcion_submenu = 5));
@@ -157,17 +158,18 @@ begin
                 opcion_submenu := menu_estadisticas();
 
                 case opcion_submenu of
-                1:  begin
-                        //TODO: Mostrar cantidad de inscripciones entre dos fechas.
-                    end;
-                2:  begin
-                        //TODO: Mostrar porcentaje de propietarios con más de una propiedad.
-                    end;
-                3:  begin
-                        //TODO: Mostrar porcentaje de propietarios por tipo de edificación.
-                    end;
+                1:  // Mostrar cantidad de inscripciones entre dos fechas.
+                    cantidad_inscripciones_entre_fechas(lista_terrenos_fecha);
+
+                2:  // Mostrar porcentaje de propietarios con más de una propiedad.
+                    porc_propietarios_mult_propiedades(arbol_contribuyentes_nombre, archivo_contador);
+
+                3:  // Mostrar porcentaje de propietarios por tipo de edificación.
+                    porc_por_tipo_edif(lista_terrenos_fecha, archivo_contador);
+
                 4:  begin
-                        //TODO: Mostrar cantidad de propietarios dados de baja.
+                        // Mostrar cantidad de propietarios dados de baja.
+                        propietarios_dados_de_baja(archivo_contribuyentes, archivo_contador);
                     end;
                 end;
             

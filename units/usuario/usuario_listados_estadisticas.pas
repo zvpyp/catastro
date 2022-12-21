@@ -39,10 +39,10 @@ Procedure propietarios_dados_de_baja(var archivo_contribuyentes : t_archivo_cont
 
 // Muestra la cantidad de terrenos por tipo de edificación y
 // su % respecto al total.
-Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var archivo_contador : t_archivo_contador);
+Procedure porc_por_tipo_edif(lista_terrenos : t_lista_terrenos; var archivo_contador : t_archivo_contador);
 
 // Escribe en pantalla cuántas inscripciones se dieron entre dos fechas. El orden no importa B).
-procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, fecha2 : string);
+procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos);
 
 // Recibe árbol con las listas cargadas y el archivo contador. Muestra en pantalla el porcentaje de propietarios con más de una propiedad.
 procedure porc_propietarios_mult_propiedades(var arbol : t_arbol; var archivo_contador : t_archivo_contador);
@@ -157,9 +157,9 @@ begin
         readkey;
 end;
 
-Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var archivo_contador : t_archivo_contador);
+Procedure porc_por_tipo_edif(lista_terrenos : t_lista_terrenos; var archivo_contador : t_archivo_contador);
 var
-    i, fin, edif_1, edif_2, edif_3, edif_4, edif_5 : cardinal;
+    fin, edif_1, edif_2, edif_3, edif_4, edif_5 : cardinal;
     terreno_aux : t_terreno; 
 begin
     edif_1 := 0;
@@ -169,48 +169,67 @@ begin
     edif_5 := 0;
     fin := cantidad_terrenos(archivo_contador);
     if fin > 0 then
+    begin
+        primero_lista_terrenos(lista_terrenos);
+
+        while not fin_lista_terrenos(lista_terrenos) do
         begin
-        for i := 1 to fin do
-            begin
-                terreno_aux := leer_terreno(archivo_terrenos, i);
-                Case terreno_aux.tipo_edificacion of
-                    1: edif_1 := edif_1 + 1;
-                    2: edif_2 := edif_2 + 1;
-                    3: edif_3 := edif_3 + 1;
-                    4: edif_4 := edif_4 + 1;
-                    5: edif_5 := edif_5 + 1;
-                end;
-            Writeln('Existen ',fin,' terrenos, de los cuales hay:');
-            if edif_1 <> 0 then
-                    Writeln('Tipo de edificación 1: ',edif_1, ' (',(edif_1/fin*100):2:0,'%)')
-            else Writeln('No existe ningún terreno con tipo de edificación 1.');
+            recuperar_lista_terrenos(lista_terrenos, terreno_aux);
 
-            if edif_2 <> 0 then
-                    Writeln('Tipo de edificación 2: ',edif_2, ' (',(edif_2/fin*100):2:0,'%)')
-            else Writeln('No existe ningún terreno con tipo de edificación 2.');
-
-            if edif_3 <> 0 then
-                    Writeln('Tipo de edificación 3: ',edif_3, ' (',(edif_3/fin*100):2:0,'%)')
-            else Writeln('No existe ningún terreno con tipo de edificación 3.');
-
-            if edif_4 <> 0 then
-                Writeln('Tipo de edificación 4: ',edif_4, ' (',(edif_4/fin*100):2:0,'%)')
-            else Writeln('No existe ningún terreno con tipo de edificación 4.');
-
-            if edif_5 <> 0 then
-                Writeln('Tipo de edificación 5: ',edif_5, ' (',(edif_5/fin*100):2:0,'%)')
-            else Writeln('No existe ningún terreno con tipo de edificación 5.');
+            case terreno_aux.tipo_edificacion of
+                1: edif_1 := edif_1 + 1;
+                2: edif_2 := edif_2 + 1;
+                3: edif_3 := edif_3 + 1;
+                4: edif_4 := edif_4 + 1;
+                5: edif_5 := edif_5 + 1;
             end;
-        end else 
-        begin
-            Writeln('Archivo de terrenos vacío.');
-            Writeln('Por favor, introduzca algunos terrenos antes de usar esta funcionalidad');
-            readkey;
+            siguiente_lista_terrenos(lista_terrenos);
         end;
+
+        Writeln('Existen ', fin,' terrenos, de los cuales hay:');
+        if edif_1 <> 0 then
+                Writeln('Tipo de edificación 1: ',edif_1, ' (',(edif_1/fin*100):2:0,'%)')
+        else Writeln('No existe ningún terreno con tipo de edificación 1.');
+
+        if edif_2 <> 0 then
+                Writeln('Tipo de edificación 2: ',edif_2, ' (',(edif_2/fin*100):2:0,'%)')
+        else Writeln('No existe ningún terreno con tipo de edificación 2.');
+
+        if edif_3 <> 0 then
+                Writeln('Tipo de edificación 3: ',edif_3, ' (',(edif_3/fin*100):2:0,'%)')
+        else Writeln('No existe ningún terreno con tipo de edificación 3.');
+
+        if edif_4 <> 0 then
+            Writeln('Tipo de edificación 4: ',edif_4, ' (',(edif_4/fin*100):2:0,'%)')
+        else Writeln('No existe ningún terreno con tipo de edificación 4.');
+
+        if edif_5 <> 0 then
+            Writeln('Tipo de edificación 5: ',edif_5, ' (',(edif_5/fin*100):2:0,'%)')
+        else Writeln('No existe ningún terreno con tipo de edificación 5.');
+    end
+    else 
+    begin
+        Writeln('Archivo de terrenos vacío.');
+        Writeln('Por favor, introduzca algunos terrenos antes de usar esta funcionalidad');
+        readkey;
+    end;
 end;
 
-procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, fecha2 : string);
+// No retorna hasta que se ingrese una fecha válida.
+function pedir_fecha(): string;
+begin
+    repeat
+        writeln('Por favor, ingrese una fecha válida');
+
+        readln(pedir_fecha);
+        clrscr;
+        
+    until (es_fecha_valida(pedir_fecha));
+end;
+
+procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos);
 var
+    fecha1, fecha2 : string;
     aux_fecha : string;
     terreno_actual : t_terreno;
     contador : cardinal;
@@ -218,6 +237,12 @@ begin
     primero_lista_terrenos(lista);
 
     contador := 0;
+
+    // pide las fechas
+    writeln('Ingrese la primera fecha:');
+    fecha1 := pedir_fecha();
+    writeln('Ingrese la segunda fecha:');
+    fecha2 := pedir_fecha();
 
     if fecha_es_mayor(fecha2, fecha1) then
     begin
