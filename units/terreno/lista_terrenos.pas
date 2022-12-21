@@ -156,7 +156,6 @@ implementation
         i : cardinal;
     begin
         crear_lista_terrenos(lista_terrenos_desde_archivo);
-
         if cantidad_terrenos > 0 then
         begin
             for i := 1 to cantidad_terrenos do
