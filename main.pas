@@ -43,9 +43,10 @@ begin
     lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
 
     // Añadir los correspondientes terrenos a cada contribuyente del árbol.
-    agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
+    if cantidad_contribuyentes(archivo_contador) > 0 then
+        agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
 
-    //menu_principal();
+    menu_principal();
 
     { LINEAS DE TESTEO }
 
