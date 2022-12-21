@@ -29,6 +29,7 @@ Procedure baja_contribuyente(var archivo : t_archivo_contribuyentes;
                              var arbol_dni : t_arbol);
 
 Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes;
+                            var archivo_contador : t_archivo_contador;
                             var arbol_nro : t_arbol;
                             var arbol_nombre : t_arbol;
                             var arbol_dni : t_arbol);

@@ -108,7 +108,7 @@ begin
 
                 case opcion_submenu of
                 1:  //Modificación de contribuyentes.
-                    mod_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
+                    mod_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
 
                 2:  //Modificación de terrenos.
                     mod_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
