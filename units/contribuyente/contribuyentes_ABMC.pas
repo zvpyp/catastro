@@ -33,8 +33,8 @@ Procedure mod_contribuyente(var archivo : t_archivo_contribuyentes;
                             var arbol_dni : t_arbol);
 
 Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes;
-                                 var arbol_nro : t_arbol;
-                                 var arbol_nombre : t_arbol);
+                                 var arbol_nombre : t_arbol;
+                                 var arbol_dni : t_arbol);
 
 Implementation
 
@@ -53,13 +53,13 @@ begin
     if (contribuyente_nuevo.numero <> '') then
     begin
       // Guarda el contribuyente en el archivo.
-      escribir_contribuyente(archivo, contribuyente_nuevo, indice);
+      escribir_contribuyente(archivo_contribuyentes, contribuyente_nuevo, indice);
       // Modifica todos los árboles.
-      sumar_por_nro(arbol_nro, archivo, indice);
-      sumar_por_nombre(arbol_nombre, archivo, indice);
-      sumar_por_dni(arbol_dni, archivo, indice);
+      sumar_por_nro(arbol_nro, archivo_contribuyentes, indice);
+      sumar_por_nombre(arbol_nombre, archivo_contribuyentes, indice);
+      sumar_por_dni(arbol_dni, archivo_contribuyentes, indice);
       // Aumenta la cantidad de contribuyentes.
-      contar_contribuyente(archivo);
+      contar_contribuyente(archivo_contador);
     end;
 end;
 
@@ -165,7 +165,7 @@ begin
       borrar_raiz(arbol_nombre_mod);
       borrar_raiz(arbol_dni_mod);
       // Modificamos el contribuyente.
-      modificar_contribuyente(contribuyente_modificado, archivo, arbol);
+      modificar_contribuyente(contribuyente_modificado, archivo, arbol_nro);
       // Guardamos el contribuente.
       escribir_contribuyente(archivo, contribuyente_modificado, pos);
       // Obtenemos las nuevas claves.
@@ -182,18 +182,18 @@ end;
 
 // Pasar arbol ordenado
 Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes;
-                                 var arbol_nro : t_arbol;
-                                 var arbol_nombre : t_arbol);
+                                 var arbol_nombre : t_arbol;
+                                 var arbol_dni : t_arbol);
 var
   contribuyente_consultado : t_contribuyente;
-  nro_contribuyente_consultado, nombre_contribuyente_consultado : string;
+  dni_consultado, nombre_contribuyente_consultado : string;
   nombre_consultado, apellido_consultado : string;
   arbol_pos : t_arbol;
   pos, tcl : int16;
 begin
   Writeln('Cómo desea realizar la consulta?');
   Writeln('1. Por nombre completo');
-  Writeln('2. Por número de contribuyente');
+  Writeln('2. Por DNI');
   Readln(tcl);
   Case tcl of
     1:
@@ -208,9 +208,9 @@ begin
     end;
     2:
     begin
-        Writeln('Nro de contribuyente: ');
-        Readln(nro_contribuyente_consultado);
-        arbol_pos := buscar_por_clave(arbol_numero, nro_contribuyente_consultado);
+        Writeln('DNI: ');
+        Readln(dni_consultado);
+        arbol_pos := buscar_por_clave(arbol_dni, dni_consultado);
         pos := arbol_pos.indice;
     end;
   end;

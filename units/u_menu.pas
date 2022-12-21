@@ -200,7 +200,7 @@ implementation
         var
             menu : t_menu;
         begin
-            menu := crear_menu('Usted se encuentra en el menú de ', nombre_menu, '. Elija una opción:');
+            menu := crear_menu('Usted se encuentra en el menú de '+ nombre_menu +'. Elija una opción:');
             agregar_opcion(menu, 'Contribuyente');      // 1
             agregar_opcion(menu, 'Terreno');            // 2
             agregar_opcion(menu, 'Volver');             // 3

@@ -9,6 +9,8 @@ Uses terreno in 'units/terreno/terreno.pas',
      validacion_entradas in 'units/varios/validacion_entradas.pas',
      contador_datos in 'units/varios/contador_datos.pas',
      arbol in 'units/arbol/arbol.pas',
+     arbol_terrenos in 'units/arbol/arbol_terrenos.pas',
+     lista_terrenos in 'units/terreno/lista_terrenos.pas',
      crt, sysutils;
 
 // Pasar archivo de terrenos, archivo contador, arbol por nro de contribuyente, fecha, nro de plano y lista de terrenos.
@@ -27,8 +29,9 @@ Procedure baja_terreno(var archivo : t_archivo_terrenos;
                        var arbol_nro_plano : t_arbol;
                        var lista_terrenos : t_lista_terrenos);
 
-// Pasar archivo de terrenos, arbol por nro de contribuyente, fecha, nro de plano y lista de terrenos.
+// Pasar archivo de terrenos, archivo contador, arbol por nro de contribuyente, fecha, nro de plano y lista de terrenos.
 Procedure mod_terreno(var archivo : t_archivo_terrenos;
+                      var archivo_contador : t_archivo_contador;
                       var arbol_nro_contribuyente : t_arbol;
                       var arbol_fecha : t_arbol;
                       var arbol_nro_plano : t_arbol;
@@ -52,9 +55,9 @@ Procedure alta_terreno(var archivo : t_archivo_terrenos;
   indice : cardinal;
 begin
     indice := cantidad_terrenos(archivo_contador) + 1;
-    crear_terreno(archivo, arbol, terreno_nuevo);
+    crear_terreno(archivo, arbol_nro_plano, terreno_nuevo);
 
-    if (terreno_nuevo.numero <> '') then
+    if (terreno_nuevo.nro_contribuyente <> '') then
     begin
     escribir_terreno(archivo, terreno_nuevo, indice);
     sumar_por_nro_contribuyente(arbol_nro_contribuyente, archivo, indice);
@@ -89,7 +92,7 @@ begin
   pos := arbol_nro_plano_baja.indice;
   While (pos <> 0) and (tcl <> -1) do
     begin
-        Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
+        Writeln('Ya existe un terreno con este numero de plano, que desea hacer?');
         Writeln('1. Ingresar otro numero de plano');
         Writeln('2. Regresar a la pantalla anterior');
         Readln(tcl);
@@ -97,8 +100,8 @@ begin
             1: Readln(nro_plano_baja);
             2: tcl := -1;
         end;
-            arbol_pos := buscar_por_clave(arbol, nro_plano_baja);
-            pos := arbol_pos.indice;
+            arbol_nro_plano_baja := buscar_por_clave(arbol_nro_plano, nro_plano_baja);
+            pos := arbol_nro_plano_baja.indice;
     end;
   if tcl <> -1 then
     begin
@@ -126,14 +129,15 @@ begin
 end;
 
 Procedure mod_terreno(var archivo : t_archivo_terrenos;
+                      var archivo_contador : t_archivo_contador;
                       var arbol_nro_contribuyente : t_arbol;
                       var arbol_fecha : t_arbol;
                       var arbol_nro_plano : t_arbol;
                       var lista_terrenos : t_lista_terrenos);
 var
-  terreno_modificado : t_contribuyente;
+  terreno_modificado : t_terreno;
   nro_terreno_modificado : string;
-  arbol_nro_contribuyente_baja, arbol_fecha_baja, arbol_nro_plano_baja : t_arbol;
+  arbol_nro_contribuyente_mod, arbol_fecha_mod, arbol_nro_plano_mod : t_arbol;
   pos, tcl : int16;
 begin
   Writeln('Introduzca el número de plano del terreno que desea modificar: ');
@@ -172,7 +176,7 @@ begin
           borrar_raiz(arbol_fecha_mod);
           borrar_raiz(arbol_nro_plano_mod);
           // Modificamos el terreno.
-          modificar_terreno(terreno_modificado, archivo, arbol);
+          modificar_terreno(terreno_modificado, archivo, arbol_nro_plano);
           // Guardamos el terreno modificado en el archivo.
           escribir_terreno(archivo, terreno_modificado, pos);
           // Agregamos el terreno a los árboles.
@@ -194,7 +198,7 @@ var
   arbol_pos : t_arbol;
   pos, tcl : int16;
 begin
-  Writeln('Número de plano: ')
+  Writeln('Número de plano: ');
   Readln(nro_plano_consultado);
   arbol_pos := buscar_por_clave(arbol, nro_plano_consultado);
   pos := arbol_pos.indice;

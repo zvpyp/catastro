@@ -1,7 +1,4 @@
 // TODO:
-// Falta crear función para comparar fechas y hacer
-// el procedimiento arbol_ordenado_por_fecha_inscripcion
-
 // Revisar arbol_ordenado_por_zona q no se si lo termine o no
 
 
