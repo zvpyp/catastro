@@ -50,18 +50,17 @@ contribuyente_nuevo : t_contribuyente;
 indice : cardinal;
 begin
     indice := cantidad_contribuyentes(archivo_contador) + 1;
-    crear_contribuyente(archivo_contribuyentes, arbol_nro, contribuyente_nuevo);
-
+    crear_contribuyente(archivo_contribuyentes, archivo_contador, arbol_nro, contribuyente_nuevo);
     if (contribuyente_nuevo.numero <> '') then
     begin
       // Guarda el contribuyente en el archivo.
       escribir_contribuyente(archivo_contribuyentes, contribuyente_nuevo, indice);
-      // Modifica todos los árboles.
-      sumar_por_nro(arbol_nro, archivo_contribuyentes, indice);
-      sumar_por_nombre(arbol_nombre, archivo_contribuyentes, indice);
-      sumar_por_dni(arbol_dni, archivo_contribuyentes, indice);
       // Aumenta la cantidad de contribuyentes.
       contar_contribuyente(archivo_contador);
+      // Modifica todos los árboles.
+      arbol_nro := arbol_ordenado_por_nro(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
+      arbol_nombre := arbol_ordenado_por_nombres(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
+      arbol_dni := arbol_ordenado_por_dni(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
     end;
 end;
 

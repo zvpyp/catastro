@@ -60,11 +60,12 @@ begin
     if (terreno_nuevo.nro_contribuyente <> '') then
     begin
     escribir_terreno(archivo, terreno_nuevo, indice);
-    sumar_por_nro_contribuyente(arbol_nro_contribuyente, archivo, indice);
-    sumar_por_fecha_inscripcion(arbol_fecha, archivo, indice);
-    sumar_por_nro_plano(arbol_nro_plano, archivo, indice);
-    enlistar_terreno(lista_terrenos, terreno_nuevo);
+    contar_terreno(archivo_contador);
+    arbol_nro_contribuyente := arbol_ordenado_por_nro_contribuyente(archivo, cantidad_terrenos(archivo_contador));
+    arbol_fecha := arbol_ordenado_por_fecha_inscripcion(archivo, cantidad_terrenos(archivo_contador));
+    arbol_nro_plano := arbol_ordenado_por_nro_plano(archivo, cantidad_terrenos(archivo_contador));
     Writeln('Terreno dado de alta con éxito');
+    Readkey;
     end;
 end;
 
