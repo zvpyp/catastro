@@ -1,11 +1,15 @@
 program main;
 
 // Units utilizadas:
-uses contribuyente in 'units/contribuyente/contribuyente.pas',
+uses arbol in 'units/arbol/arbol.pas',
+     contribuyente in 'units/contribuyente/contribuyente.pas',
      terreno in 'units/terreno/terreno.pas',
      arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas',
      arbol_terrenos in 'units/arbol/arbol_terrenos.pas',
-     lista_terrenos in 'units/terreno/lista_terrenos.pas';
+     lista_terrenos in 'units/terreno/lista_terrenos.pas',
+     u_menu in 'units/u_menu.pas',
+     contador_datos in 'units/varios/contador_datos.pas',
+     crt;
 
 var
     archivo_contribuyentes : t_archivo_contribuyentes;
@@ -24,6 +28,8 @@ var
 { <<<<<<<<<->>>>>>>>> }
 
 begin
+    clrscr;
+    cursoroff;
     // Abrir archivos necesarios
     abrir_archivo_contribuyentes(archivo_contribuyentes);
     abrir_archivo_terrenos(archivo_terrenos);
@@ -34,11 +40,13 @@ begin
     arbol_contribuyentes_nombre := arbol_ordenado_por_nombres(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
 
     // Generar el árbol de terrenos y la lista de terrenos
-    arbol_terrenos_nro_plano := (archivo_terrenos, cantidad_terrenos(archivo_contador));
+    arbol_terrenos_nro_plano := arbol_ordenado_por_nro_plano(archivo_terrenos, cantidad_terrenos(archivo_contador));
     lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
 
     // Añadir los correspondientes terrenos a cada contribuyente del árbol.
     agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
+
+    menu_principal();
 
     { LINEAS DE TESTEO }
 

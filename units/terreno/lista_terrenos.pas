@@ -6,8 +6,9 @@ unit lista_terrenos;
 
 interface
 
-    uses terreno in './units/terreno/terreno.pas',
-         compara_fechas in './units/varios/compara_fechas.pas';
+    uses terreno in 'units/terreno/terreno.pas',
+    
+         compara_fechas in 'units/varios/compara_fechas.pas';
 
     type
 
@@ -57,7 +58,7 @@ implementation
 
     procedure siguiente_lista_terrenos(var lista : t_lista_terrenos);
     begin
-        lista.actual_terrenos := lista.actual^.siguiente;
+        lista.actual := lista.actual^.siguiente;
     end;
 
     procedure primero_lista_terrenos(var lista : t_lista_terrenos);
@@ -99,7 +100,7 @@ implementation
                   (fecha_es_mayor(terreno.fecha_inscripcion, lista.actual^.info.fecha_inscripcion)) do
             begin
                 anterior := lista.actual;
-                siguiente(lista);
+                siguiente_lista_terrenos(lista);
             end;
 
             puntero_nuevo^.siguiente := lista.actual;
@@ -129,10 +130,10 @@ implementation
             lista.actual := anterior^.siguiente;
 
             while (not(fin_lista_terrenos(lista))) and
-                  (fecha_es_mayor(terreno.fecha_inscripcion, lista.actual^.info.fecha_inscripcion)) do
+                  (buscado <> lista.actual^.info.nro_plano) do
             begin
                 anterior := lista.actual;
-                siguiente(lista);
+                siguiente_lista_terrenos(lista);
             end;
 
             if (lista.actual <> nil) then

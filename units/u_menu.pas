@@ -1,4 +1,4 @@
-unit menu;
+unit u_menu;
 
 { Unidad de menús y submenús. }
 
@@ -26,6 +26,8 @@ interface
             ultima : t_puntero_opcion;
             tam : byte;
         end;
+    
+    function menu_principal(): byte;
 
 {--------------------------------}
 
@@ -150,13 +152,13 @@ implementation
             begin
                 mostrar_menu(menu);
 
-                opt : leer_opcion();
+                opt := leer_opcion();
 
                 if opt = 'abajo' then
-                    opcion_siguiente(menu_nuevo);
+                    opcion_siguiente(menu);
                 
                 if opt = 'arriba' then
-                    opcion_anterior(menu_nuevo);
+                    opcion_anterior(menu);
                 
                 clrscr;
             end;
@@ -164,6 +166,21 @@ implementation
             // si se usó enter, retorna el índice correspondiente
             if opt = 'enter' then
                 seleccion_menu := menu.seleccionada^.indice;
+        end;
+
+        function menu_principal(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('Bienvenido a Catastro, del equipo 10 :)');
+            agregar_opcion(menu, 'Alta');                       // 1
+            agregar_opcion(menu, 'Baja');                       // 2
+            agregar_opcion(menu, 'Modificación');               // 3
+            agregar_opcion(menu, 'Consulta');                   // 4
+            agregar_opcion(menu, 'Listados y estadísticas');    // 5
+            agregar_opcion(menu, 'Salir');                      // 6
+
+            menu_principal := seleccion_menu(menu);
         end;
 
 end.

@@ -8,8 +8,8 @@ unit arbol_contribuyentes;
 
 interface
 
-    uses contribuyente in './units/contribuyente/contribuyente.pas',
-         arbol in 'units/arbol/arbol',
+    uses arbol in 'units/arbol/arbol',
+         contribuyente in './units/contribuyente/contribuyente.pas',
          terreno in 'units/terreno/terreno.pas',
          lista_terrenos in 'units/terreno/lista_terrenos.pas';
 
@@ -34,6 +34,7 @@ interface
     // el argumento "encontrado" debe pasarse como false.
     procedure agregar_terreno_a_contribuyente(var arbol_por_nombres : t_arbol;
                                               terreno : t_terreno;
+                                              var encontrado : boolean);
     
     // Agrega un nodo a un árbol ordenado por nombres.
     // Su raíz será la posición en el archivo dado.
@@ -266,10 +267,10 @@ implementation
             if not(encontrado) then
             begin
                 if tiene_hijo_izq(arbol_por_nombres) then
-                    agregar_terreno_a_contribuyente(arbol_ordenado_por_nombres.si^, terreno, encontrado);
+                    agregar_terreno_a_contribuyente(arbol_por_nombres.si^, terreno, encontrado);
 
                 if tiene_hijo_der(arbol_por_nombres) then
-                    agregar_terreno_a_contribuyente(arbol_ordenado_por_nombres.sd^, terreno, encontrado);
+                    agregar_terreno_a_contribuyente(arbol_por_nombres.sd^, terreno, encontrado);
             end;
         end;
         
@@ -301,18 +302,16 @@ implementation
 
     procedure agregar_listas_por_contribuyente(var arbol_por_nombres : t_arbol;
                                                lista_terrenos : t_lista_terrenos);
-    var
-        terreno_actual : t_terreno;
     begin
         if tiene_hijo_izq(arbol_por_nombres) then
-            agregar_listas_por_contribuyente(arbol_por_nombres.si^);
+            agregar_listas_por_contribuyente(arbol_por_nombres.si^, lista_terrenos);
         
         // con el nodo actual
 
         agregar_terrenos_a_contribuyente(arbol_por_nombres, lista_terrenos);
 
         if tiene_hijo_der(arbol_por_nombres) then
-            agregar_listas_por_contribuyente(arbol_por_nombres.sd^);
+            agregar_listas_por_contribuyente(arbol_por_nombres.sd^, lista_terrenos);
     end;
 
 end.

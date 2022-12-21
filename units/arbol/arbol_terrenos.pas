@@ -31,7 +31,7 @@ Function arbol_ordenado_por_nro_plano(Var archivo : t_archivo_terrenos;
 
 // Agrega un nodo a un arbol ordenado por nro de contribuyente.
 // Su raíz será la posición en el archivo dado.
-// El valor se determina según el nro de contributente del terreno dado.
+// El valor se determina según el nro de contribuyente del terreno dado.
 Procedure sumar_por_nro_contribuyente(Var arbol: t_arbol;
                                       Var archivo : t_archivo_terrenos;
                                           nuevo_terreno_indice : cardinal);
@@ -56,7 +56,7 @@ Implementation
 
 // Agrega un nodo a un arbol ordenado por nro de contribuyente.
 // Su raíz será la posición en el archivo dado.
-// El valor se determina según el nro de contributente del terreno dado.
+// El valor se determina según el nro de contribuyente del terreno dado.
 Procedure sumar_por_nro_contribuyente(Var arbol: t_arbol;
                            Var archivo : t_archivo_terrenos;
                            nuevo_terreno_indice : cardinal);
@@ -83,7 +83,7 @@ Begin
       If tiene_hijo_der(arbol) Then
         sumar_por_nro_contribuyente(arbol.sd^, archivo, nuevo_terreno_indice)
       Else
-        anidar_hijo_der(arbol, nuevo_terreno_indice, nro_contribuyente_nuevo);
+        anidar_hijo_der(arbol, nuevo_terreno_indice, nro_contribuyente_nuevo, true, nro_contribuyente_nuevo);
     End
     // Caso en que sea menor
   Else
@@ -94,7 +94,7 @@ Begin
       If tiene_hijo_izq(arbol) Then
         sumar_por_nro_contribuyente(arbol.si^, archivo, nuevo_terreno_indice)
       Else
-        anidar_hijo_izq(arbol, nuevo_terreno_indice, nro_contribuyente_nuevo);
+        anidar_hijo_izq(arbol, nuevo_terreno_indice, nro_contribuyente_nuevo, true, nro_contribuyente_nuevo);
     End;
 End;
 
@@ -113,7 +113,7 @@ Begin
   nro_contribuyente_primero := primer_terreno.nro_contribuyente;
 
   arbol_ordenado_por_nro_contribuyente := crear_arbol(indice_actual,
-                                nro_contribuyente_primero);
+                                nro_contribuyente_primero, true, nro_contribuyente_primero);
 
   For indice_actual := 2 To cantidad_terrenos Do
     Begin
@@ -151,7 +151,7 @@ Begin
       If tiene_hijo_der(arbol) Then
         sumar_por_fecha_inscripcion(arbol.sd^, archivo, nuevo_terreno_indice)
       Else
-        anidar_hijo_der(arbol, nuevo_terreno_indice, fecha_inscripcion_nuevo);
+        anidar_hijo_der(arbol, nuevo_terreno_indice, fecha_inscripcion_nuevo, true, '0');
     End
     // Caso en que sea menor
   Else
@@ -162,12 +162,12 @@ Begin
       If tiene_hijo_izq(arbol) Then
         sumar_por_fecha_inscripcion(arbol.si^, archivo, nuevo_terreno_indice)
       Else
-        anidar_hijo_izq(arbol, nuevo_terreno_indice, fecha_inscripcion_nuevo);
+        anidar_hijo_izq(arbol, nuevo_terreno_indice, fecha_inscripcion_nuevo, true, '0');
     End;
 End;
 
 Function arbol_ordenado_por_fecha_inscripcion(Var archivo : t_archivo_terrenos;
-                                              cantidad_terrenos : cardinal): t_arbol
+                                              cantidad_terrenos : cardinal): t_arbol;
 Var 
   indice_actual : cardinal;
   primer_terreno : t_terreno;
@@ -182,7 +182,7 @@ Begin
     fecha_inscripcion_primero := primer_terreno.fecha_inscripcion;
 
     arbol_ordenado_por_fecha_inscripcion := crear_arbol(indice_actual,
-                                  fecha_inscripcion_primero);
+                                  fecha_inscripcion_primero, true, '0');
   end;
 
   if cantidad_terrenos > 1 then
@@ -223,7 +223,7 @@ Begin
       If tiene_hijo_der(arbol) Then
         sumar_por_nro_plano(arbol.sd^, archivo, nuevo_terreno_indice)
       Else
-        anidar_hijo_der(arbol, nuevo_terreno_indice, nro_plano_nuevo);
+        anidar_hijo_der(arbol, nuevo_terreno_indice, nro_plano_nuevo, true, '0');
     End
     // Caso en que sea menor
   Else
@@ -234,7 +234,7 @@ Begin
       If tiene_hijo_izq(arbol) Then
         sumar_por_nro_plano(arbol.si^, archivo, nuevo_terreno_indice)
       Else
-        anidar_hijo_izq(arbol, nuevo_terreno_indice, nro_plano_nuevo);
+        anidar_hijo_izq(arbol, nuevo_terreno_indice, nro_plano_nuevo, true, '0');
     End;
 End;
 
@@ -256,7 +256,7 @@ Begin
     nro_plano_primero := primer_terreno.nro_plano;
 
     arbol_ordenado_por_nro_plano := crear_arbol(indice_actual,
-                                  nro_plano_primero);
+                                  nro_plano_primero, true, nro_plano_primero);
   end;
 
   if cantidad_terrenos > 1 then

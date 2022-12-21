@@ -6,6 +6,8 @@ unit arbol;
 
 interface
 
+    uses lista_terrenos in 'units/terreno/lista_terrenos.pas';
+
     type
     t_puntero_arbol = ^t_arbol; // No utilizar fuera de la unit.
 
@@ -20,13 +22,13 @@ interface
     end;
 
     // Retorna un arbol binario cuya raiz es el índice dado.
-    function crear_arbol(indice : cardinal; clave : string; estado : boolean): t_arbol;
+    function crear_arbol(indice : cardinal; clave : string; estado : boolean; nro_contribuyente : string): t_arbol;
 
     // Añade un hijo izquierdo a un nodo.
-    procedure anidar_hijo_izq(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean);
+    procedure anidar_hijo_izq(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean; nro_contribuyente : string);
 
     // Añade un hijo derecho a un nodo.
-    procedure anidar_hijo_der(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean);
+    procedure anidar_hijo_der(var arbol : t_arbol; indice : cardinal; clave : string; estado : boolean; nro_contribuyente : string);
 
     // Retorna verdadero si el nodo raíz posee hijo izquierdo.
     function tiene_hijo_izq(arbol : t_arbol): boolean;
@@ -84,17 +86,17 @@ implementation
 
     function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
     begin
-        buscar_por_clave := crear_arbol(0,'',false);
+        buscar_por_clave := crear_arbol(0,'',false, '');
 
         if arbol.clave = clave then
             buscar_por_clave := arbol
         else
         begin
             if (clave < arbol.clave) and (tiene_hijo_izq(arbol)) then
-                buscar_por_clave(arbol.si^, clave)
+                buscar_por_clave := buscar_por_clave(arbol.si^, clave)
             else
             if tiene_hijo_der(arbol) then
-                buscar_por_clave(arbol.sd^, clave);
+                buscar_por_clave := buscar_por_clave(arbol.sd^, clave);
         end;
     end;
 
