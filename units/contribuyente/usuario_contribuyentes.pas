@@ -196,7 +196,7 @@ begin
           pos := arbol_pos.indice;
         While pos = 0 do
           begin
-            Writeln('Ya existe un usuario con este numero de contribuyente, que desea hacer?');
+            Writeln('No existe un usuario con este numero de contribuyente, que desea hacer?');
             Writeln('1. Ingresar otro numero de contribuyente');
             Writeln('2. Regresar a la pantalla anterior');
             Readln(tcl);
@@ -207,7 +207,6 @@ begin
             arbol_pos := buscar_por_clave(arbol, modif);
             pos := arbol_pos.indice;
           end;
-          contribuyente.numero := modif;
         end;
         2:
         begin

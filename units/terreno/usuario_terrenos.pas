@@ -18,30 +18,31 @@ interface
     uses terreno in 'units/terreno/terreno.pas',
          validacion_entradas in 'units/varios/validacion_entradas.pas',
          arbol in 'units/arbol/arbol.pas',
+         u_menu in 'units/u_menu.pas',
          crt;
 
 // Crea un terreno.
-Procedure crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol; var nuevo_terreno : t_terreno);
+Procedure crear_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol; var nuevo_terreno : t_terreno);
 
-Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; arbol : t_arbol);
+Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; var arbol : t_arbol);
 
-Procedure consultar_terreno(var terreno : t_terreno; archivo : t_archivo_terrenos; arbol : t_arbol);
+Procedure consultar_terreno(var terreno : t_terreno);
 
 {--------------------------------}
 
 implementation
 
 // Pasar árbol ordenado por nro de plano y archivo de terrenos.
-Procedure crear_terreno(archivo : t_archivo_terrenos; arbol : t_arbol; var nuevo_terreno : t_terreno);
+Procedure crear_terreno(var archivo : t_archivo_terrenos; var arbol : t_arbol; var nuevo_terreno : t_terreno);
 var
-tcl, pos : int16;
-arbol_pos : t_arbol;
-nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario, superficie : string;
-avaluo, superficie, valor_m2, porc_zona, porc_edif : real;
-zona, tipo_edificacion : 1..5;
+  tcl, pos : int16;
+  arbol_pos : t_arbol;
+  nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario: string;
+  avaluo, superficie, valor_m2, porc_zona, porc_edif : real;
+  zona, tipo_edificacion : 1..5;
 begin
   valor_m2 := 12308.6;
-  tlc := 1;
+  tcl := 1;
   While ((tcl <> 0) and (tcl < 9)) do
   begin
     Case tcl of
@@ -69,7 +70,7 @@ begin
           pos := arbol_pos.indice;
         While (pos <> 0) and (tcl <> -1) do
           begin
-            Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
+            Writeln('Ya existe un terreno con este numero de plano, que desea hacer?');
             Writeln('1. Ingresar otro numero de plano');
             Writeln('2. Regresar a la pantalla anterior');
             Readln(tcl);
@@ -155,15 +156,15 @@ begin
     end;
 end;
 
-Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; arbol : t_arbol);
+Procedure modificar_terreno(var terreno : t_terreno; var archivo : t_archivo_terrenos; var arbol : t_arbol);
 var
-tcl, pos : byte;
-arbol_pos : t_arbol;
-nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario, superficie : string;
-avaluo, superficie, porc_zona, porc_edif, valor_m2 : real;
-zona, tipo_edificacion : 1..5;
+  tcl, pos : byte;
+  arbol_pos : t_arbol;
+  nro_contribuyente, nro_plano, fecha_inscripcion, domicilio_parcelario: string;
+  avaluo, superficie, porc_zona, porc_edif, valor_m2 : real;
+  zona, tipo_edificacion : 1..5;
 begin
-valor_m2 := 12308.6;
+  valor_m2 := 12308.6;
   repeat
     tcl := menu_modificar_terreno();
 
@@ -184,15 +185,15 @@ valor_m2 := 12308.6;
               Writeln('Número de plano:');
               Readln(nro_plano);
               While ((not limite_caracteres(nro_plano,15)) or (not string_numerica(nro_plano))) do
-              begin
+                begin
                   Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
                   Readln(nro_plano);
-              end; // Verificar que el numero de plano sea único.
-                  arbol_pos := buscar_por_clave(arbol, nro_plano);
-                  pos := arbol_pos.indice;
-                While pos = 0 then
+                end; // Verificar que el numero de plano sea único.
+              arbol_pos := buscar_por_clave(arbol, nro_plano);
+              pos := arbol_pos.indice;
+              While pos = 0 do
                   begin
-                    Writeln('Ya existe un terreno con este numero de plano, que desea hacer?')
+                    Writeln('Ya existe un terreno con este número de plano, que desea hacer?');
                     Writeln('1. Ingresar otro numero de plano');
                     Writeln('2. Regresar a la pantalla anterior');
                     Readln(tcl);
@@ -203,7 +204,6 @@ valor_m2 := 12308.6;
                     arbol_pos := buscar_por_clave(arbol, nro_plano);
                     pos := arbol_pos.indice;
                   end;
-                end;
               terreno.nro_plano := nro_plano;
           end;
           3:
@@ -212,7 +212,7 @@ valor_m2 := 12308.6;
               Readln(fecha_inscripcion);
               While (not es_fecha_valida(fecha_inscripcion)) do
               begin
-                  Writeln('El valor ingresado no cumple con el formato, recuerde que debe ser dd/mm/aaaa, por ejemplo: 23/07/2020');
+                  Writeln('El valor ingresado no cumple con el formato, recuerde que debe ser aaaa-mm-dd, por ejemplo: 2002-07-23');
                   Readln(fecha_inscripcion);
               end;
               terreno.fecha_inscripcion := fecha_inscripcion;
@@ -269,7 +269,7 @@ valor_m2 := 12308.6;
   until ((tcl = 0) or (tcl = 8)); // Opciones de salir según menu_modificar_terreno
 end;
 
-Procedure consultar_terreno(terreno : t_terreno); // Acomodar para terrenos
+Procedure consultar_terreno(var terreno : t_terreno);
 begin
       Writeln('Número de contribuyente: ',terreno.nro_contribuyente);
       Writeln('Número de plano: ',terreno.nro_plano);

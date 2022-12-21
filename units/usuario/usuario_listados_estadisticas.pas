@@ -15,7 +15,9 @@ uses
     lista_terrenos in 'units/varios/lista_terrenos.pas',
     arbol in 'units/arbol/arbol.pas',
     terreno in 'units/terreno/terreno.pas',
-    arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas';
+    arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas',
+    validacion_entradas in 'units/varios/validacion_entradas.pas',
+    crt;
 
 {-----------------Listados-----------------}
 
@@ -43,7 +45,7 @@ Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var arch
 procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, fecha2 : string);
 
 // Recibe árbol con las listas cargadas y el archivo contador. Muestra en pantalla el porcentaje de propietarios con más de una propiedad.
-procedure porc_propietarios_mult_propiedades(arbol : t_arbol; archivo_contador : t_archivo_contador);
+procedure porc_propietarios_mult_propiedades(var arbol : t_arbol; var archivo_contador : t_archivo_contador);
 
 {------------------------------------------}
 
@@ -76,7 +78,7 @@ end;
 procedure listado_zona_terrenos(terrenos_por_zona : t_vector_listas);
 var
     i : 1..5;
-    lista := lista_terrenos;
+    lista : t_lista_terrenos;
 begin
     for i := 1 to 5 do
     begin
@@ -141,7 +143,7 @@ var
     contribuyente_aux : t_contribuyente; 
 begin
     dados_de_baja := 0;
-    fin := cantidad_contribuyentes(t_archivo_contador);
+    fin := cantidad_contribuyentes(archivo_contador);
     if fin > 0 then
     begin
         for i := 1 to fin do
@@ -158,48 +160,53 @@ end;
 Procedure porc_por_tipo_edif(var archivo_terrenos : t_archivo_terrenos; var archivo_contador : t_archivo_contador);
 var
     i, fin, edif_1, edif_2, edif_3, edif_4, edif_5 : cardinal;
-    contribuyente_aux : t_contribuyente; 
+    terreno_aux : t_terreno; 
 begin
     edif_1 := 0;
     edif_2 := 0;
     edif_3 := 0;
     edif_4 := 0;
     edif_5 := 0;
-    fin := cantidad_contribuyentes(t_archivo_contador);
+    fin := cantidad_terrenos(archivo_contador);
     if fin > 0 then
-    begin
-    for i := 1 to fin do
         begin
-            contribuyente_aux := leer_contribuyente(archivo_terrenos, i);
-            Case contribuyente_aux.tipo_edificacion of
-                1: edif_1 := edif_1 + 1;
-                2: edif_2 := edif_2 + 1;
-                3: edif_3 := edif_3 + 1;
-                4: edif_4 := edif_4 + 1;
-                5: edif_5 := edif_5 + 1;
+        for i := 1 to fin do
+            begin
+                terreno_aux := leer_terreno(archivo_terrenos, i);
+                Case terreno_aux.tipo_edificacion of
+                    1: edif_1 := edif_1 + 1;
+                    2: edif_2 := edif_2 + 1;
+                    3: edif_3 := edif_3 + 1;
+                    4: edif_4 := edif_4 + 1;
+                    5: edif_5 := edif_5 + 1;
+                end;
+            Writeln('Existen ',fin,' terrenos, de los cuales hay:');
+            if edif_1 <> 0 then
+                    Writeln('Tipo de edificación 1: ',edif_1, ' (',(edif_1/fin*100):2:0,'%)')
+            else Writeln('No existe ningún terreno con tipo de edificación 1.');
+
+            if edif_2 <> 0 then
+                    Writeln('Tipo de edificación 2: ',edif_2, ' (',(edif_2/fin*100):2:0,'%)')
+            else Writeln('No existe ningún terreno con tipo de edificación 2.');
+
+            if edif_3 <> 0 then
+                    Writeln('Tipo de edificación 3: ',edif_3, ' (',(edif_3/fin*100):2:0,'%)')
+            else Writeln('No existe ningún terreno con tipo de edificación 3.');
+
+            if edif_4 <> 0 then
+                Writeln('Tipo de edificación 4: ',edif_4, ' (',(edif_4/fin*100):2:0,'%)')
+            else Writeln('No existe ningún terreno con tipo de edificación 4.');
+
+            if edif_5 <> 0 then
+                Writeln('Tipo de edificación 5: ',edif_5, ' (',(edif_5/fin*100):2:0,'%)')
+            else Writeln('No existe ningún terreno con tipo de edificación 5.');
             end;
-        Writeln('Existen ',fin,' terrenos, de los cuales hay:');
-        if edif_1 <> 0 then
-                Writeln('Tipo de edificación 1: ',edif_1, ' (',edif_1/fin*100,'%)')
-        else Writeln('No existe ningún terreno con tipo de edificación 1.');
-
-        if edif_2 <> 0 then
-                Writeln('Tipo de edificación 2: ',edif_2, ' (',edif_2/fin*100,'%)')
-        else Writeln('No existe ningún terreno con tipo de edificación 2.');
-
-        if edif_3 <> 0 then
-                Writeln('Tipo de edificación 3: ',edif_3, ' (',edif_3/fin*100,'%)')
-        else Writeln('No existe ningún terreno con tipo de edificación 3.');
-
-        if edif_4 <> 0 then
-            Writeln('Tipo de edificación 4: ',edif_4, ' (',edif_4/fin*100,'%)')
-        else Writeln('No existe ningún terreno con tipo de edificación 4.');
-
-        if edif_5 <> 0 then
-            Writeln('Tipo de edificación 5: ',edif_5, ' (',edif_5/fin*100,'%)')
-        else Writeln('No existe ningún terreno con tipo de edificación 5.');
+        end else 
+        begin
+            Writeln('Archivo de terrenos vacío.');
+            Writeln('Por favor, introduzca algunos terrenos antes de usar esta funcionalidad');
+            readkey;
         end;
-    end;    
 end;
 
 procedure cantidad_inscripciones_entre_fechas(lista : t_lista_terrenos; fecha1, fecha2 : string);
@@ -227,9 +234,7 @@ begin
         recuperar_lista_terrenos(lista, terreno_actual);
     end;
 
-    
-    
-    while fecha_es_mayor_igual(fecha2, terreno_actual.fecha_inscripcion)then
+    while fecha_es_mayor_igual(fecha2, terreno_actual.fecha_inscripcion) do
     begin
         contador := contador + 1;
         siguiente_lista_terrenos(lista);
@@ -241,7 +246,6 @@ begin
 end;
 
 function cant_propietarios_mult_propiedades(arbol : t_arbol): cardinal;
-var
 begin
     if arbol.lista.tam > 1 then 
         cant_propietarios_mult_propiedades := cant_propietarios_mult_propiedades + 1;
@@ -249,11 +253,11 @@ begin
     if tiene_hijo_izq(arbol) then
         cant_propietarios_mult_propiedades := cant_propietarios_mult_propiedades + cant_propietarios_mult_propiedades(arbol.si^);
 
-    if tiene_hizo_der(arbol) then
+    if tiene_hijo_der(arbol) then
         cant_propietarios_mult_propiedades := cant_propietarios_mult_propiedades + cant_propietarios_mult_propiedades(arbol.sd^);
 end;
 
-procedure porc_propietarios_mult_propiedades(arbol : t_arbol; archivo_contador : t_archivo_contador);
+procedure porc_propietarios_mult_propiedades(var arbol : t_arbol; var archivo_contador : t_archivo_contador);
 var
     total_propietarios, propietarios_mult : cardinal;
 begin
@@ -267,12 +271,5 @@ begin
     else Writeln('Ningún propietario tiene más de una propiedad');
     end;
 end;
-    // TODO:
-    // Hacer un recorrido preorden sobre el árbol potoca
-    // retornar la cantidad de propietarios con más de una propiedad.
-
-    // TODO: Hacer un procedimiento que llame a la función anterior
-    // Y luego calcule el porcentaje de propietarios con más de una propiedad sobre el total
-    // Para calcular el total, usar la lista de propiedaes (usando su .tam).
 
 end.
