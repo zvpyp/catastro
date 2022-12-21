@@ -106,18 +106,21 @@ Var
   nro_contribuyente_primero : string;
 Begin
   // Creamos el árbol con el primer índice.
-  indice_actual := 1;
-  seek(archivo, indice_actual);
-  read(archivo, primer_terreno);
-  nro_contribuyente_primero := primer_terreno.nro_contribuyente;
-
-  arbol_ordenado_por_nro_contribuyente := crear_arbol(indice_actual,
-                                nro_contribuyente_primero, true, nro_contribuyente_primero);
-
-  For indice_actual := 2 To cantidad_terrenos Do
-    Begin
-      sumar_por_nro_contribuyente(arbol_ordenado_por_nro_contribuyente, archivo, indice_actual);
-    End;
+  if cantidad_terrenos > 0 then
+    begin
+      indice_actual := 1;
+      seek(archivo, indice_actual);
+      read(archivo, primer_terreno);
+      nro_contribuyente_primero := primer_terreno.nro_contribuyente;
+      arbol_ordenado_por_nro_contribuyente := crear_arbol(indice_actual, nro_contribuyente_primero, true, nro_contribuyente_primero);
+    end;
+  if cantidad_terrenos > 1 then
+    begin
+      for indice_actual := 2 to cantidad_terrenos do
+        begin
+          sumar_por_nro_contribuyente(arbol_ordenado_por_nro_contribuyente, archivo, indice_actual);
+        end;
+    end;
 End;
 
 // Agrega un nodo a un arbol ordenado por fecha de inscripción.

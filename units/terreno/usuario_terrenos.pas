@@ -62,7 +62,7 @@ begin
         Readln(nro_plano);
         While ((not limite_caracteres(nro_plano,15)) or (not string_numerica(nro_plano))) do
           begin
-          Writeln('El valor ingresado supera los 15 caracteres, ingréselo nuevamente por favor');
+          Writeln('El valor ingresado supera los 15 caracteres o no es un número, ingréselo nuevamente por favor');
           Readln(nro_plano);
           end;
         // Buscamos si el numero existe ya en el archivo.
