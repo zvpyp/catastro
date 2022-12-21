@@ -86,6 +86,7 @@ implementation
         tiene_hijo_der := (arbol.sd <> nil);
     end;
 
+    // Deprecated
     function buscar_por_clave(arbol : t_puntero_arbol; clave : string): t_puntero_arbol;
     begin
         buscar_por_clave := nil;
@@ -102,6 +103,7 @@ implementation
         end;
     end;
 
+    // Deprecated
     procedure borrar_raiz(var arbol : t_puntero_arbol);
     var
         izq_auxiliar : t_puntero_arbol;

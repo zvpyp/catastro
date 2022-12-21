@@ -21,13 +21,13 @@ var
     archivo_terrenos : t_archivo_terrenos;
     archivo_contador : t_archivo_contador;
 
-    arbol_contribuyentes_nro : t_puntero_arbol;
-    arbol_contribuyentes_dni : t_puntero_arbol;
-    arbol_contribuyentes_nombre : t_puntero_arbol;
+    arbol_contribuyentes_nro : t_arbol;
+    arbol_contribuyentes_dni : t_arbol;
+    arbol_contribuyentes_nombre : t_arbol;
     
-    arbol_terrenos_nro_contribuyente : t_puntero_arbol;
-    arbol_terrenos_fecha_inscripcion : t_puntero_arbol;
-    arbol_terrenos_nro_plano : t_puntero_arbol;
+    arbol_terrenos_nro_contribuyente : t_arbol;
+    arbol_terrenos_fecha_inscripcion : t_arbol;
+    arbol_terrenos_nro_plano : t_arbol;
     lista_terrenos_fecha : t_lista_terrenos;
 
     vector_terrenos_por_zona : t_vector_listas; // Se genera cada vez que sea necesario.
@@ -48,19 +48,19 @@ begin
     abrir_archivo_contador(archivo_contador);
 
     // Generar árboles de contribuyentes
-    arbol_contribuyentes_nro^ := arbol_ordenado_por_nro(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
-    arbol_contribuyentes_dni^ := arbol_ordenado_por_dni(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
-    arbol_contribuyentes_nombre^ := arbol_ordenado_por_nombres(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
+    arbol_contribuyentes_nro := arbol_ordenado_por_nro(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
+    arbol_contribuyentes_dni := arbol_ordenado_por_dni(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
+    arbol_contribuyentes_nombre := arbol_ordenado_por_nombres(archivo_contribuyentes, cantidad_contribuyentes(archivo_contador));
 
     // Generar los árboles de terrenos y la lista de terrenos
-    arbol_terrenos_nro_contribuyente^ := arbol_ordenado_por_nro_contribuyente(archivo_terrenos, cantidad_terrenos(archivo_contador));
-    arbol_terrenos_fecha_inscripcion^ := arbol_ordenado_por_fecha_inscripcion(archivo_terrenos, cantidad_terrenos(archivo_contador));
-    arbol_terrenos_nro_plano^ := arbol_ordenado_por_nro_plano(archivo_terrenos, cantidad_terrenos(archivo_contador));
+    arbol_terrenos_nro_contribuyente := arbol_ordenado_por_nro_contribuyente(archivo_terrenos, cantidad_terrenos(archivo_contador));
+    arbol_terrenos_fecha_inscripcion := arbol_ordenado_por_fecha_inscripcion(archivo_terrenos, cantidad_terrenos(archivo_contador));
+    arbol_terrenos_nro_plano := arbol_ordenado_por_nro_plano(archivo_terrenos, cantidad_terrenos(archivo_contador));
     lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
 
     // Añadir los correspondientes terrenos a cada contribuyente del árbol.
     if cantidad_contribuyentes(archivo_contador) > 0 then
-        agregar_listas_por_contribuyente(arbol_contribuyentes_nombre^, lista_terrenos_fecha);
+        agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
 
 
     { Loop principal}
@@ -77,10 +77,10 @@ begin
 
                 case opcion_submenu of
                 1:  //Alta de contribuyentes.
-                    alta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro^, arbol_contribuyentes_nombre^, arbol_contribuyentes_dni^, archivo_contador);
+                    alta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni, archivo_contador);
 
                 2:  //Alta de terrenos.
-                    alta_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente^, arbol_terrenos_fecha_inscripcion^, arbol_terrenos_nro_plano^, lista_terrenos_fecha);
+                    alta_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -121,10 +121,10 @@ begin
 
                 case opcion_submenu of
                 1:  //Consulta de contribuyentes.
-                    consulta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nombre^, arbol_contribuyentes_dni^);
+                    consulta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
 
                 2:  //Consulta de terrenos.
-                    consulta_terreno(archivo_terrenos, arbol_terrenos_nro_plano^);
+                    consulta_terreno(archivo_terrenos, arbol_terrenos_nro_plano);
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -135,7 +135,7 @@ begin
 
                 case opcion_submenu of
                 1:  // Lista de contribuyentes con sus propiedades valorizadas.
-                    listado_contribuyentes_propiedades(arbol_contribuyentes_nombre^);
+                    listado_contribuyentes_propiedades(arbol_contribuyentes_nombre);
 
                 2:  // Lista de inscripciones en un año.
                     listado_inscripciones_anio(lista_terrenos_fecha);
