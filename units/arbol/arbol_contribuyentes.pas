@@ -246,12 +246,12 @@ implementation
         end;
 
         if cantidad_contribuyentes > 1 then
-        begin
-            for indice_actual := 2 to cantidad_contribuyentes do
             begin
-                sumar_por_nro(arbol_ordenado_por_nro, archivo, indice_actual);
+                for indice_actual := 2 to cantidad_contribuyentes do
+                begin
+                    sumar_por_nro(arbol_ordenado_por_nro, archivo, indice_actual);
+                end;
             end;
-        end;
     end;
 
 
