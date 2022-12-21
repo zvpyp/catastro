@@ -157,11 +157,14 @@ implementation
     begin
         crear_lista_terrenos(lista_terrenos_desde_archivo);
 
-        for i := 1 to cantidad_terrenos do
+        if cantidad_terrenos > 0 then
         begin
-            terreno_actual := leer_terreno(archivo, i);
+            for i := 1 to cantidad_terrenos do
+            begin
+                terreno_actual := leer_terreno(archivo, i);
 
-            enlistar_terreno(lista_terrenos_desde_archivo, terreno_actual);
+                enlistar_terreno(lista_terrenos_desde_archivo, terreno_actual);
+            end;
         end;
     end;
 
