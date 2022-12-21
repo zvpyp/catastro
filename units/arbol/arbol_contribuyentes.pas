@@ -237,18 +237,21 @@ implementation
         primer_contribuyente : t_contribuyente;
     begin
         // Creamos el árbol con el primer índice.
-        indice_actual := 1;
-        seek(archivo, indice_actual);
-        read(archivo, primer_contribuyente);
-        arbol_ordenado_por_nro := crear_arbol(indice_actual, primer_contribuyente.numero, primer_contribuyente.activo, primer_contribuyente.numero);
+        if cantidad_contribuyentes > 0 then
+            begin
+                indice_actual := 1;
+                seek(archivo, indice_actual);
+                read(archivo, primer_contribuyente);
+                arbol_ordenado_por_nro := crear_arbol(indice_actual, primer_contribuyente.numero, primer_contribuyente.activo, primer_contribuyente.numero);
+            end;
 
         if cantidad_contribuyentes > 1 then
-        begin
-            for indice_actual := 2 to cantidad_contribuyentes do
             begin
-                sumar_por_nro(arbol_ordenado_por_nro, archivo, indice_actual);
+                for indice_actual := 2 to cantidad_contribuyentes do
+                begin
+                    sumar_por_nro(arbol_ordenado_por_nro, archivo, indice_actual);
+                end;
             end;
-        end;
     end;
 
 

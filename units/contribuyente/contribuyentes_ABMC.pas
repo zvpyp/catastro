@@ -180,7 +180,6 @@ begin
 
 end;
 
-// Pasar arbol ordenado
 Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes;
                                  var arbol_nombre : t_arbol;
                                  var arbol_dni : t_arbol);
