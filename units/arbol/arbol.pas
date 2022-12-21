@@ -42,6 +42,7 @@ interface
     function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
 
     // Borra la raiz del puntero del árbol que se le pase.
+    // Obsoleto.
     procedure borrar_raiz(var arbol : t_puntero_arbol);
 
 {--------------------------------}
@@ -86,24 +87,22 @@ implementation
         tiene_hijo_der := (arbol.sd <> nil);
     end;
 
-    // Deprecated
-    function buscar_por_clave(arbol : t_puntero_arbol; clave : string): t_puntero_arbol;
+    function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;
     begin
-        buscar_por_clave := nil;
-
-        if arbol^.clave = clave then
+        buscar_por_clave := crear_arbol(0,'',false, '');
+        if arbol.clave = clave then
             buscar_por_clave := arbol
         else
         begin
-            if (clave < arbol^.clave) and (tiene_hijo_izq(arbol^)) then
-                buscar_por_clave := buscar_por_clave(arbol^.si, clave)
+            if (clave < arbol.clave) and (tiene_hijo_izq(arbol)) then
+                buscar_por_clave := buscar_por_clave(arbol.si^, clave)
             else
-            if tiene_hijo_der(arbol^) then
-                buscar_por_clave := buscar_por_clave(arbol^.sd, clave);
+            if tiene_hijo_der(arbol) then
+                buscar_por_clave := buscar_por_clave(arbol.sd^, clave);
         end;
     end;
 
-    // Deprecated
+    // Obsoleto.
     procedure borrar_raiz(var arbol : t_puntero_arbol);
     var
         izq_auxiliar : t_puntero_arbol;
