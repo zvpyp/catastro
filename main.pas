@@ -29,7 +29,6 @@ var
 
 begin
     clrscr;
-    cursoroff;
     // Abrir archivos necesarios
     abrir_archivo_contribuyentes(archivo_contribuyentes);
     abrir_archivo_terrenos(archivo_terrenos);
@@ -46,7 +45,7 @@ begin
     // Añadir los correspondientes terrenos a cada contribuyente del árbol.
     agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
 
-    menu_principal();
+    //menu_principal();
 
     { LINEAS DE TESTEO }
 

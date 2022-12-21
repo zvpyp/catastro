@@ -76,12 +76,12 @@ implementation
 
     function tiene_hijo_izq(arbol : t_arbol): boolean;
     begin
-        tiene_hijo_izq := not(arbol.si = nil);
+        tiene_hijo_izq := (arbol.si <> nil);
     end;
 
     function tiene_hijo_der(arbol : t_arbol): boolean;
     begin
-        tiene_hijo_der := not(arbol.sd = nil);
+        tiene_hijo_der := (arbol.sd <> nil);
     end;
 
     function buscar_por_clave(arbol : t_arbol; clave : string): t_arbol;

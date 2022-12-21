@@ -175,13 +175,6 @@ implementation
                 anidar_hijo_izq(arbol, nuevo_contribuyente_indice, nuevo_contribuyente.numero, nuevo_contribuyente.activo, nuevo_contribuyente.numero);
         end;
     end;
-
-    // TODO:
-    function busqueda_contribuyente(var arbol : t_arbol): t_contribuyente;
-    begin
-        
-    end;
-
     
     function arbol_ordenado_por_nombres(var archivo : t_archivo_contribuyentes;
                                             cantidad_contribuyentes : cardinal): t_arbol;
@@ -306,6 +299,7 @@ implementation
     procedure agregar_listas_por_contribuyente(var arbol_por_nombres : t_arbol;
                                                lista_terrenos : t_lista_terrenos);
     begin
+
         if tiene_hijo_izq(arbol_por_nombres) then
             agregar_listas_por_contribuyente(arbol_por_nombres.si^, lista_terrenos);
         
