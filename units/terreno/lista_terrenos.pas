@@ -1,4 +1,6 @@
 unit lista_terrenos;
+
+{$codepage utf8}
     
 { Unidad de lista de terrenos. }
 

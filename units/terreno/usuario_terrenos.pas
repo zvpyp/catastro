@@ -1,5 +1,7 @@
 unit usuario_terrenos;
 
+{$codepage utf8}
+
 //TODO:
 // Hacer procedimiento borrar_terreno
 // Verificar que 'superficie' sea un número real.

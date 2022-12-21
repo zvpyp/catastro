@@ -1,5 +1,7 @@
 unit compara_fechas;
 
+{$codepage utf8}
+
 interface
 
 // Las fechas deben tener el formato aaaa-mm-dd

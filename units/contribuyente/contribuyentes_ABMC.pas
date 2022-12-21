@@ -1,7 +1,8 @@
 // Falta agregar que en alta, baja y modificación también se modifique el árbol, para no generarlo de 0 todas las veces.
 
-
 Unit contribuyentes_ABMC;
+
+{$codepage utf8}
 
 Interface
 

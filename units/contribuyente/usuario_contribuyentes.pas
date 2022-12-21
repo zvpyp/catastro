@@ -1,7 +1,8 @@
 unit usuario_contribuyentes;
 
+{$codepage utf8}
+
 //TODO:
-// Falta que se modifique el super árbol cuando se crea, borra o modifica.
 // Mejorar el diseño de todos los Writeln de estos procedimientos.
 
 { Unidad de tipo de interacción con usuario del submenú de contribuyentes. }

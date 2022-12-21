@@ -1,5 +1,6 @@
-
 Unit terreno;
+
+{$codepage utf8}
 
 { Unidad de tipo de dato terreno. }
 

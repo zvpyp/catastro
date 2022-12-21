@@ -1,5 +1,7 @@
 program main;
 
+{$codepage utf8}
+
 // Units utilizadas:
 uses arbol in 'units/arbol/arbol.pas',
      contribuyente in 'units/contribuyente/contribuyente.pas',
@@ -9,6 +11,7 @@ uses arbol in 'units/arbol/arbol.pas',
      lista_terrenos in 'units/terreno/lista_terrenos.pas',
      u_menu in 'units/u_menu.pas',
      contador_datos in 'units/varios/contador_datos.pas',
+     usuario_listados_estadisticas in 'units/usuario/usuario_listados_estadisticas.pas'
      crt;
 
 var
@@ -21,6 +24,8 @@ var
     
     arbol_terrenos_nro_plano : t_arbol;
     lista_terrenos_fecha : t_lista_terrenos;
+
+    vector_terrenos_por_zona : t_vector_listas; // Se genera cada vez que sea necesario.
 
     opcion_principal : byte; // utilizado para la interacción con el menú principal.
     opcion_submenu : byte; // utilizado para los submenús del menú principal.
@@ -123,14 +128,16 @@ begin
                 opcion_submenu := menu_listados();
 
                 case opcion_submenu of
-                1:  begin
-                        //TODO: Lista de contribuyentes con sus propiedades valorizadas.
-                    end;
-                2:  begin
-                        //TODO: Lista de inscripciones en un año.
-                    end;
+                1:  // Lista de contribuyentes con sus propiedades valorizadas.
+                    listado_contribuyentes_propiedades(arbol_contribuyentes_nombre);
+
+                2:  // Lista de inscripciones en un año.
+                    listado_inscripciones_anio(lista_terrenos_fecha);
+
                 3:  begin
-                        //TODO: Lista de terrenos por zona.
+                        // Lista de terrenos por zona.
+                        vector_terrenos_por_zona := generar_vector_por_zona(lista_terrenos_fecha);
+                        listado_zona_terrenos(vector_terrenos_por_zona);
                     end;
                 4:  begin
                         //TODO: Imprimir comprobante.

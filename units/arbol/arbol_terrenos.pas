@@ -1,4 +1,4 @@
-
+// TODO:
 // Falta crear función para comparar fechas y hacer
 // el procedimiento arbol_ordenado_por_fecha_inscripcion
 
@@ -6,6 +6,8 @@
 
 
 Unit arbol_terrenos;
+
+{$codepage utf8}
 { Unidad de árboles binarios que ordenan terrenos. }
 
 {--------------------------------------------------------------------------------------}

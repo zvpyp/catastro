@@ -1,5 +1,6 @@
-
 Unit terrenos_ABMC;
+
+{$codepage utf8}
 
 Interface
 

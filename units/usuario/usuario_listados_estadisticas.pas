@@ -1,5 +1,7 @@
 unit usuario_listados_estadisticas;
 
+{$codepage utf8}
+
 { Unidad de tipo de interacción con usuario del submenú de listados y estadísticas. }
 
 {--------------------------------}
@@ -25,8 +27,8 @@ procedure listado_contribuyentes_propiedades(arbol : t_arbol);
 // Muestra todas las zonas y los terrenos que les corresponden.
 procedure listado_zona_terrenos(terrenos_por_zona : t_vector_listas);
 
-// Muestra las inscripciones de terrenos que hubo en un año determinado.
-procedure listado_inscripciones_anio(lista : t_lista_terrenos; anio : string);
+// Pide un año al usuario y muestra un listado de las inscripciones en dicho año.
+procedure listado_inscripciones_anio(lista : t_lista_terrenos);
 
 {---------------Estadísticas---------------}
 
@@ -90,7 +92,8 @@ begin
     end;
 end;
 
-procedure listado_inscripciones_anio(lista : t_lista_terrenos; anio : string);
+// Muestra las inscripciones en un año determinado.
+procedure mostrar_inscripciones_anio(lista : t_lista_terrenos; anio : string);
 var
     fecha1, fecha2 : string;
     terreno_actual : t_terreno;
@@ -117,6 +120,19 @@ begin
 
 end;
 
+procedure listado_inscripciones_anio(lista : t_lista_terrenos);
+var
+    anio : string;
+begin
+    clrscr;
+
+    repeat
+        writeln('Ingrese un año, por favor: ');
+        readln(anio);
+    until (string_numerica(anio) and (length(anio) = 4));
+
+    mostrar_inscripciones_anio(lista, anio);
+end;
 {---------------Estadísticas---------------}
 
 Procedure propietarios_dados_de_baja(var archivo_contribuyentes : t_archivo_contribuyentes; var archivo_contador : t_archivo_contador);

@@ -1,5 +1,7 @@
 unit contribuyente;
 
+{$codepage utf8}
+
 { Unidad de tipo de dato contribuyente. }
 
 {--------------------------------}

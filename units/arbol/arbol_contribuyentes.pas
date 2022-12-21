@@ -1,4 +1,7 @@
 unit arbol_contribuyentes;
+
+{$codepage utf8}
+
 { Unidad de árboles binarios que ordenan contribuyentes. }
 
 // TODO

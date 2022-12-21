@@ -1,5 +1,7 @@
 unit validacion_entradas;
 
+{$codepage utf8}
+
 { Unidad de funciones de manejo de cadenas de caracteres y manejo de fechas. }
 
 {--------------------------------}

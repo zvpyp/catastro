@@ -1,5 +1,7 @@
 unit arbol;
 
+{$codepage utf8}
+
 { Unidad de árboles binarios utilizados como índice de datos para archivos. }
 
 {--------------------------------}

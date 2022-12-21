@@ -1,5 +1,7 @@
 unit u_menu;
 
+{$codepage utf8}
+
 { Unidad de menús y submenús. }
 
 {--------------------------------}

@@ -1,5 +1,7 @@
 unit contador_datos;
 
+{$codepage utf8}
+
 { Unidad para conteo de contribuyentes y terrenos guardados.
   Nota: se utiliza esta unit para evitar leer posiciones vacías. }
 
