@@ -61,7 +61,7 @@ begin
 
     // Añadir los correspondientes terrenos a cada contribuyente del árbol.
     if cantidad_contribuyentes(archivo_contador) > 0 then
-        agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
+        //agregar_listas_por_contribuyente(arbol_contribuyentes_nombre, lista_terrenos_fecha);
 
 
     { Loop principal}

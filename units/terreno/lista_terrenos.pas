@@ -35,6 +35,7 @@ interface
     procedure recuperar_lista_terrenos(lista : t_lista_terrenos; var recuperado : t_terreno);
     procedure enlistar_terreno(var lista : t_lista_terrenos; terreno : t_terreno);
     procedure desenlistar_terreno(var lista : t_lista_terrenos; buscado : string);
+    procedure crear_lista_terrenos(var lista : t_lista_terrenos);
 
     // A partir de un archivo de terrenos, retorna una lista ordenada por número de plano.
     function lista_terrenos_desde_archivo(var archivo : t_archivo_terrenos;
@@ -72,7 +73,7 @@ implementation
         recuperado := lista.actual^.info;
     end;
 
-    procedure crear_lista_terrenos(lista : t_lista_terrenos);
+    procedure crear_lista_terrenos(var lista : t_lista_terrenos);
     begin
         lista.cabecera := nil;
         lista.actual := nil;
@@ -86,7 +87,7 @@ implementation
         new(puntero_nuevo);
         puntero_nuevo^.info := terreno;
 
-        if (lista_vacia_terrenos(lista)) or 
+        if (lista.cabecera = nil) or 
            (fecha_es_mayor(lista.cabecera^.info.fecha_inscripcion, terreno.fecha_inscripcion)) then
         begin
             puntero_nuevo^.siguiente := lista.cabecera;
