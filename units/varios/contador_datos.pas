@@ -14,6 +14,7 @@ interface
     type
     t_contador_datos = record
         contribuyentes : cardinal;
+        contribuyentes_activos : cardinal;
         terrenos : cardinal;
         end;
     
@@ -63,6 +64,7 @@ implementation
 
             contador_default.contribuyentes := 0;
             contador_default.terrenos := 0;
+            contador_default.contribuyentes_activos := 0;
 
             seek(archivo, 1);
             write(archivo, contador_default);
@@ -74,7 +76,7 @@ implementation
         close(archivo);
     end;
 
-    procedure contar_contribuyente(var archivo : t_archivo_contador);
+    procedure sumar_contribuyente(var archivo : t_archivo_contador);
     var
         contador_aux : t_contador_datos;
     begin
@@ -87,7 +89,7 @@ implementation
         write(archivo, contador_aux);
     end;
 
-    procedure contar_terreno(var archivo : t_archivo_contador);
+    procedure sumar_terreno(var archivo : t_archivo_contador);
     var
         contador_aux : t_contador_datos;
     begin
@@ -100,14 +102,14 @@ implementation
         write(archivo, contador_aux);
     end;
 
-    procedure restar_contribuyente(var archivo : t_archivo_contador);
+    procedure sumar_activo(var archivo : t_archivo_contador);
     var
         contador_aux : t_contador_datos;
     begin
         seek(archivo, 1);
         read(archivo, contador_aux);
 
-        contador_aux.contribuyentes := contador_aux.contribuyentes - 1;
+        contador_aux.contribuyentes_activos := contador_aux.contribuyentes_activos + 1;
 
         seek(archivo, 1);
         write(archivo, contador_aux);
@@ -121,6 +123,19 @@ implementation
         read(archivo, contador_aux);
 
         contador_aux.terrenos := contador_aux.terrenos - 1;
+
+        seek(archivo, 1);
+        write(archivo, contador_aux);
+    end;
+
+    procedure restar_activo(var archivo : t_archivo_contador);
+    var
+        contador_aux : t_contador_datos;
+    begin
+        seek(archivo, 1);
+        read(archivo, contador_aux);
+
+        contador_aux.contribuyentes_activos := contador_aux.contribuyentes_activos - 1;
 
         seek(archivo, 1);
         write(archivo, contador_aux);
@@ -147,4 +162,14 @@ implementation
         cantidad_terrenos := contador_aux.terrenos;
     end;
     
+    function cantidad_activos(var archivo : t_archivo_contador): cardinal;
+    var
+        contador_aux : t_contador_datos;
+    begin
+        seek(archivo, 1);
+        read(archivo, contador_aux);
+
+        cantidad_activos := contador_aux.contribuyentes_activos;
+    end;
+
 end.
