@@ -1,8 +1,10 @@
-// Falta agregar que en alta, baja y modificación también se modifique el árbol, para no generarlo de 0 todas las veces.
+// TODO: cambiar para que funcione con nueva implementación de árbol.
 
 Unit contribuyentes_ABMC;
 
 {$codepage utf8}
+
+{--------------------------------}
 
 Interface
 
@@ -40,6 +42,9 @@ Procedure consulta_contribuyente(var archivo : t_archivo_contribuyentes;
 
 Implementation
 
+{--------------------------------}
+
+// TODO: cambiar para que funcione con nueva implementación de árbol.
 Procedure alta_contribuyente(var archivo_contribuyentes : t_archivo_contribuyentes;
                              var arbol_nro : t_arbol;
                              var arbol_nombre : t_arbol;

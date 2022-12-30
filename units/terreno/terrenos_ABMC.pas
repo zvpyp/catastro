@@ -1,3 +1,5 @@
+// TODO: cambiar para que funcione solamente con las listas.
+
 Unit terrenos_ABMC;
 
 {$codepage utf8}
@@ -43,7 +45,7 @@ Procedure consulta_terreno(var archivo : t_archivo_terrenos;
 
 Implementation
 
-// Agregar que se modifique el arbol.
+// TODO: cambiar para que funcione solamente con las listas.
 Procedure alta_terreno(var archivo : t_archivo_terrenos;
                        var archivo_contador : t_archivo_contador;
                        var arbol_nro_contribuyente : t_arbol;
