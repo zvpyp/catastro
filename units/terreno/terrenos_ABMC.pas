@@ -10,8 +10,7 @@ Uses terreno in 'units/terreno/terreno.pas',
      usuario_terrenos in 'units/terreno/usuario_terrenos',
      validacion_entradas in 'units/varios/validacion_entradas.pas',
      contador_datos in 'units/varios/contador_datos.pas',
-     arbol in 'units/arbol/arbol.pas',
-     arbol_terrenos in 'units/arbol/arbol_terrenos.pas',
+     arbol in 'units/arbol.pas',
      lista_terrenos in 'units/terreno/lista_terrenos.pas',
      crt, sysutils;
 

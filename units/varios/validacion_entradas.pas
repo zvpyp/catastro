@@ -19,6 +19,9 @@ uses sysutils, crt;
     // Retorna verdadero si la string es una fecha valida
     function es_fecha_valida(entrada : string): boolean;
 
+    // Pide una entrada al usuario. Repite el mensaje hasta que el usuario haya ingresado una entrada válida.
+    function leer_entrada(mensaje : string; limite : byte; numerico : boolean): string;
+
 {--------------------------------}
 
 implementation
@@ -194,10 +197,16 @@ implementation
     function leer_entrada(mensaje : string; limite : byte; numerico : boolean): string;
     var
         valido : boolean;
+        restricciones : string;
     begin
+        restricciones := 'hasta ' + IntToStr(limite) + ' caracteres';
+        
+        if numerico then
+            restricciones := restricciones + ' numéricos';
+
         repeat
             clrscr;
-            writeln(mensaje);
+            writeln(mensaje, '(', restricciones, ')');
 
             valido := true;
 

@@ -1,3 +1,5 @@
+// TODO: hacer que funcione bien con los nuevos cambios.
+
 unit usuario_terrenos;
 
 {$codepage utf8}
@@ -17,7 +19,7 @@ interface
 
     uses terreno in 'units/terreno/terreno.pas',
          validacion_entradas in 'units/varios/validacion_entradas.pas',
-         arbol in 'units/arbol/arbol.pas',
+         arbol in 'units/arbol.pas',
          u_menu in 'units/u_menu.pas',
          crt;
 

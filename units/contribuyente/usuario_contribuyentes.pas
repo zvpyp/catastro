@@ -1,9 +1,8 @@
+// TODO: hacer que funcione bien con los nuevos cambios.
+
 unit usuario_contribuyentes;
 
 {$codepage utf8}
-
-//TODO:
-// Mejorar el diseño de todos los Writeln de estos procedimientos.
 
 { Unidad de tipo de interacción con usuario del submenú de contribuyentes. }
 
@@ -14,7 +13,7 @@ interface
     uses contribuyente in 'units/contribuyente/contribuyente.pas',
          validacion_entradas in 'units/varios/validacion_entradas.pas',
          contador_datos in 'units/varios/contador_datos.pas',
-         arbol in 'units/arbol/arbol.pas',
+         arbol in 'units/arbol.pas',
          u_menu in 'units/u_menu.pas',
          crt, sysutils;
 

@@ -12,8 +12,7 @@ Uses contribuyente in 'units/contribuyente/contribuyente.pas',
      usuario_contribuyentes in 'units/contribuyente/usuario_contribuyentes',
      validacion_entradas in 'units/varios/validacion_entradas.pas',
      contador_datos in 'units/varios/contador_datos.pas',
-     arbol in 'units/arbol/arbol.pas',
-     arbol_contribuyentes in 'units/arbol/arbol_contribuyentes.pas',
+     arbol in 'units/arbol.pas',
      u_menu in 'units/u_menu.pas',
      crt, sysutils;
 
