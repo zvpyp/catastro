@@ -7,7 +7,7 @@ interface
     type
     t_dato_arbol = record
         clave : string; // clave utilizada para ordenamiento y búsqueda.
-        pos : cardinal; // posición en el archivo.
+        indice : cardinal; // posición en el archivo.
     end;
     
     t_puntero_arbol = ^t_nodo_arbol;
@@ -26,6 +26,12 @@ interface
     function arbol_vacio(raiz : t_puntero_arbol): boolean;
 
     function arbol_lleno(raiz : t_puntero_arbol): boolean;
+
+    // retorna el t_dato de la raíz de un árbol.
+    function info_raiz(raiz : t_puntero_arbol): t_dato_arbol;
+
+    // Retorna el índice del elemento buscado. Si no existe, retorna un t_dato_arbol vacío.
+    function preorden(raiz : t_puntero_arbol; clave : string): t_puntero_arbol;
 
 {--------------------------------}
 
@@ -63,6 +69,35 @@ implementation
     function arbol_lleno(raiz : t_puntero_arbol): boolean;
     begin
         arbol_lleno := getHeapStatus.totalFree < sizeOf(t_nodo_arbol);
+    end;
+
+    function info_raiz(raiz : t_puntero_arbol): t_dato_arbol;
+    begin
+        info_raiz := raiz^.info;        
+    end;
+
+    procedure modificar_clave(raiz : t_puntero_arbol; nueva_clave : string);
+    begin
+        raiz^.info.clave := nueva_clave;
+    end;
+
+    // TODO: cambiar al puntero
+    function preorden(raiz : t_puntero_arbol; clave : string): t_puntero_arbol;
+    begin
+        if (raiz = nil) then
+            preorden := nil
+        else
+        begin
+            if (raiz^.info.clave = clave) then
+                preorden := raiz
+            else
+            begin
+                if (raiz^.info.clave > clave) then
+                    preorden := preorden(raiz^.si, clave)
+                else
+                    preorden := preorden(raiz^.sd, clave);
+            end;
+        end;
     end;
 
 end.

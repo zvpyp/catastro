@@ -266,16 +266,13 @@ implementation
             menu : t_menu;
         begin
             menu := crear_menu('¿Qué desea modificar?');
-            agregar_opcion(menu, 'Número de contribuyente');    // 1
+            agregar_opcion(menu, 'Nombre');                     // 1
             agregar_opcion(menu, 'Apellido');                   // 2
-            agregar_opcion(menu, 'Nombre');                     // 3
-            agregar_opcion(menu, 'Dirección');                  // 4
-            agregar_opcion(menu, 'Ciudad');                     // 5
-            agregar_opcion(menu, 'DNI');                        // 6
-            agregar_opcion(menu, 'Fecha de nacimiento');        // 7
-            agregar_opcion(menu, 'Teléfono');                   // 8
-            agregar_opcion(menu, 'Email');                      // 9
-            agregar_opcion(menu, 'Volver');                     // 10
+            agregar_opcion(menu, 'Dirección');                  // 3
+            agregar_opcion(menu, 'Ciudad');                     // 4
+            agregar_opcion(menu, 'Teléfono');                   // 5
+            agregar_opcion(menu, 'Email');                      // 6
+            agregar_opcion(menu, 'Volver');                     // 7
 
             menu_modificar_contribuyente := seleccion_menu(menu);
         end;

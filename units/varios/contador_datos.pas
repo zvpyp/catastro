@@ -28,10 +28,10 @@ interface
     procedure cerrar_archivo_contador(var archivo : t_archivo_contador);
 
     // Suma un contribuyente a los datos.
-    procedure contar_contribuyente(var archivo : t_archivo_contador);
+    procedure sumar_contribuyente(var archivo : t_archivo_contador);
 
     // Suma un terreno a los datos.
-    procedure contar_terreno(var archivo : t_archivo_contador);
+    procedure sumar_terreno(var archivo : t_archivo_contador);
 
     // Resta un contribuyente a los datos.
     procedure restar_contribuyente(var archivo : t_archivo_contador);
@@ -39,11 +39,14 @@ interface
     // Resta un terreno a los datos.
     procedure restar_terreno(var archivo : t_archivo_contador);
 
-    // Devuelve la cantidad de contribuyentes del archivo.
+    // Devuelve la cantidad de contribuyentes existentes.
     function cantidad_contribuyentes(var archivo : t_archivo_contador): cardinal;
 
-    // Devuelve la cantidad de terrenos del archivo.
+    // Devuelve la cantidad de terrenos existentes
     function cantidad_terrenos(var archivo : t_archivo_contador): cardinal;
+
+    // Devuelve la cantidad de contribuyentes activos.
+    function cantidad_activos(var archivo : t_archivo_contador): cardinal;
 
 {--------------------------------}
 
@@ -84,6 +87,7 @@ implementation
         read(archivo, contador_aux);
 
         contador_aux.contribuyentes := contador_aux.contribuyentes + 1;
+        contador_aux.contribuyentes_activos := contador_aux.contribuyentes_activos + 1;
 
         seek(archivo, 1);
         write(archivo, contador_aux);
@@ -102,14 +106,14 @@ implementation
         write(archivo, contador_aux);
     end;
 
-    procedure sumar_activo(var archivo : t_archivo_contador);
+    procedure restar_contribuyente(var archivo : t_archivo_contador);
     var
         contador_aux : t_contador_datos;
     begin
         seek(archivo, 1);
         read(archivo, contador_aux);
 
-        contador_aux.contribuyentes_activos := contador_aux.contribuyentes_activos + 1;
+        contador_aux.contribuyentes_activos := contador_aux.contribuyentes_activos - 1;
 
         seek(archivo, 1);
         write(archivo, contador_aux);
@@ -128,25 +132,13 @@ implementation
         write(archivo, contador_aux);
     end;
 
-    procedure restar_activo(var archivo : t_archivo_contador);
-    var
-        contador_aux : t_contador_datos;
-    begin
-        seek(archivo, 1);
-        read(archivo, contador_aux);
-
-        contador_aux.contribuyentes_activos := contador_aux.contribuyentes_activos - 1;
-
-        seek(archivo, 1);
-        write(archivo, contador_aux);
-    end;
-
 
     function cantidad_contribuyentes(var archivo : t_archivo_contador): cardinal;
     var
         contador_aux : t_contador_datos;
     begin
-        seek(archivo, 1);
+        writeln(filesize(archivo));
+        seek(archivo, 0);
         read(archivo, contador_aux);
 
         cantidad_contribuyentes := contador_aux.contribuyentes;

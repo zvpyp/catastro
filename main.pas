@@ -9,10 +9,9 @@ uses arbol in 'units/arbol.pas',
      lista_terrenos in 'units/terreno/lista_terrenos.pas',
      u_menu in 'units/u_menu.pas',
      contador_datos in 'units/varios/contador_datos.pas',
-     usuario_listados_estadisticas in 'units/usuario/usuario_listados_estadisticas.pas',
-     contribuyentes_ABMC in 'units/contribuyente/contribuyentes_ABMC.pas',
-     terrenos_ABMC in 'units/terreno/terrenos_ABMC.pas',
-     comprobante in 'units/usuario/comprobante.pas',
+     nuevo_usuario_contribuyentes in 'units/contribuyente/nuevo_usuario_contribuyentes.pas',
+     //usuario_listados_estadisticas in 'units/usuario/usuario_listados_estadisticas.pas',
+     //comprobante in 'units/usuario/comprobante.pas',
      crt;
 
 var
@@ -35,6 +34,8 @@ var
     opcion_principal : byte; // utilizado para la interacción con el menú principal.
     opcion_submenu : byte; // utilizado para los submenús del menú principal.
 
+    aux : t_puntero_arbol; // utilizado para las búsquedas.
+
 { VARIABLES DE TESTEO }
 
 
@@ -47,13 +48,13 @@ begin
     abrir_archivo_terrenos(archivo_terrenos);
     abrir_archivo_contador(archivo_contador);
 
-    // TODO: Generar árboles de contribuyentes
+    // TODO: Generar árboles de contribuyentes mediante archivo.
     {arbol_contribuyentes_dni := 
     arbol_contribuyentes_nombre :=}
 
     // Generar lista de terrenos.
     // TODO: lista ordenada por dueño???
-    lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
+    //lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
 
     { Loop principal}
 
@@ -68,13 +69,15 @@ begin
                 opcion_submenu := menu_ABMC('alta');
 
                 case opcion_submenu of
-                1:  //Alta de contribuyentes.
-                    // TODO: cambiar para que funcione con nueva implementación de árbol. 
-                    //alta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni, archivo_contador);
+                1:  // Alta de contribuyentes.
+                    begin
+                        aux := buscar_contribuyente(arbol_contribuyentes_dni);
+                        crear_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, aux);
+                    end;
 
-                2:  //Alta de terrenos.
-                    // TODO: cambiar para que funcione solamente con las listas.
-                    //alta_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
+                2:  // Alta de terrenos.
+                    begin
+                    end;
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -86,12 +89,14 @@ begin
 
                 case opcion_submenu of
                 1:  //Baja de contribuyentes.
-                    // TODO: Idem.
-                    //baja_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
+                    begin
+                        aux := buscar_contribuyente(arbol_contribuyentes_dni);
+                        borrar_contribuyente(archivo_contribuyentes, archivo_contador, aux);
+                    end;
 
                 2:  //Baja de terrenos.
-                    // TODO: Idem.
-                    //baja_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
+                    begin
+                    end;
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -103,12 +108,14 @@ begin
 
                 case opcion_submenu of
                 1:  //Modificación de contribuyentes.
-                    // TODO: Idem.
-                    //mod_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_nro, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
+                    begin
+                        aux := buscar_contribuyente(arbol_contribuyentes_dni);
+                        modificar_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_nombre, aux);
+                    end;
 
                 2:  //Modificación de terrenos.
-                    // TODO: Idem.
-                    //mod_terreno(archivo_terrenos, archivo_contador, arbol_terrenos_nro_contribuyente, arbol_terrenos_fecha_inscripcion, arbol_terrenos_nro_plano, lista_terrenos_fecha);
+                    begin
+                    end;
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -119,17 +126,20 @@ begin
 
                 case opcion_submenu of
                 1:  //Consulta de contribuyentes.
-                    // TODO: Idem.
-                    //consulta_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nombre, arbol_contribuyentes_dni);
+                    begin
+                        aux := buscar_contribuyente(arbol_contribuyentes_dni);
+
+                        consultar_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_nombre, aux);
+                    end;
 
                 2:  //Consulta de terrenos.
-                    // TODO: Idem.
-                    //consulta_terreno(archivo_terrenos, arbol_terrenos_nro_plano);
+                    begin
+                    end;
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
         // Opción de listados.
-        5:  repeat
+        {5:  repeat
             
                 opcion_submenu := menu_listados();
 
@@ -180,7 +190,7 @@ begin
                     end;
                 end;
             
-            until ((opcion_submenu = 0) or (opcion_submenu = 5));
+            until ((opcion_submenu = 0) or (opcion_submenu = 5));}
         end;
         
     until ((opcion_principal = 0) or (opcion_principal = 7)); // 0 es salir por escape, 7 es por selección

@@ -21,6 +21,13 @@ uses sysutils, crt;
 
     // Pide una entrada al usuario. Repite el mensaje hasta que el usuario haya ingresado una entrada válida.
     function leer_entrada(mensaje : string; limite : byte; numerico : boolean): string;
+    
+
+    // Pide una fecha al usuario. Continúa una vez ingresada una fecha válida.,
+    function leer_fecha(): string;
+
+    // Muestra un mensaje al usuario. No retorna hasta que elija s o n.
+    function leer_si_no(mensaje : string): string;
 
 {--------------------------------}
 
@@ -206,7 +213,7 @@ implementation
 
         repeat
             clrscr;
-            writeln(mensaje, '(', restricciones, ')');
+            writeln(mensaje, '(', restricciones, '):');
 
             valido := true;
 
@@ -220,5 +227,25 @@ implementation
             if not(limite_caracteres(leer_entrada, limite)) then
                 valido := false;
         until (valido);
+    end;
+
+    function leer_fecha(): string;
+    begin
+        repeat
+            clrscr;
+            writeln('Ingrese una fecha válida (AAAA-MM-DD): ');
+            readln(leer_fecha);
+        until (es_fecha_valida(leer_fecha));
+    end;
+
+    function leer_si_no(mensaje : string): string;
+    begin
+        repeat
+            clrscr;
+            writeln(mensaje, ' (s/n)');
+            leer_si_no := readkey;
+            leer_si_no := lowercase(leer_si_no);
+            
+        until ((leer_si_no = 's') or (leer_si_no = 'n'));
     end;
 end.
