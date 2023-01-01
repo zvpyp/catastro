@@ -109,7 +109,7 @@ implementation
             contribuyente.apellido := leer_entrada('Apellido', 30, false);
             contribuyente.direccion := leer_entrada('Dirección', 30, false);
             contribuyente.ciudad := leer_entrada('Ciudad', 40, false);
-            contribuyente.fecha_nacimiento := leer_fecha();
+            contribuyente.fecha_nacimiento := leer_fecha('Fecha de nacimiento');
             contribuyente.tel := leer_entrada('Teléfono', 15, true);
             contribuyente.email := leer_entrada('Email', 40, false);
             contribuyente.activo := true;
