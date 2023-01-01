@@ -24,7 +24,7 @@ uses sysutils, crt;
     
 
     // Pide una fecha al usuario. Continúa una vez ingresada una fecha válida.,
-    function leer_fecha(): string;
+    function leer_fecha(mensaje : string): string;
 
     // Muestra un mensaje al usuario. No retorna hasta que elija s o n.
     function leer_si_no(mensaje : string): string;
@@ -229,11 +229,11 @@ implementation
         until (valido);
     end;
 
-    function leer_fecha(): string;
+    function leer_fecha(mensaje : string): string;
     begin
         repeat
             clrscr;
-            writeln('Ingrese una fecha válida (AAAA-MM-DD): ');
+            writeln(mensaje, ' (AAAA-MM-DD):');
             readln(leer_fecha);
         until (es_fecha_valida(leer_fecha));
     end;
