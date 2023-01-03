@@ -11,7 +11,7 @@ interface
 uses sysutils, crt;
 
     // Pide una entrada al usuario. Repite el mensaje hasta que el usuario haya ingresado una entrada válida.
-    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string = 'normal'): string;
+    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string): string;
 
     // Pide una fecha al usuario. Continúa una vez ingresada una fecha válida.,
     function leer_fecha(mensaje : string): string;
@@ -31,7 +31,7 @@ implementation
     end;
 
     // retorna verdadero si una string es un número entero.
-    function string_numerica(entrada : string; positivo : boolean = true; numero_real : boolean = false): boolean;
+    function string_numerica(entrada : string; positivo : boolean; numero_real : boolean): boolean;
     var
         i : byte;
         primer_digito : byte;
@@ -93,7 +93,7 @@ implementation
             es_formato_fecha := false;
 
         // Chequea que el año, mes y día sean numéricos
-        if not(string_numerica(ano) and string_numerica(mes) and string_numerica(dia)) then
+        if not(string_numerica(ano, true, false) and string_numerica(mes, true, false) and string_numerica(dia, true, false)) then
             es_formato_fecha := false;
         
         // Chequea que los separadores sean '-' o '/'
@@ -222,7 +222,7 @@ implementation
     //      -normal : alfanumérico, sin restricciones de tipo
     //      -natural : Acepta solamente números naturales.
     //      -real_positivo : acepta solamente números reales positivos. Se utiliza punto como separador decimal.
-    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string = 'normal'): string;
+    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string): string;
     var
         valido : boolean;
         restricciones : string;
@@ -245,7 +245,7 @@ implementation
             // tipos numéricos
             case tipo of
                 'natural':          begin
-                                        if not(string_numerica(leer_entrada)) then
+                                        if not(string_numerica(leer_entrada, true, false)) then
                                             valido := false;
                                     end;
 
