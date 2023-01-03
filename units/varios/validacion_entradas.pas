@@ -10,18 +10,8 @@ interface
 
 uses sysutils, crt;
 
-    // Retorna verdadero si una string solo contiene caracteres numéricos.
-    function string_numerica(entrada : string): boolean;
-
-    // Retorna verdadero si la string no supera un límite de caracteres.
-    function limite_caracteres(entrada : string; limite : byte): boolean;
-
-    // Retorna verdadero si la string es una fecha valida
-    function es_fecha_valida(entrada : string): boolean;
-
     // Pide una entrada al usuario. Repite el mensaje hasta que el usuario haya ingresado una entrada válida.
-    function leer_entrada(mensaje : string; limite : byte; numerico : boolean): string;
-    
+    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string = 'normal'): string;
 
     // Pide una fecha al usuario. Continúa una vez ingresada una fecha válida.,
     function leer_fecha(mensaje : string): string;
@@ -34,25 +24,52 @@ uses sysutils, crt;
 implementation
 
     // Retorna verdadero si un caracter es numérico.
+    // Incluye puntos.
     function caracter_numerico(caracter : char): boolean;
     begin
-        caracter_numerico := (('0' <= caracter) and (caracter <= '9'));
+        caracter_numerico := (('0' <= caracter) and (caracter <= '9')) or (caracter = '.');
     end;
 
-    function string_numerica(entrada : string): boolean;
+    // retorna verdadero si una string es un número entero.
+    function string_numerica(entrada : string; positivo : boolean = true; numero_real : boolean = false): boolean;
     var
         i : byte;
+        primer_digito : byte;
+        limite_puntos : 0..1; // cantidad de puntos que puede tener la string.
+        puntos : byte; // contador de la cantidad de puntos.
     begin
         string_numerica := true;
 
-        for i := 1 to length(entrada) do
+        if numero_real then
+            limite_puntos := 1
+        else
+            limite_puntos := 0;
+
+        // caso del primer carácter.
+        if positivo then
+            primer_digito := 1
+        else
+        begin
+            // caso de que permita negativos
+            if (entrada[1] = '-') then
+                primer_digito := 2;
+        end;
+
+        for i := primer_digito to length(entrada) do
         begin
             if not(caracter_numerico(entrada[i])) then
                 string_numerica := false;
+            else if entrada[i] = '.' then
+                puntos := puntos + 1;
         end;
+
+        if puntos > limite_puntos then
+            string_numerica := false;
     end;
 
-    function limite_caracteres(entrada : string; limite : byte): boolean;
+    function string_real():
+
+    function limite_caracteres(entrada : string; limite : byte = 255): boolean;
     begin
         limite_caracteres := length(entrada) <= limite;
     end;
@@ -201,15 +218,21 @@ implementation
     // Verifica si cumple el límite de caracteres.
     // Verifica si es numerico en caso de ser necesario.
     // Repite hasta obtener una entrada válida.
-    function leer_entrada(mensaje : string; limite : byte; numerico : boolean): string;
+    // TIPOS:
+    //      -normal : alfanumérico, sin restricciones de tipo
+    //      -natural : Acepta solamente números naturales.
+    //      -real_positivo : acepta solamente números reales positivos. Se utiliza punto como separador decimal.
+    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string = 'normal'): string;
     var
         valido : boolean;
         restricciones : string;
     begin
         restricciones := 'hasta ' + IntToStr(limite) + ' caracteres';
         
-        if numerico then
-            restricciones := restricciones + ' numéricos';
+        if (tipo = 'normal') or (tipo = 'real_positivo') then
+            restricciones := 'hasta ' + IntToStr(limite) + ' caracteres';
+        if (tipo = 'natural') then
+            restricciones := 'hasta ' + IntToStr(limite) + ' dígitos';
 
         repeat
             clrscr;
@@ -219,9 +242,18 @@ implementation
 
             readln(leer_entrada);
 
-            // Verifica si es numérico en caso de ser necesario.
-            if (numerico) and not(string_numerica(leer_entrada)) then
-                valido := false;
+            // tipos numéricos
+            case tipo of
+                'natural':          begin
+                                        if not(string_numerica(leer_entrada)) then
+                                            valido := false;
+                                    end;
+
+                'real_positivo':    begin
+                                        if not(string_numerica(leer_entrada, true, true)) then
+                                            valido := false;
+                                    end;
+            end;
             
             // Verifica el límite de caracteres.
             if not(limite_caracteres(leer_entrada, limite)) then
