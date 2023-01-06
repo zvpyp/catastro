@@ -8,6 +8,8 @@ unit contador_datos;
 {--------------------------------}
 
 interface
+    uses crt;
+
     const
         ruta_archivo_contador = './contador_datos.dat';
 
@@ -137,8 +139,7 @@ implementation
     var
         contador_aux : t_contador_datos;
     begin
-        writeln(filesize(archivo));
-        seek(archivo, 0);
+        seek(archivo, 1);
         read(archivo, contador_aux);
 
         cantidad_contribuyentes := contador_aux.contribuyentes;

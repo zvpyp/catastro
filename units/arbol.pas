@@ -4,9 +4,14 @@ unit arbol;
 
 interface
 
+    // para testeo
+    uses
+    crt, sysutils;
+
     type
     t_dato_arbol = record
         clave : string; // clave utilizada para ordenamiento y búsqueda.
+        numero : string; // número de contribuyente. Utilizado para determinar terrenos que le pertenecen al contribuyente.
         indice : cardinal; // posición en el archivo.
     end;
     
@@ -30,8 +35,15 @@ interface
     // retorna el t_dato de la raíz de un árbol.
     function info_raiz(raiz : t_puntero_arbol): t_dato_arbol;
 
-    // Retorna el índice del elemento buscado. Si no existe, retorna un t_dato_arbol vacío.
+    // retorna el hijo derecho de un árbol.
+    function hijo_derecho(raiz : t_puntero_arbol): t_puntero_arbol;
+
+    // Retorna un puntero al primer elemento encontrado. Si no existe, retorna un t_dato_arbol con índice 0.
+    // NOTA: si retorna índice 0, borrar posteriormente el puntero luego del uso.
     function preorden(raiz : t_puntero_arbol; clave : string): t_puntero_arbol;
+
+    // Retorna un árbol con todos los nodos que tengan la misma clave. Guarda en una variable la cantidad de nodos encontrados.
+    procedure preorden_multiple(raiz : t_puntero_arbol; clave : string; var encontrados : t_puntero_arbol; var cantidad : cardinal);
 
 {--------------------------------}
 
@@ -54,6 +66,7 @@ implementation
         end
         else
         begin
+            // NOTA: si son iguales, el hijo a agregar se posiciona en el subárbol derecho.
             if raiz^.info.clave > dato.clave then
                 agregar_hijo(raiz^.si, dato)
             else
@@ -73,31 +86,80 @@ implementation
 
     function info_raiz(raiz : t_puntero_arbol): t_dato_arbol;
     begin
-        info_raiz := raiz^.info;        
+        if (raiz <> nil) then
+        begin
+            info_raiz := raiz^.info;
+        end
+        else
+        begin
+            info_raiz.clave := '';
+            info_raiz.numero := '';
+            info_raiz.indice := 0;
+        end;
     end;
+
+
+    // TODO: utilizar en otras funciones???.
+    function hijo_derecho(raiz : t_puntero_arbol): t_puntero_arbol;
+    begin
+        hijo_derecho := raiz^.sd;
+    end;
+
 
     procedure modificar_clave(raiz : t_puntero_arbol; nueva_clave : string);
     begin
         raiz^.info.clave := nueva_clave;
     end;
 
-    // TODO: cambiar al puntero
+
     function preorden(raiz : t_puntero_arbol; clave : string): t_puntero_arbol;
     begin
         if (raiz = nil) then
-            preorden := nil
+        begin
+            new(preorden);
+            preorden^.info.clave := clave;
+            preorden^.info.numero := '';
+            preorden^.info.indice := 0;
+        end
         else
         begin
-            if (raiz^.info.clave = clave) then
+
+
+            clrscr;
+            writeln('actual: ', raiz^.info.clave);
+            writeln('buscado: ', clave);
+            writeln('indice: ', raiz^.info.indice);
+            writeln('numero: ', raiz^.info.numero);
+            writeln('iguales: ', (lowercase(raiz^.info.clave) = lowercase(clave)));
+            readkey;
+
+            if (lowercase(raiz^.info.clave) = lowercase(clave)) then
                 preorden := raiz
             else
             begin
-                if (raiz^.info.clave > clave) then
+                if (lowercase(raiz^.info.clave) > lowercase(clave)) then
                     preorden := preorden(raiz^.si, clave)
                 else
                     preorden := preorden(raiz^.sd, clave);
             end;
         end;
+    end;
+
+
+    procedure preorden_multiple(raiz : t_puntero_arbol; clave : string; var encontrados : t_puntero_arbol; var cantidad : cardinal);
+    begin
+        raiz := preorden(raiz, clave); // busca el primer elemento que concuerde con la clave.
+
+        // Encontrado (índice distinto de 0)
+        if (raiz^.info.indice <> 0) then
+        begin
+            encontrados := raiz;
+            cantidad := cantidad + 1;
+            // busca en el subárbol derecho de la raíz para determinar si hay más elementos iguales y los agrega.
+            preorden_multiple(raiz^.sd, clave, encontrados^.sd, cantidad);
+        end
+        else if cantidad > 0 then
+            dispose(raiz); // borrar nodo vacío si existe otra entrada.
     end;
 
 end.

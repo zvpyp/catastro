@@ -10,10 +10,17 @@ interface
 
 uses sysutils, crt;
 
-    // Pide una entrada al usuario. Repite el mensaje hasta que el usuario haya ingresado una entrada válida.
-    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string): string;
+    // Pide una entrada al usuario.
+    // Verifica si cumple el límite de caracteres.
+    // Verifica si es numerico en caso de ser necesario.
+    // Repite hasta obtener una entrada válida.
+    // TIPOS:
+    //      -normal : alfanumérico, sin restricciones de tipo
+    //      -natural : Acepta solamente números naturales.
+    //      -real_positivo : acepta solamente números reales positivos. Se utiliza punto como separador decimal.
+    function leer_entrada(mensaje : string; limite : byte; tipo : string): string;
 
-    // Pide una fecha al usuario. Continúa una vez ingresada una fecha válida.,
+    // Pide una fecha al usuario. Continúa una vez ingresada una fecha válida.
     function leer_fecha(mensaje : string): string;
 
     // Muestra un mensaje al usuario. No retorna hasta que elija s o n.
@@ -38,6 +45,7 @@ implementation
         limite_puntos : 0..1; // cantidad de puntos que puede tener la string.
         puntos : byte; // contador de la cantidad de puntos.
     begin
+        puntos := 0;
         string_numerica := true;
 
         if numero_real then
@@ -58,7 +66,7 @@ implementation
         for i := primer_digito to length(entrada) do
         begin
             if not(caracter_numerico(entrada[i])) then
-                string_numerica := false;
+                string_numerica := false
             else if entrada[i] = '.' then
                 puntos := puntos + 1;
         end;
@@ -67,9 +75,7 @@ implementation
             string_numerica := false;
     end;
 
-    function string_real():
-
-    function limite_caracteres(entrada : string; limite : byte = 255): boolean;
+    function limite_caracteres(entrada : string; limite : byte): boolean;
     begin
         limite_caracteres := length(entrada) <= limite;
     end;
@@ -214,15 +220,7 @@ implementation
     end;
 
     // TODO: hacer bello.
-    // Pide una entrada al usuario.
-    // Verifica si cumple el límite de caracteres.
-    // Verifica si es numerico en caso de ser necesario.
-    // Repite hasta obtener una entrada válida.
-    // TIPOS:
-    //      -normal : alfanumérico, sin restricciones de tipo
-    //      -natural : Acepta solamente números naturales.
-    //      -real_positivo : acepta solamente números reales positivos. Se utiliza punto como separador decimal.
-    function leer_entrada(mensaje : string; limite : byte = 255; tipo : string): string;
+    function leer_entrada(mensaje : string; limite : byte; tipo : string): string;
     var
         valido : boolean;
         restricciones : string;

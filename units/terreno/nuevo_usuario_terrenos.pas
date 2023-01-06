@@ -10,7 +10,6 @@ interface
 
     uses
         terreno in 'units/terreno/terreno.pas',
-        arbol in 'units/arbol.pas',
         contador_datos in 'units/varios/contador_datos.pas',
         u_menu in 'units/u_menu.pas',
         validacion_entradas in 'units/varios/validacion_entradas.pas',
@@ -62,16 +61,16 @@ implementation
     // TODO: estilizar.
     procedure mostrar_terreno(terreno : t_contribuyente);
     begin
-            writeln('Domicilio parcelario: ', terreno.domicilio_parcelario);
-            writeln('Número de plano: ', terreno.nro_plano);
-            writeln('Número de contribuyente: ', terreno.nro_contribuyente);
-            writeln('Avalúo: ', terreno.avaluo);
-            writeln('Fecha de inscripción: ', terreno.fecha_incripcion);
-            writeln('Superficie: ', terreno.superficie);
-            writeln('Zona: ', terreno.zona);
-            writeln('Tipo de edificación: ', terreno.tipo_edificacion);
+        writeln('Domicilio parcelario: ', terreno.domicilio_parcelario);
+        writeln('Número de plano: ', terreno.nro_plano);
+        writeln('Número de contribuyente: ', terreno.nro_contribuyente);
+        writeln('Avalúo: ', terreno.avaluo);
+        writeln('Fecha de inscripción: ', terreno.fecha_incripcion);
+        writeln('Superficie: ', terreno.superficie);
+        writeln('Zona: ', terreno.zona);
+        writeln('Tipo de edificación: ', terreno.tipo_edificacion);
 
-            writeln('');
-            writeln('Presione una tecla para continuar...');
-            readkey;
+        writeln('');
+        writeln('Presione una tecla para continuar...');
+        readkey;
     end;
