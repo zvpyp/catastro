@@ -14,6 +14,9 @@ interface
         contador_datos in 'units/varios/contador_datos.pas',
         u_menu in 'units/u_menu.pas',
         validacion_entradas in 'units/varios/validacion_entradas.pas',
+        terreno in 'units/terreno/terreno.pas',
+        lista_terrenos in 'units/terreno/lista_terrenos.pas',
+        usuario_terrenos in 'units/terreno/usuario_terrenos.pas',
         crt, sysutils;
 
     // Le pide una clave al usuario (tipo dni o nombre). Retorna un dato con clave e índice, si existe.
@@ -33,16 +36,19 @@ interface
     // puntero_datos contiene un puntero árbol con la clave y el índice del tipo determinado.
     // tipo determina el tipo de orden que se usa en el árbol.
     // tipos: 'dni', 'nombre'
-    procedure crear_contribuyente(var archivo : t_archivo_contribuyentes;
+    procedure alta_contribuyente(var archivo : t_archivo_contribuyentes;
                                     var archivo_contador : t_archivo_contador;
                                     var raiz_dni : t_puntero_arbol;
                                     var raiz_nombre : t_puntero_arbol;
                                     puntero_datos : t_puntero_arbol;
                                     tipo : string);
 
-    // Borra un contribuyente dado, si existe.
-    procedure borrar_contribuyente(var archivo : t_archivo_contribuyentes;
+    // Da de baja a un contribuyente dado, si existe.
+    // Borra también todas sus propiedades.
+    procedure baja_contribuyente(var archivo_contribuyentes : t_archivo_contribuyentes;
+                                    var archivo_terrenos : t_archivo_terrenos;
                                     var archivo_contador : t_archivo_contador;
+                                    var lista_terrenos : t_lista_terrenos;
                                     puntero_datos : t_puntero_arbol);
 
     // Modifica un contribuyente dado, si existe. Sino, pregunta para crearlo.
@@ -129,7 +135,6 @@ implementation
     var
         clave : string;
         cantidad : cardinal; // utilizado en caso de múltiples encontrados.
-        seleccionado : t_puntero_arbol;
         mensaje : string;
         opt : byte;
         i : byte;
@@ -154,7 +159,6 @@ implementation
             {writeln('la cantidad de encontrados es ', cantidad);
             readkey;}
 
-            // TODO: Pedir seleccionar si hay múltiples
             if cantidad >= 2 then
             begin
                 clrscr;
@@ -188,7 +192,7 @@ implementation
     end;
 
 
-    procedure crear_contribuyente(var archivo : t_archivo_contribuyentes;
+    procedure alta_contribuyente(var archivo : t_archivo_contribuyentes;
                                     var archivo_contador : t_archivo_contador;
                                     var raiz_dni : t_puntero_arbol;
                                     var raiz_nombre : t_puntero_arbol;
@@ -278,12 +282,15 @@ implementation
     end;
 
 
-    procedure borrar_contribuyente(var archivo : t_archivo_contribuyentes;
+    procedure baja_contribuyente(var archivo_contribuyentes : t_archivo_contribuyentes;
+                                    var archivo_terrenos : t_archivo_terrenos;
                                     var archivo_contador : t_archivo_contador;
+                                    var lista_terrenos : t_lista_terrenos;
                                     puntero_datos : t_puntero_arbol);
     var
         contribuyente : t_contribuyente;
         indice : cardinal;
+        terreno_encontrado : t_terreno;
     begin
         clrscr;
 
@@ -291,7 +298,7 @@ implementation
 
         if (indice <> 0) then
         begin
-            contribuyente := leer_contribuyente(archivo, indice);
+            contribuyente := leer_contribuyente(archivo_contribuyentes, indice);
 
             writeln('Datos del contribuyente a dar de baja:');
             mostrar_contribuyente(contribuyente);
@@ -300,8 +307,19 @@ implementation
 
             if leer_si_no('¿Quiere dar de baja al contribuyente Nro. ' + contribuyente.numero + '?') = 's' then
             begin
-                escribir_contribuyente(archivo, contribuyente, indice);
+                escribir_contribuyente(archivo_contribuyentes, contribuyente, indice);
                 restar_contribuyente(archivo_contador); // resta 1 al contador de activos.
+
+                // Borrar las propiedades de ese contribuyente.
+                while secuencial_terreno(lista_terrenos, contribuyente.numero, 'contribuyente') do
+                begin
+                    recuperar_lista_terrenos(lista_terrenos, terreno_encontrado);
+
+                    writeln('Borrando: ', terreno_encontrado.domicilio_parcelario); readkey; // Test
+                    
+                    borrar_terreno(archivo_terrenos, archivo_contador, lista_terrenos, terreno_encontrado);
+                end;
+
                 writeln('Contribuyente dado de baja satisfactoriamente :)');
             end 
         end
@@ -310,7 +328,6 @@ implementation
 
         writeln('Presione una tecla para continuar...');
         readkey;
-        // TODO: BORRAR LAS PROPIEDADES QUE LE PERTENECEN A ESE CONTRIBUYENTE >:(
     end;
 
 
@@ -369,7 +386,7 @@ implementation
         else
         begin
             if leer_si_no('El contribuyente no existe. ¿Desea crearlo?') = 's' then
-                crear_contribuyente(archivo, archivo_contador, raiz_dni, raiz_nombre, puntero_datos, tipo);
+                alta_contribuyente(archivo, archivo_contador, raiz_dni, raiz_nombre, puntero_datos, tipo);
         end;
 
         writeln('Presione una tecla para continuar...');
@@ -396,7 +413,7 @@ implementation
         else
         begin
             if leer_si_no('El contribuyente no existe. ¿Desea crearlo?') = 's' then
-                crear_contribuyente(archivo, archivo_contador, raiz_dni, raiz_nombre, puntero_datos, tipo);
+                alta_contribuyente(archivo, archivo_contador, raiz_dni, raiz_nombre, puntero_datos, tipo);
         end;
     end;
 

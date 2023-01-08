@@ -9,7 +9,8 @@ unit lista_terrenos;
 interface
 
     uses terreno in 'units/terreno/terreno.pas',
-         compara_fechas in 'units/varios/compara_fechas.pas';
+         compara_fechas in 'units/varios/compara_fechas.pas',
+         crt, sysutils;
 
     type
 
@@ -43,35 +44,49 @@ interface
     
     // A partir de una lista, genera un array cuya lísta de índice i contiene terrenos de la zona i.
     function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
+
+    // Realiza una búsqueda secuencial sobre el terreno.
+    // Retorna verdadero si se encuentra, y posiciona el actual en el encontrado.
+    // Tipos:
+    //      'domicilio'
+    //      'contribuyente'
+    //      'plano'
+    function secuencial_terreno(var lista : t_lista_terrenos; clave : string; tipo : string): boolean;
     
 {--------------------------------}
 
 implementation
+
 
     function lista_vacia_terrenos(lista : t_lista_terrenos): boolean;
     begin
         lista_vacia_terrenos := (lista.tam = 0);
     end;
 
+
     function fin_lista_terrenos(lista : t_lista_terrenos): boolean;
     begin
         fin_lista_terrenos := (lista.actual = nil);
     end;
+
 
     procedure siguiente_lista_terrenos(var lista : t_lista_terrenos);
     begin
         lista.actual := lista.actual^.siguiente;
     end;
 
+
     procedure primero_lista_terrenos(var lista : t_lista_terrenos);
     begin
         lista.actual := lista.cabecera;
     end;
 
+
     procedure recuperar_lista_terrenos(lista : t_lista_terrenos; var recuperado : t_terreno);
     begin
         recuperado := lista.actual^.info;
     end;
+
 
     procedure crear_lista_terrenos(var lista : t_lista_terrenos);
     begin
@@ -79,6 +94,7 @@ implementation
         lista.actual := nil;
         lista.tam := 0;
     end;
+
 
     procedure enlistar_terreno(var lista : t_lista_terrenos; terreno : t_terreno);
     var
@@ -113,13 +129,60 @@ implementation
 
     end;
 
+
+    function secuencial_terreno(var lista : t_lista_terrenos; clave : string; tipo : string): boolean;
+    var
+        actual : string;
+    begin
+        // Por default, retornar false.
+        secuencial_terreno := false;
+
+        if not(lista_vacia_terrenos(lista)) then
+        begin
+            primero_lista_terrenos(lista);
+
+            case tipo of
+            'domicilio':        actual := lista.actual^.info.domicilio_parcelario;
+            'contribuyente':    actual := lista.actual^.info.nro_contribuyente;
+            'plano':            actual := lista.actual^.info.nro_plano;
+            end;
+
+            // Se posiciona en el terreno más cercano (mayor o igual)
+            while (not(fin_lista_terrenos(lista)) and (actual < clave)) do
+            begin
+                siguiente_lista_terrenos(lista);
+
+                if lista.actual <> nil then
+                begin
+                    case tipo of
+                    'domicilio':        actual := lista.actual^.info.domicilio_parcelario;
+                    'contribuyente':    actual := lista.actual^.info.nro_contribuyente;
+                    'plano':            actual := lista.actual^.info.nro_plano;
+                    end;
+                end;
+            end;
+
+            // Si son iguales, retornar true.
+            if (not(fin_lista_terrenos(lista)) and (actual = clave)) then
+                secuencial_terreno := true;
+        end;
+    end;
+
+
     procedure desenlistar_terreno(var lista : t_lista_terrenos; buscado : string);
     var
         puntero_aux, anterior : t_puntero_terreno;
     begin
+
+        // TEST
+        writeln('cabecera plano: ', lista.cabecera^.info.nro_plano);
+        readkey;
         
         if (buscado = lista.cabecera^.info.nro_plano) then
         begin
+            // TEST:
+            writeln('Borrar cabecera');
+
             puntero_aux := lista.cabecera;
             lista.cabecera := lista.cabecera^.siguiente;
             dispose(puntero_aux);
@@ -128,6 +191,9 @@ implementation
         end
         else
         begin
+            // TEST:
+            writeln('Borrar distinto a cabecera');
+
             anterior := lista.cabecera;
             lista.actual := anterior^.siguiente;
 
@@ -150,6 +216,7 @@ implementation
         end;
     end;
 
+
     function lista_terrenos_desde_archivo(var archivo : t_archivo_terrenos;
                                               cantidad_terrenos : cardinal): t_lista_terrenos;
     var
@@ -167,6 +234,7 @@ implementation
             end;
         end;
     end;
+
 
     function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
     var

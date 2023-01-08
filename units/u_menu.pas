@@ -47,6 +47,12 @@ interface
     // Opciones de consulta por DNI o por nombre y apellido.
     function menu_consulta(): byte;
 
+    // Pide al usuario seleccionar una zona para un terreno.
+    function menu_seleccion_zona(): byte;
+
+    // Pide al usuario seleccionar un tipo de edificación para un terreno.
+    function menu_seleccion_tipo_edificacion(): byte;
+
 
     { Funciones y procedimientos para crear un menú desde cero
       Nota: utilizar solamente si se desconocen las opciones de antemano. }
@@ -275,12 +281,10 @@ implementation
             menu := crear_menu('¿Qué desea modificar?');        
             agregar_opcion(menu, 'Número de contribuyente');    // 1
             agregar_opcion(menu, 'Número de plano');            // 2
-            agregar_opcion(menu, 'Fecha de inscripción');       // 3
-            agregar_opcion(menu, 'Domicilio parcelario');       // 4
-            agregar_opcion(menu, 'Superficie');                 // 5
-            agregar_opcion(menu, 'Zona');                       // 6
-            agregar_opcion(menu, 'Tipo de edificación');        // 7
-            agregar_opcion(menu, 'Volver');                     // 8
+            agregar_opcion(menu, 'Superficie');                 // 3
+            agregar_opcion(menu, 'Zona');                       // 4
+            agregar_opcion(menu, 'Tipo de edificación');        // 5
+            agregar_opcion(menu, 'Volver');                     // 6
 
             menu_modificar_terreno := seleccion_menu(menu);
         end;
@@ -311,6 +315,42 @@ implementation
             agregar_opcion(menu, 'Volver');                 // 3
 
             menu_consulta := seleccion_menu(menu);
+        end;
+
+
+        function menu_seleccion_zona(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('Seleccione la zona del terreno:');
+            agregar_opcion(menu, 'Zona 1 (1,5%)');    // 1
+            agregar_opcion(menu, 'Zona 2 (1,1%)');    // 2
+            agregar_opcion(menu, 'Zona 3 (0,7%)');    // 3
+            agregar_opcion(menu, 'Zona 4 (0,4%)');    // 4
+            agregar_opcion(menu, 'Zona 5 (0,1%)');    // 5
+
+            // Evitar salir con escape.
+            repeat
+                menu_seleccion_zona := seleccion_menu(menu);
+            until (menu_seleccion_zona <> 0);
+        end;
+
+
+        function menu_seleccion_tipo_edificacion(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('Seleccione el tipo de edificación:');
+            agregar_opcion(menu, 'Categoría 1 (1,7)');    // 1
+            agregar_opcion(menu, 'Categoría 2 (1,3)');    // 2
+            agregar_opcion(menu, 'Categoría 3 (1,1)');    // 3
+            agregar_opcion(menu, 'Categoría 4 (0,8)');    // 4
+            agregar_opcion(menu, 'Categoría 5 (0,5)');    // 5
+
+            // Evitar salir con escape.
+            repeat
+                menu_seleccion_tipo_edificacion := seleccion_menu(menu);
+            until (menu_seleccion_tipo_edificacion <> 0);
         end;
 
 end.

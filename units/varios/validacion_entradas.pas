@@ -83,7 +83,7 @@ implementation
     // Retorna verdadero si la string es del formato aaaa-mm-dd o aaaa/mm/dd
     function es_formato_fecha(entrada : string): boolean;
     var
-        ano : string[4];
+        anio : string[4];
         mes, dia : string[2];
     begin
         es_formato_fecha := true;
@@ -91,7 +91,7 @@ implementation
         // Chequea el largo y crea variables de año, mes y día.
         if length(entrada) = 10 then
         begin
-            ano := copy(entrada, 1, 4);
+            anio := copy(entrada, 1, 4);
             mes := copy(entrada, 6, 2);
             dia := copy(entrada, 10);
         end
@@ -99,7 +99,7 @@ implementation
             es_formato_fecha := false;
 
         // Chequea que el año, mes y día sean numéricos
-        if not(string_numerica(ano, true, false) and string_numerica(mes, true, false) and string_numerica(dia, true, false)) then
+        if not(string_numerica(anio, true, false) and string_numerica(mes, true, false) and string_numerica(dia, true, false)) then
             es_formato_fecha := false;
         
         // Chequea que los separadores sean '-' o '/'
@@ -109,24 +109,24 @@ implementation
 
     // Retorna verdadero si un año del formato aaaa es bisiesto.
     // Se asume que la variable ingresada siempre será numérica, no negativa y de caracteres exactos.
-    function es_bisiesto(ano : string): boolean;
+    function es_bisiesto(anio : string): boolean;
     var
-        ano_int : cardinal;
+        anio_int : cardinal;
     begin
         es_bisiesto := false;
 
-        ano_int := StrToInt(ano);
+        anio_int := StrToInt(anio);
 
         // Caso de año secular (divisible por 100)
-        if (ano_int mod 100) = 0 then
+        if (anio_int mod 100) = 0 then
         begin
-            if (ano_int mod 400) = 0 then
+            if (anio_int mod 400) = 0 then
                 es_bisiesto := true;
         end
         // Caso de año no secular
         else
         begin
-            if (ano_int mod 4) = 0 then
+            if (anio_int mod 4) = 0 then
                 es_bisiesto := true;
         end;
     end;
@@ -158,7 +158,7 @@ implementation
 
     // Retorna verdadero si un mes del forma dd es válido, basado en mes y año.
     // Se asume que la variable ingresada siempre será numérica, no negativa y de caracteres exactos.
-    function es_dia_valido(dia : string; mes : string; ano : string): boolean;
+    function es_dia_valido(dia : string; mes : string; anio : string): boolean;
     var
         dia_int : cardinal;
     begin
@@ -169,7 +169,7 @@ implementation
         // Febrero
         if StrToInt(mes) = 2 then
         begin
-            if es_bisiesto(ano) and (dia_int <= 29) then
+            if es_bisiesto(anio) and (dia_int <= 29) then
                 es_dia_valido := true
             else
             begin
@@ -196,14 +196,14 @@ implementation
 
     function es_fecha_valida(entrada : string): boolean;
     var
-        dia, mes, ano : string;
+        dia, mes, anio : string;
     begin
         es_fecha_valida := true;
 
         // Verifica que el formato sea correcto
         if es_formato_fecha(entrada) then
         begin
-            ano := copy(entrada, 1, 4);
+            anio := copy(entrada, 1, 4);
             mes := copy(entrada, 6, 2);
             dia := copy(entrada, 10);
 
@@ -212,7 +212,7 @@ implementation
                 es_fecha_valida := false;
 
             // Verifica día válido
-            if not(es_dia_valido(dia, mes, ano)) then
+            if not(es_dia_valido(dia, mes, anio)) then
                 es_fecha_valida := false;
         end
         else
@@ -256,7 +256,7 @@ implementation
             // Verifica el límite de caracteres.
             if not(limite_caracteres(leer_entrada, limite)) then
                 valido := false;
-        until (valido);
+        until (valido and (length(leer_entrada) >= 1));
     end;
 
     function leer_fecha(mensaje : string): string;

@@ -6,12 +6,13 @@ program main;
     uses arbol in 'units/arbol.pas',
         contribuyente in 'units/contribuyente/contribuyente.pas',
         terreno in 'units/terreno/terreno.pas',
-        lista_terrenos in 'units/terreno/lista_terrenos.pas',
         u_menu in 'units/u_menu.pas',
         contador_datos in 'units/varios/contador_datos.pas',
-        usuario_contribuyentes in 'units/contribuyente/usuario_contribuyentes.pas',
-        compara_fechas in 'units/varios/compara_fechas.pas',
         validacion_entradas in 'units/varios/validacion_entradas.pas',
+        usuario_contribuyentes in 'units/contribuyente/usuario_contribuyentes.pas',
+        usuario_terrenos in 'units/terreno/usuario_terrenos.pas',
+        compara_fechas in 'units/varios/compara_fechas.pas',
+        lista_terrenos in 'units/terreno/lista_terrenos.pas',
         //usuario_listados_estadisticas in 'units/usuario/usuario_listados_estadisticas.pas',
         //comprobante in 'units/usuario/comprobante.pas',
         crt;
@@ -41,6 +42,22 @@ program main;
         end;
     end;
 
+
+    // Genera la lista de terrenos a partir de un archivo.
+    procedure generar_lista(var lista : t_lista_terrenos; var archivo : t_archivo_terrenos; cantidad : cardinal);
+    var
+        i : cardinal;
+        terreno : t_terreno;
+    begin
+        for i := 1 to cantidad do
+        begin
+            terreno := leer_terreno(archivo, i);
+
+            enlistar_terreno(lista, terreno);
+        end;
+    end;
+
+
 var
     archivo_contribuyentes : t_archivo_contribuyentes;
     archivo_terrenos : t_archivo_terrenos;
@@ -52,14 +69,15 @@ var
     
     lista_terrenos_fecha : t_lista_terrenos; // Listas de terrenos.
 
-    vector_terrenos_por_zona : t_vector_listas; // Se genera cada vez que sea necesario.
+    //vector_terrenos_por_zona : t_vector_listas; // Se genera cada vez que sea necesario.
 
     opcion_principal : byte; // utilizado para la interacción con el menú principal.
     opcion_submenu : byte; // utilizado para los submenús del menú principal.
     opcion_consulta : byte; // utilizado para el tipo de búsqueda.
     tipo_busqueda : string; // 'dni' o 'nombre'.
 
-    aux : t_puntero_arbol; // utilizado para las búsquedas.
+    puntero_aux : t_puntero_arbol; // utilizado para las búsquedas.
+    terreno_aux : t_terreno; // utilizado para la búsqueda en alta.
 
 begin
     clrscr;
@@ -72,22 +90,31 @@ begin
     crear_arbol(arbol_contribuyentes_dni);
     crear_arbol(arbol_contribuyentes_nombre);
 
-    {writeln('al abrir: ', cantidad_contribuyentes(archivo_contador));
-    readkey;}
-
-    // Agregar contribuyentes a partir del archivo.
+    // Agregar contribuyentes a partir del archivo
     if cantidad_contribuyentes(archivo_contador) > 0 then
     begin
         generar_arbol(arbol_contribuyentes_dni, archivo_contribuyentes, cantidad_contribuyentes(archivo_contador), 'dni');
         generar_arbol(arbol_contribuyentes_nombre, archivo_contribuyentes, cantidad_contribuyentes(archivo_contador), 'nombre');
     end;
 
+    // Generar lista vacía
+    crear_lista_terrenos(lista_terrenos_fecha);
+
+    // Agregar terrenos a partir del archivo
+    if cantidad_terrenos(archivo_contador) > 0 then
+        generar_lista(lista_terrenos_fecha, archivo_terrenos, cantidad_terrenos(archivo_contador));
+
+    // TEST:
+    writeln('al abrir:');
+    writeln('cantidad_contribuyentes: ', cantidad_contribuyentes(archivo_contador));
+    writeln('cantidad_terrenos: ', cantidad_terrenos(archivo_contador));
+    readkey;
+
     // Generar lista de terrenos.
-    // TODO: lista ordenada por dueño???
+    // ¿TODO?: lista ordenada por dueño
     //lista_terrenos_fecha := lista_terrenos_desde_archivo(archivo_terrenos, cantidad_terrenos(archivo_contador));
 
-    { Loop principal}
-
+    // Menú principal
     repeat
         opcion_principal := menu_principal();
 
@@ -101,12 +128,14 @@ begin
                 case opcion_submenu of
                 1:  // Alta de contribuyentes.
                     begin
-                        aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, 'dni'); // verifica si el contribuyente ya existe.
-                        crear_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, aux, 'dni');
+                        puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, 'dni'); // verifica si el contribuyente ya existe.
+                        alta_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, puntero_aux, 'dni');
                     end;
 
                 2:  // Alta de terrenos.
                     begin
+                        terreno_aux := buscar_terreno(lista_terrenos_fecha);
+                        alta_terreno(archivo_terrenos, archivo_contribuyentes, archivo_contador, lista_terrenos_fecha, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, terreno_aux);
                     end;
                 end;
             
@@ -127,13 +156,13 @@ begin
                             2:  tipo_busqueda := 'nombre';
                         end;
 
-                        aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
-                        borrar_contribuyente(archivo_contribuyentes, archivo_contador, aux);
+                        puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
+                        baja_contribuyente(archivo_contribuyentes, archivo_terrenos, archivo_contador, lista_terrenos_fecha, puntero_aux);
                     end;
 
                 2:  //Baja de terrenos.
-                    begin
-                    end;
+                    baja_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha);
+
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -153,13 +182,13 @@ begin
                             2:  tipo_busqueda := 'nombre';
                         end;
 
-                        aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
-                        modificar_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, aux, tipo_busqueda);
+                        puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
+                        modificar_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, puntero_aux, tipo_busqueda);
                     end;
 
                 2:  //Modificación de terrenos.
-                    begin
-                    end;
+                    modificar_terreno(archivo_terrenos, archivo_contribuyentes, archivo_contador, lista_terrenos_fecha, arbol_contribuyentes_dni, arbol_contribuyentes_nombre);
+
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -178,14 +207,13 @@ begin
                             2:  tipo_busqueda := 'nombre';
                         end;
 
-                        aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
-
-                        consultar_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, aux, tipo_busqueda);
+                        puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
+                        consultar_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, puntero_aux, tipo_busqueda);
                     end;
 
                 2:  //Consulta de terrenos.
-                    begin
-                    end;
+                    consultar_terreno(archivo_terrenos, archivo_contribuyentes, archivo_contador, lista_terrenos_fecha, arbol_contribuyentes_dni, arbol_contribuyentes_nombre);
+
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
@@ -223,20 +251,16 @@ begin
 
                 case opcion_submenu of
                 1:  // Mostrar cantidad de inscripciones entre dos fechas.
-                    // TODO: verificar si funciona.
                     //cantidad_inscripciones_entre_fechas(lista_terrenos_fecha);
 
                 2:  // Mostrar porcentaje de propietarios con más de una propiedad.
-                    // TODO: idem.
                     //porc_propietarios_mult_propiedades(arbol_contribuyentes_nombre, archivo_contador);
 
                 3:  // Mostrar porcentaje de propietarios por tipo de edificación.
-                    // TODO: verificar si funciona.
                     //porc_por_tipo_edif(lista_terrenos_fecha, archivo_contador);
 
                 4:  begin
                         // Mostrar cantidad de propietarios dados de baja.
-                        // TODO: verificar si funciona.
                         //propietarios_dados_de_baja(archivo_contribuyentes, archivo_contador);
                     end;
                 end;
@@ -248,7 +272,10 @@ begin
 
     clrscr;
 
-    {writeln('al salir: ', cantidad_contribuyentes(archivo_contador));
+    {// TEST:
+    writeln('al cerrar:');
+    writeln('cantidad_contribuyentes: ', cantidad_contribuyentes(archivo_contador));
+    writeln('cantidad_terrenos: ', cantidad_terrenos(archivo_contador));
     readkey;}
 
     // Cerrar los archivos utilizados.
