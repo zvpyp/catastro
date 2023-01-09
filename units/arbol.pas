@@ -102,13 +102,6 @@ implementation
         hijo_derecho := raiz^.sd;
     end;
 
-
-    procedure modificar_clave(raiz : t_puntero_arbol; nueva_clave : string);
-    begin
-        raiz^.info.clave := nueva_clave;
-    end;
-
-
     function preorden(raiz : t_puntero_arbol; clave : string): t_puntero_arbol;
     begin
         if (raiz = nil) then
