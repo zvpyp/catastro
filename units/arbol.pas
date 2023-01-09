@@ -11,7 +11,6 @@ interface
     type
     t_dato_arbol = record
         clave : string; // clave utilizada para ordenamiento y búsqueda.
-        numero : string; // número de contribuyente. Utilizado para determinar terrenos que le pertenecen al contribuyente.
         indice : cardinal; // posición en el archivo.
     end;
     
@@ -93,13 +92,11 @@ implementation
         else
         begin
             info_raiz.clave := '';
-            info_raiz.numero := '';
             info_raiz.indice := 0;
         end;
     end;
 
 
-    // TODO: utilizar en otras funciones???.
     function hijo_derecho(raiz : t_puntero_arbol): t_puntero_arbol;
     begin
         hijo_derecho := raiz^.sd;
@@ -118,7 +115,6 @@ implementation
         begin
             new(preorden);
             preorden^.info.clave := clave;
-            preorden^.info.numero := '';
             preorden^.info.indice := 0;
         end
         else
@@ -129,7 +125,6 @@ implementation
             writeln('actual: ', raiz^.info.clave);
             writeln('buscado: ', clave);
             writeln('indice: ', raiz^.info.indice);
-            writeln('numero: ', raiz^.info.numero);
             writeln('iguales: ', (lowercase(raiz^.info.clave) = lowercase(clave)));
             readkey;
 

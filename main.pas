@@ -35,7 +35,6 @@ program main;
             else if tipo = 'nombre' then
                 dato.clave := contribuyente.nombre + ' ' + contribuyente.apellido;
             
-            dato.numero := contribuyente.numero;
             dato.indice := i;
 
             agregar_hijo(raiz, dato);
