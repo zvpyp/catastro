@@ -33,8 +33,10 @@ interface
     
     function menu_principal(): byte;
 
-    // Menú genérico para las opciones agregar, borrar, modificar, consultar.
-    function menu_ABMC(nombre_menu : string): byte;
+    // Acciones a realizar sobre el contribuyente encontrado.
+    function menu_encontrado(): byte;
+
+    function menu_consulta(): byte;
 
     function menu_modificar_terreno(): byte;
 
@@ -45,7 +47,7 @@ interface
     function menu_estadisticas(): byte;
 
     // Opciones de consulta por DNI o por nombre y apellido.
-    function menu_consulta(): byte;
+    function menu_consulta_contribuyente(): byte;
 
     // Pide al usuario seleccionar una zona para un terreno.
     function menu_seleccion_zona(): byte;
@@ -218,24 +220,36 @@ implementation
         var
             menu : t_menu;
         begin
-            menu := crear_menu('Bienvenido a Catastro, del equipo 10 ¿Qué desea hacer? :)');
-            agregar_opcion(menu, 'Alta');                       // 1
-            agregar_opcion(menu, 'Baja');                       // 2
-            agregar_opcion(menu, 'Modificación');               // 3
-            agregar_opcion(menu, 'Consulta');                   // 4
-            agregar_opcion(menu, 'Listas e impresión de datos');// 5
-            agregar_opcion(menu, 'Estadísticas');               // 6
-            agregar_opcion(menu, 'Salir');                      // 7
+            menu := crear_menu('Bienvenido al Catastro del equipo 10 ¿Qué desea hacer? :)');
+            agregar_opcion(menu, 'Ingresar número de contribuyente');  // 1
+            agregar_opcion(menu, 'Consulta');                          // 2
+            agregar_opcion(menu, 'Listas e impresión de datos');       // 3
+            agregar_opcion(menu, 'Estadísticas');                      // 4
+            agregar_opcion(menu, 'Salir');                             // 5
 
             menu_principal := seleccion_menu(menu);
         end;
 
-
-        function menu_ABMC(nombre_menu : string): byte;
+        function menu_encontrado(): byte;
         var
             menu : t_menu;
         begin
-            menu := crear_menu('Usted se encuentra en el menú de '+ nombre_menu +'. Elija una opción:');
+            menu := crear_menu('¿Qué desea realizar?');
+            agregar_opcion(menu, 'Modificación');      // 1
+            agregar_opcion(menu, 'Baja');              // 2
+            agregar_opcion(menu, 'Ver terrenos');      // 3
+            agregar_opcion(menu, 'Agregar terreno');   // 4
+            agregar_opcion(menu, 'Eliminar terreno');  // 5
+            agregar_opcion(menu, 'Salir');             // 6
+
+            menu_principal := seleccion_menu(menu);
+        end;
+
+        function menu_consulta(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('¿Qué desea consultar?');
             agregar_opcion(menu, 'Contribuyente');      // 1
             agregar_opcion(menu, 'Terreno');            // 2
             agregar_opcion(menu, 'Volver');             // 3
@@ -280,11 +294,10 @@ implementation
         begin
             menu := crear_menu('¿Qué desea modificar?');        
             agregar_opcion(menu, 'Número de contribuyente');    // 1
-            agregar_opcion(menu, 'Número de plano');            // 2
-            agregar_opcion(menu, 'Superficie');                 // 3
-            agregar_opcion(menu, 'Zona');                       // 4
-            agregar_opcion(menu, 'Tipo de edificación');        // 5
-            agregar_opcion(menu, 'Volver');                     // 6
+            agregar_opcion(menu, 'Superficie');                 // 2
+            agregar_opcion(menu, 'Zona');                       // 3
+            agregar_opcion(menu, 'Tipo de edificación');        // 4
+            agregar_opcion(menu, 'Volver');                     // 5
 
             menu_modificar_terreno := seleccion_menu(menu);
         end;
@@ -305,7 +318,7 @@ implementation
         end;
 
 
-        function menu_consulta(): byte;
+        function menu_consulta_contribuyente(): byte;
         var
             menu : t_menu;
         begin
@@ -323,11 +336,11 @@ implementation
             menu : t_menu;
         begin
             menu := crear_menu('Seleccione la zona del terreno:');
-            agregar_opcion(menu, 'Zona 1 (1,5%)');    // 1
-            agregar_opcion(menu, 'Zona 2 (1,1%)');    // 2
-            agregar_opcion(menu, 'Zona 3 (0,7%)');    // 3
-            agregar_opcion(menu, 'Zona 4 (0,4%)');    // 4
-            agregar_opcion(menu, 'Zona 5 (0,1%)');    // 5
+            agregar_opcion(menu, 'Zona 1 (150%)');    // 1
+            agregar_opcion(menu, 'Zona 2 (110%)');    // 2
+            agregar_opcion(menu, 'Zona 3 (70%)');     // 3
+            agregar_opcion(menu, 'Zona 4 (40%)');     // 4
+            agregar_opcion(menu, 'Zona 5 (10%)');     // 5
 
             // Evitar salir con escape.
             repeat
@@ -341,11 +354,11 @@ implementation
             menu : t_menu;
         begin
             menu := crear_menu('Seleccione el tipo de edificación:');
-            agregar_opcion(menu, 'Categoría 1 (1,7)');    // 1
-            agregar_opcion(menu, 'Categoría 2 (1,3)');    // 2
-            agregar_opcion(menu, 'Categoría 3 (1,1)');    // 3
-            agregar_opcion(menu, 'Categoría 4 (0,8)');    // 4
-            agregar_opcion(menu, 'Categoría 5 (0,5)');    // 5
+            agregar_opcion(menu, 'Categoría 1 (170%)');    // 1
+            agregar_opcion(menu, 'Categoría 2 (130%)');    // 2
+            agregar_opcion(menu, 'Categoría 3 (110%)');    // 3
+            agregar_opcion(menu, 'Categoría 4 (80%)');     // 4
+            agregar_opcion(menu, 'Categoría 5 (50%)');     // 5
 
             // Evitar salir con escape.
             repeat

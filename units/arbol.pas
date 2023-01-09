@@ -31,10 +31,10 @@ interface
 
     function arbol_lleno(raiz : t_puntero_arbol): boolean;
 
-    // retorna el t_dato de la raíz de un árbol.
+    // Retorna el t_dato de la raíz de un árbol.
     function info_raiz(raiz : t_puntero_arbol): t_dato_arbol;
 
-    // retorna el hijo derecho de un árbol.
+    // Retorna el hijo derecho de un árbol.
     function hijo_derecho(raiz : t_puntero_arbol): t_puntero_arbol;
 
     // Retorna un puntero al primer elemento encontrado. Si no existe, retorna un t_dato_arbol con índice 0.

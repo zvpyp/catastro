@@ -1,3 +1,5 @@
+// Falta cambiar toda la estructura con el nuevo menú.
+
 program main;
 
 {$codepage utf8}
