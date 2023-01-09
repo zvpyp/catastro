@@ -223,7 +223,6 @@ implementation
                     contribuyente.dni := leer_entrada('DNI', 10, 'natural');
                 end;
             end;
-
             
             contribuyente.nombre := leer_entrada('Nombre', 30, 'normal');
             contribuyente.apellido := leer_entrada('Apellido', 30, 'normal');
