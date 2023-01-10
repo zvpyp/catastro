@@ -7,7 +7,7 @@ unit listados;
 interface
 
     uses
-    terreno in 'units/terreno/terreno.pas';
+    terreno in 'units/terreno/terreno.pas',
     lista_terrenos in 'units/terreno/lista_terrenos.pas';
 
     // Muestra los terrenos según la zona que le corresponda.
