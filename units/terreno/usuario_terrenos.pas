@@ -24,15 +24,11 @@ interface
     // Sino, por predeterminado retorna un terreno vacío, con índice 0.
     function buscar_terreno(var lista : t_lista_terrenos): t_terreno;
 
-    // Toma un terreno buscado. Si el terreno ya existe, muestra los datos.
-    // Si no existe, pide datos al usuario y lo crea.
+    // Pide los datos y crea el terreno (con el nro de contribuyente obtenido con anterioridad).
     procedure alta_terreno(var archivo_terrenos : t_archivo_terrenos;
-                            var archivo_contribuyentes : t_archivo_contribuyentes;
-                            var archivo_contador : t_archivo_contador;
-                            var lista : t_lista_terrenos;
-                            var arbol_contribuyentes_dni : t_puntero_arbol;
-                            var arbol_contribuyentes_nombre : t_puntero_arbol;
-                            terreno : t_terreno);
+                           var archivo_contador : t_archivo_contador;
+                           var lista : t_lista_terrenos;
+                               nro_contribuyente : string);
     
     // Elimina un terreno de una lista y un archivo. Lo descuenta del archivo contador.
     procedure borrar_terreno(var archivo : t_archivo_terrenos;
@@ -40,28 +36,20 @@ interface
                                 var lista : t_lista_terrenos;
                                 terreno : t_terreno);
 
-    // Pide al usuario un terreno. Si existe, lo borra.
+    // Se le debe pasar el terreno que se desea eliminar.
     procedure baja_terreno(var archivo : t_archivo_terrenos;
                             var archivo_contador : t_archivo_contador;
-                            var lista : t_lista_terrenos);
+                            var lista : t_lista_terrenos;
+                            var terreno : t_terreno);
     
-    // Pide al usuario un terreno. Si existe, pide datos para modificarlo.
-    // Si no existe, pregunta para darlo de alta.
+    // Pasar por parámetro el terreno a modificar.
     procedure modificar_terreno(var archivo_terrenos : t_archivo_terrenos;
-                                var archivo_contribuyentes : t_archivo_contribuyentes;
                                 var archivo_contador : t_archivo_contador;
                                 var lista : t_lista_terrenos;
-                                var arbol_contribuyentes_dni : t_puntero_arbol;
-                                var arbol_contribuyentes_nombre : t_puntero_arbol);
+                                var terreno : t_terreno);
     
-    // Pide al usuario un terreno. Si existe, lo muestra en pantalla.
-    // Si no existe, pregunta para darlo de alta.
-    procedure consultar_terreno(var archivo_terrenos : t_archivo_terrenos;
-                                var archivo_contribuyentes : t_archivo_contribuyentes;
-                                var archivo_contador : t_archivo_contador;
-                                var lista : t_lista_terrenos;
-                                var arbol_contribuyentes_dni : t_puntero_arbol;
-                                var arbol_contribuyentes_nombre : t_puntero_arbol);
+    // Imprime en pantalla todos los datos del terreno.
+    procedure consulta_terreno(terreno : t_terreno);
 
 {--------------------------------}
 
@@ -71,7 +59,7 @@ implementation
     usuario_contribuyentes in 'units/contribuyente/usuario_contribuyentes.pas';
 
     // TODO: estilizar.
-    procedure mostrar_terreno(terreno : t_terreno);
+    procedure consulta_terreno(terreno : t_terreno);
     begin
         writeln('Domicilio parcelario: ', terreno.domicilio_parcelario);
         writeln('Número de plano: ', terreno.nro_plano);
@@ -169,42 +157,49 @@ implementation
 
 
     procedure alta_terreno(var archivo_terrenos : t_archivo_terrenos;
-                            var archivo_contribuyentes : t_archivo_contribuyentes;
-                            var archivo_contador : t_archivo_contador;
-                            var lista : t_lista_terrenos;
-                            var arbol_contribuyentes_dni : t_puntero_arbol;
-                            var arbol_contribuyentes_nombre : t_puntero_arbol;
-                            terreno : t_terreno);
+                           var archivo_contador : t_archivo_contador;
+                           var lista : t_lista_terrenos;
+                               nro_contribuyente : string);
+    var 
+        terreno : t_terreno;
+        edif_porc, zona_porc, valor_m2 : real; 
     begin
-        // Si el terreno no existe (indice 0), lo crea.
-        if terreno.indice = 0 then
-        begin
-
-            // Pedir datos al usuario. Nota: el domicilio parcelario se establece en la búsqueda.
+        valor_m2 := 12308.6;
             
-            terreno.nro_contribuyente := leer_numero_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre);
-            terreno.nro_plano := leer_numero_plano(lista);
-            terreno.avaluo := StrToFloat(leer_entrada('Ingrese el avalúo', 255, 'real'));
-            terreno.fecha_inscripcion := leer_fecha('Ingrese la fecha de inscripción');
-            terreno.superficie := strToFloat(leer_entrada('Ingrese la superficie en km cuadrados', 255, 'real'));
-            terreno.zona := menu_seleccion_zona();
-            terreno.tipo_edificacion := menu_seleccion_tipo_edificacion();
+        terreno.nro_contribuyente := nro_contribuyente;
+        terreno.nro_plano := leer_numero_plano(lista);
+        terreno.fecha_inscripcion := leer_fecha('Ingrese la fecha de inscripción');
+        terreno.domicilio_parcelario := leer_entrada('Ingrese el domicilio parcelario', 30, 'normal');
+        terreno.superficie := strToFloat(leer_entrada('Ingrese la superficie en km cuadrados', 255, 'real'));
+        terreno.zona := menu_seleccion_zona();
+        terreno.tipo_edificacion := menu_seleccion_tipo_edificacion();
 
-            terreno.indice := cantidad_terrenos(archivo_contador) + 1;
-
-            crear_terreno(archivo_terrenos, archivo_contador, lista, terreno);
-
-            clrscr;
-            writeln('Terreno creado satisfactoriamente :)');
-            readkey;
-        end
-        // Terreno ya existente
-        else
-        begin
-            writeln('Terreno ya existente: ');
-            writeln('');
-            mostrar_terreno(terreno);
+        case terreno.zona of
+            1: zona_porc := 1.5;
+            2: zona_porc := 1.1;
+            3: zona_porc := 0.7;
+            4: zona_porc := 0.4;
+            5: zona_porc := 0.1;
         end;
+
+        case terreno.tipo_edificacion of
+            1: edif_porc := 1.7;
+            2: edif_porc := 1.3;
+            3: edif_porc := 1.1;
+            4: edif_porc := 0.8;
+            5: edif_porc := 0.5;
+        end;
+
+        // Calculamos el avalúo.
+        terreno.avaluo := valor_m2 * terreno.superficie * zona_porc * edif_porc;
+
+        terreno.indice := cantidad_terrenos(archivo_contador) + 1;
+
+        crear_terreno(archivo_terrenos, archivo_contador, lista, terreno);
+
+        clrscr;
+        writeln('Terreno creado satisfactoriamente :)');
+        readkey;
     end;
 
 
@@ -245,112 +240,81 @@ implementation
 
     procedure baja_terreno(var archivo : t_archivo_terrenos;
                             var archivo_contador : t_archivo_contador;
-                            var lista : t_lista_terrenos);
-    var
-        terreno : t_terreno;
+                            var lista : t_lista_terrenos;
+                            var terreno : t_terreno);
     begin
-        terreno := buscar_terreno(lista);
         clrscr;
 
-        if terreno.indice <> 0 then
-        begin
-            // Mostrar el terreno a eliminar
-            writeln('Terreno a eliminar: ');
-            writeln('');
-            mostrar_terreno(terreno);
+        // Mostrar el terreno a eliminar
+        writeln('Terreno a eliminar: ');
+        writeln('');
+        mostrar_terreno(terreno);
 
-            if (leer_si_no('¿Quiere eliminar el terreno?') = 's') then
-                borrar_terreno(archivo, archivo_contador, lista, terreno);
-        end
-        else
-        begin
-            writeln('No se ha encontrado el terreno que quiere eliminar :(');
-            writeln('Presione una tecla para continuar...');
-            readkey;
-        end;
+        if (leer_si_no('¿Quiere eliminar el terreno?') = 's') then
+            borrar_terreno(archivo, archivo_contador, lista, terreno);
     end;
 
 
     procedure modificar_terreno(var archivo_terrenos : t_archivo_terrenos;
-                                var archivo_contribuyentes : t_archivo_contribuyentes;
                                 var archivo_contador : t_archivo_contador;
                                 var lista : t_lista_terrenos;
-                                var arbol_contribuyentes_dni : t_puntero_arbol;
-                                var arbol_contribuyentes_nombre : t_puntero_arbol);
+                                var terreno : t_terreno);
     var
-        terreno : t_terreno;
         nuevo_terreno : t_terreno;
         opt : byte;
+        edif_porc, zona_porc, valor_m2 : real;
     begin
-        terreno := buscar_terreno(lista);
+        valor_m2 := 12308.6;
+
         nuevo_terreno := terreno;
         clrscr;
 
-        if terreno.indice <> 0 then
-        begin
-            // Menú de modificación
-            // TODO: cambiar número de contribuyente buscando contribuyente por nombre o dni.
-            repeat
-                opt := menu_modificar_terreno();
+        // Menú de modificación
+        repeat
+            opt := menu_modificar_terreno();
 
-                case opt of
-                1:  nuevo_terreno.nro_contribuyente := leer_entrada('Número de contribuyente', 15, 'natural');
-                2:  nuevo_terreno.nro_plano := leer_numero_plano(lista);
-                3:  nuevo_terreno.superficie := strToFloat(leer_entrada('Superficie', 255, 'real'));
-                4:  nuevo_terreno.zona := menu_seleccion_zona();
-                5:  nuevo_terreno.tipo_edificacion := menu_seleccion_tipo_edificacion();
-                end;
-            until ((opt = 0) or (opt = 6));
+            case opt of
+                1:  nuevo_terreno.superficie := strToFloat(leer_entrada('Superficie', 255, 'real'));
+                2:  nuevo_terreno.zona := menu_seleccion_zona();
+                3:  nuevo_terreno.tipo_edificacion := menu_seleccion_tipo_edificacion();
+            end;
+        until ((opt = 0) or (opt = 4));
 
-            writeln('Datos actualizados:');
-            writeln('');
-            mostrar_terreno(nuevo_terreno);
+        case terreno.zona of
+            1: zona_porc := 1.5;
+            2: zona_porc := 1.1;
+            3: zona_porc := 0.7;
+            4: zona_porc := 0.4;
+            5: zona_porc := 0.1;
+        end;
 
+        case terreno.tipo_edificacion of
+            1: edif_porc := 1.7;
+            2: edif_porc := 1.3;
+            3: edif_porc := 1.1;
+            4: edif_porc := 0.8;
+            5: edif_porc := 0.5;
+        end;
 
-            
-            if (leer_si_no('¿Desea guardar los cambios?') = 's') then
+        nuevo_terreno.avaluo := valor_m2 * terreno.superficie * zona_porc * edif_porc;
+
+        writeln('Datos actualizados:');
+        writeln('');
+        mostrar_terreno(nuevo_terreno);
+
+        if (leer_si_no('¿Desea guardar los cambios?') = 's') then
             begin
                 // Borrar datos viejos.
                 borrar_terreno(archivo_terrenos, archivo_contador, lista, terreno);
 
                 // Agregar datos nuevos.
-                crear_terreno(archivo_terrenos, archivo_contador, lista, terreno);
+                crear_terreno(archivo_terrenos, archivo_contador, lista, nuevo_terreno);
 
                 clrscr;
                 writeln('Terreno actualizado satisfactoriamente :)');
                 writeln('Presione una tecla para continuar...');
                 readkey;
             end;
-
-            
-        end
-        else
-        begin
-            if (leer_si_no('Terreno inexistente. ¿Desea crearlo?') = 's') then
-                alta_terreno(archivo_terrenos, archivo_contribuyentes, archivo_contador, lista, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, terreno);
-        end;
-    end;
-
-
-    procedure consultar_terreno(var archivo_terrenos : t_archivo_terrenos;
-                                var archivo_contribuyentes : t_archivo_contribuyentes;
-                                var archivo_contador : t_archivo_contador;
-                                var lista : t_lista_terrenos;
-                                var arbol_contribuyentes_dni : t_puntero_arbol;
-                                var arbol_contribuyentes_nombre : t_puntero_arbol);
-    var
-        terreno : t_terreno;
-    begin
-        terreno := buscar_terreno(lista);
-        clrscr;
-
-        if terreno.indice <> 0 then
-            mostrar_terreno(terreno)
-        else
-        begin
-            if (leer_si_no('Terreno inexistente. ¿Desea crearlo?') = 's') then
-                alta_terreno(archivo_terrenos, archivo_contribuyentes, archivo_contador, lista, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, terreno);
-        end;
     end;
 
 end.

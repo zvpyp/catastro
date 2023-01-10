@@ -239,8 +239,9 @@ implementation
             agregar_opcion(menu, 'Baja');              // 2
             agregar_opcion(menu, 'Ver terrenos');      // 3
             agregar_opcion(menu, 'Agregar terreno');   // 4
-            agregar_opcion(menu, 'Eliminar terreno');  // 5
-            agregar_opcion(menu, 'Salir');             // 6
+            agregar_opcion(menu, 'Modificar terreno'); // 5
+            agregar_opcion(menu, 'Eliminar terreno');  // 6
+            agregar_opcion(menu, 'Salir');             // 7
 
             menu_principal := seleccion_menu(menu);
         end;
@@ -293,11 +294,10 @@ implementation
             menu : t_menu;
         begin
             menu := crear_menu('¿Qué desea modificar?');        
-            agregar_opcion(menu, 'Número de contribuyente');    // 1
-            agregar_opcion(menu, 'Superficie');                 // 2
-            agregar_opcion(menu, 'Zona');                       // 3
-            agregar_opcion(menu, 'Tipo de edificación');        // 4
-            agregar_opcion(menu, 'Volver');                     // 5
+            agregar_opcion(menu, 'Superficie');                 // 1
+            agregar_opcion(menu, 'Zona');                       // 2
+            agregar_opcion(menu, 'Tipo de edificación');        // 3
+            agregar_opcion(menu, 'Volver');                     // 4
 
             menu_modificar_terreno := seleccion_menu(menu);
         end;
