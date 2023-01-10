@@ -32,44 +32,33 @@ interface
     procedure mostrar_contribuyente(contribuyente : t_contribuyente);
 
     // Pide datos al usuario. Crea un nuevo contribuyente y lo añade al archivo.
-    // Se deben ingresar ambos árboles ordenados.
-    // puntero_datos contiene un puntero árbol con la clave y el índice del tipo determinado.
-    // tipo determina el tipo de orden que se usa en el árbol.
-    // tipos: 'dni', 'nombre'
+    // Se deben ingresar los 3 árboles ordenados.
+    // Se utiliza el nro de contribuyente pedido con anterioridad.
     procedure alta_contribuyente(var archivo : t_archivo_contribuyentes;
-                                    var archivo_contador : t_archivo_contador;
-                                    var raiz_dni : t_puntero_arbol;
-                                    var raiz_nombre : t_puntero_arbol;
-                                    puntero_datos : t_puntero_arbol;
-                                    tipo : string);
+                                 var archivo_contador : t_archivo_contador;
+                                 var raiz_dni : t_puntero_arbol;
+                                 var raiz_nombre : t_puntero_arbol;
+                                 var raiz_nro_contribuyente : t_puntero_arbol;
+                                     nro_contribuyente : string);
 
-    // Da de baja a un contribuyente dado, si existe.
+    // Da de baja a un contribuyente dado.
     // Borra también todas sus propiedades.
     procedure baja_contribuyente(var archivo_contribuyentes : t_archivo_contribuyentes;
-                                    var archivo_terrenos : t_archivo_terrenos;
-                                    var archivo_contador : t_archivo_contador;
-                                    var lista_terrenos : t_lista_terrenos;
-                                    puntero_datos : t_puntero_arbol);
+                                 var archivo_terrenos : t_archivo_terrenos;
+                                 var archivo_contador : t_archivo_contador;
+                                 var lista_terrenos : t_lista_terrenos;
+                                 var raiz_nro_contribuyente : t_puntero_arbol;
+                                     nro_contribuyente : string);
 
-    // Modifica un contribuyente dado, si existe. Sino, pregunta para crearlo.
-    // tipo determina el tipo de orden que se usa en el árbol.
-    // tipos: 'dni', 'nombre'
+    // Modifica un contribuyente dado.
     procedure modificar_contribuyente(var archivo : t_archivo_contribuyentes;
-                                        var archivo_contador : t_archivo_contador;
-                                        var raiz_dni : t_puntero_arbol;
-                                        var raiz_nombre : t_puntero_arbol;
-                                        puntero_datos : t_puntero_arbol;
-                                        tipo : string);
+                                      var raiz_nro_contribuyente : t_puntero_arbol;
+                                          nro_contribuyente : string);
 
-    // Si existe un contribuyente, lo muestra en pantalla. Sino, pregunta para crearlo.
-    // tipo determina el tipo de orden que se usa en el árbol.
-    // tipos: 'dni', 'nombre'
+    // Busca el contribuyente en el árbol e imprime sus datos.
     procedure consultar_contribuyente(var archivo : t_archivo_contribuyentes;
-                                        var archivo_contador : t_archivo_contador;
-                                        var raiz_dni : t_puntero_arbol;
-                                        var raiz_nombre : t_puntero_arbol;
-                                        puntero_datos : t_puntero_arbol;
-                                        tipo : string);
+                                      var raiz_nro_contribuyente : t_puntero_arbol;
+                                          nro_contribuyente : string);
 
 {--------------------------------}
 
@@ -79,22 +68,28 @@ implementation
     procedure mostrar_contribuyente(contribuyente : t_contribuyente);
     begin
         if contribuyente.activo then
-        begin
-            writeln('Nombre completo: ', contribuyente.nombre, ' ', contribuyente.apellido);
-            writeln('DNI: ', contribuyente.dni);
-            writeln('Número de contribuyente: ', contribuyente.numero);
-            writeln('Dirección: ', contribuyente.direccion);
-            writeln('Ciudad: ', contribuyente.ciudad);
-            writeln('Fecha de Nacimiento: ', contribuyente.fecha_nacimiento);
-            writeln('Teléfono: ', contribuyente.tel);
-            writeln('Email: ', contribuyente.email);
+            begin
+                writeln('Nombre completo: ', contribuyente.nombre, ' ', contribuyente.apellido);
+                writeln('DNI: ', contribuyente.dni);
+                writeln('Número de contribuyente: ', contribuyente.numero);
+                writeln('Dirección: ', contribuyente.direccion);
+                writeln('Ciudad: ', contribuyente.ciudad);
+                writeln('Fecha de Nacimiento: ', contribuyente.fecha_nacimiento);
+                writeln('Teléfono: ', contribuyente.tel);
+                writeln('Email: ', contribuyente.email);
 
-            writeln('');
-            writeln('Presione una tecla para continuar...');
-            readkey;
-        end
+                writeln('');
+                writeln('Presione una tecla para continuar...');
+                readkey;
+            end
         else
-            writeln('Contribuyente inactivo');
+            begin
+                writeln('Contribuyente inactivo');
+
+                writeln('');
+                writeln('Presione una tecla para continuar...');
+                readkey;
+            end;
     end;
 
 
@@ -193,199 +188,145 @@ implementation
 
 
     procedure alta_contribuyente(var archivo : t_archivo_contribuyentes;
-                                    var archivo_contador : t_archivo_contador;
-                                    var raiz_dni : t_puntero_arbol;
-                                    var raiz_nombre : t_puntero_arbol;
-                                    puntero_datos : t_puntero_arbol;
-                                    tipo : string);
+                                 var archivo_contador : t_archivo_contador;
+                                 var raiz_dni : t_puntero_arbol;
+                                 var raiz_nombre : t_puntero_arbol;
+                                 var raiz_nro_contribuyente : t_puntero_arbol;
+                                     nro_contribuyente : string);
     var
         contribuyente : t_contribuyente;
-        dato : t_dato_arbol;
         indice : cardinal;
+        dato : t_dato_arbol;
     begin
         clrscr;
+    
+        contribuyente.numero := nro_contribuyente; // Le pasamos el nro de contribuyente que se pidió antes.
+        contribuyente.dni := leer_entrada('DNI', 10, 'natural');
+        contribuyente.nombre := leer_entrada('Nombre', 30, 'normal');
+        contribuyente.apellido := leer_entrada('Apellido', 30, 'normal');
+        contribuyente.direccion := leer_entrada('Dirección', 30, 'normal');
+        contribuyente.ciudad := leer_entrada('Ciudad', 40, 'normal');
+        contribuyente.fecha_nacimiento := leer_fecha('Fecha de nacimiento');
+        contribuyente.tel := leer_entrada('Teléfono', 15, 'natural');
+        contribuyente.email := leer_entrada('Email', 40, 'normal'); // TODO: crear un leer separado para email.
+        contribuyente.activo := true;
 
-        dato := info_raiz(puntero_datos);
-        indice := dato.indice;
+        // Asignar automáticamente el índice en el archivo.
+        indice := cantidad_contribuyentes(archivo_contador) + 1;
 
-        // Si no existe, pide datos para crearlo.
-        if indice = 0 then
-        begin
-            
-            if tipo = 'dni' then
-            begin
-                contribuyente.dni := dato.clave;
-            end
-            else
-            begin
-                if tipo = 'nombre' then
-                begin
-                    contribuyente.dni := leer_entrada('DNI', 10, 'natural');
-                end;
-            end;
-            
-            contribuyente.nombre := leer_entrada('Nombre', 30, 'normal');
-            contribuyente.apellido := leer_entrada('Apellido', 30, 'normal');
-            contribuyente.numero := leer_entrada('Número de contribuyente', 15, 'natural');
-            contribuyente.direccion := leer_entrada('Dirección', 30, 'normal');
-            contribuyente.ciudad := leer_entrada('Ciudad', 40, 'normal');
-            contribuyente.fecha_nacimiento := leer_fecha('Fecha de nacimiento');
-            contribuyente.tel := leer_entrada('Teléfono', 15, 'natural');
-            contribuyente.email := leer_entrada('Email', 40, 'normal'); // TODO: crear un leer separado para email.
-            contribuyente.activo := true;
+        // Añadirlo al archivo
+        escribir_contribuyente(archivo, contribuyente, indice);
 
-            // Asignar automáticamente el índice en el archivo.
-            indice := cantidad_contribuyentes(archivo_contador) + 1;
+        dato.indice := indice;
+        dato.clave := contribuyente.dni;            
+        //Test: {writeln('dato.clave: ', dato.clave);}
+        agregar_hijo(raiz_dni, dato);
+        dato.clave  := contribuyente.nombre + ' ' + contribuyente.apellido;
+        agregar_hijo(raiz_nombre, dato);
+        dato.clave := contribuyente.numero;
+        agregar_hijo(raiz_nro_contribuyente, dato);
 
-            // Añadirlo al archivo
-            escribir_contribuyente(archivo, contribuyente, indice);
+        // Cuenta un nuevo contribuyente.
+        sumar_contribuyente(archivo_contador);
 
-            dato.indice := indice;
-            dato.numero := contribuyente.numero;
-            dato.clave := contribuyente.dni;
-            writeln('dato.clave: ', dato.clave);
-            agregar_hijo(raiz_dni, dato);
-            dato.clave  := contribuyente.nombre + ' ' + contribuyente.apellido;
-            agregar_hijo(raiz_nombre, dato);
-
-            // Cuenta un nuevo contribuyente.
-            sumar_contribuyente(archivo_contador);
-            
-            // Liberar espacio en memoria del puntero auxiliar.
-            dispose(puntero_datos);
-
-            clrscr;
-            writeln('Contribuyente creado satisfactoriamente :)');
-            readkey;
-
-        end
-        else
-        begin
-            // Caso en el que ya exista
-            contribuyente := leer_contribuyente(archivo, indice);
-
-            // Si no está activo, pide para activarlo.
-            if not(contribuyente.activo) then
-            begin
-                if (leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's') then
-                    activar_contribuyente(archivo, contribuyente, indice);
-            end
-            // Caso de que esté activo
-            else
-            begin
-                writeln('Ya existe ese contribuyente:');
-                writeln('');
-                mostrar_contribuyente(contribuyente);
-            end;
-        end;
+        clrscr;
+        writeln('Contribuyente creado satisfactoriamente :)');
+        readkey;
     end;
 
 
     procedure baja_contribuyente(var archivo_contribuyentes : t_archivo_contribuyentes;
-                                    var archivo_terrenos : t_archivo_terrenos;
-                                    var archivo_contador : t_archivo_contador;
-                                    var lista_terrenos : t_lista_terrenos;
-                                    puntero_datos : t_puntero_arbol);
+                                 var archivo_terrenos : t_archivo_terrenos;
+                                 var archivo_contador : t_archivo_contador;
+                                 var lista_terrenos : t_lista_terrenos;
+                                 var raiz_nro_contribuyente : t_puntero_arbol;
+                                     nro_contribuyente : string);
     var
         contribuyente : t_contribuyente;
+        nodo : t_puntero_arbol;
         indice : cardinal;
         terreno_encontrado : t_terreno;
     begin
         clrscr;
 
-        indice := info_raiz(puntero_datos).indice;
+        nodo := preorden(raiz_nro_contribuyente, nro_contribuyente);
+        indice := nodo^.info.indice;
+        
+        contribuyente := leer_contribuyente(archivo_contribuyentes, indice);
+        contribuyente.activo := false;
 
-        if (indice <> 0) then
+        escribir_contribuyente(archivo_contribuyentes, contribuyente, indice);
+        restar_contribuyente(archivo_contador); // resta 1 al contador de activos.
+
+        // Borrar las propiedades de ese contribuyente.
+        while secuencial_terreno(lista_terrenos, contribuyente.numero, 'contribuyente') do
         begin
-            contribuyente := leer_contribuyente(archivo_contribuyentes, indice);
+            recuperar_lista_terrenos(lista_terrenos, terreno_encontrado);
 
-            writeln('Datos del contribuyente a dar de baja:');
-            mostrar_contribuyente(contribuyente);
-
-            contribuyente.activo := false;
-
-            if leer_si_no('¿Quiere dar de baja al contribuyente Nro. ' + contribuyente.numero + '?') = 's' then
-            begin
-                escribir_contribuyente(archivo_contribuyentes, contribuyente, indice);
-                restar_contribuyente(archivo_contador); // resta 1 al contador de activos.
-
-                // Borrar las propiedades de ese contribuyente.
-                while secuencial_terreno(lista_terrenos, contribuyente.numero, 'contribuyente') do
-                begin
-                    recuperar_lista_terrenos(lista_terrenos, terreno_encontrado);
-
-                    writeln('Borrando: ', terreno_encontrado.domicilio_parcelario); readkey; // Test
+            writeln('Borrando: ', terreno_encontrado.domicilio_parcelario); readkey; // Test
                     
-                    borrar_terreno(archivo_terrenos, archivo_contador, lista_terrenos, terreno_encontrado);
-                end;
+            borrar_terreno(archivo_terrenos, archivo_contador, lista_terrenos, terreno_encontrado);
+        end;
 
-                writeln('Contribuyente dado de baja satisfactoriamente :)');
-            end 
-        end
-        else
-            writeln('No se puede dar de baja este contribuyente porque no se encuentra en la base de datos :(');
-
+        writeln('Contribuyente dado de baja satisfactoriamente :)');
+        writeln('');
         writeln('Presione una tecla para continuar...');
         readkey;
     end;
 
 
     procedure modificar_contribuyente(var archivo : t_archivo_contribuyentes;
-                                        var archivo_contador : t_archivo_contador;
-                                        var raiz_dni : t_puntero_arbol;
-                                        var raiz_nombre : t_puntero_arbol;
-                                        puntero_datos : t_puntero_arbol;
-                                        tipo : string);
+                                      var raiz_nro_contribuyente : t_puntero_arbol;
+                                          nro_contribuyente : string);
     var
         contribuyente : t_contribuyente;
+        nodo : t_puntero_arbol;
+        dato : t_dato_arbol;
         opt : byte;
         indice : cardinal;
     begin
         clrscr;
-        
-        indice := info_raiz(puntero_datos).indice; 
 
-        if (indice <> 0) then
+        nodo := preorden(raiz_nro_contribuyente, nro_contribuyente);
+        indice := nodo^.info.indice;
+
+        // Cargar datos del contribuyente
+        contribuyente := leer_contribuyente(archivo, indice);
+
+        if contribuyente.activo then
         begin
-            // Cargar datos del contribuyente
-            contribuyente := leer_contribuyente(archivo, indice);
-
-            if contribuyente.activo then
-            begin
-                // Menú de modificación
-                repeat
-                    opt := menu_modificar_contribuyente();
-
-                    case opt of
-                    1:  contribuyente.direccion := leer_entrada('Dirección', 30, 'normal');
-                    2:  contribuyente.ciudad := leer_entrada('Ciudad', 40, 'normal');
-                    3:  contribuyente.tel := leer_entrada('Teléfono', 15, 'natural');
-                    4:  contribuyente.email := leer_entrada('Email', 40, 'normal');
-                    end;
-
-                until ((opt = 0) or (opt = 5)); // Opciones de salir.
-
+            // Menú de modificación
+            repeat
                 clrscr;
                 writeln('Datos actualizados del contribuyente:');
                 mostrar_contribuyente(contribuyente);
+                
+                opt := menu_modificar_contribuyente();
 
-                // guardar los cambios en el archivo y en el árbol.
-                if (leer_si_no('¿Desea guardar los cambios?') = 's') then
-                begin
-                    escribir_contribuyente(archivo, contribuyente, indice);
-                    writeln('Contribuyente modificado satisfactoriamente :)');
+                case opt of
+                1:  contribuyente.direccion := leer_entrada('Dirección', 30, 'normal');
+                2:  contribuyente.ciudad := leer_entrada('Ciudad', 40, 'normal');
+                3:  contribuyente.tel := leer_entrada('Teléfono', 15, 'natural');
+                4:  contribuyente.email := leer_entrada('Email', 40, 'normal');
                 end;
-            end
-            else
+
+            until ((opt = 0) or (opt = 5)); // Opciones de salir.
+
+            clrscr;
+            writeln('Datos actualizados del contribuyente:');
+            mostrar_contribuyente(contribuyente);
+
+            // guardar los cambios en el archivo y en el árbol.
+            if (leer_si_no('¿Desea guardar los cambios?') = 's') then
             begin
-                if (leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's') then
-                    activar_contribuyente(archivo, contribuyente, indice);
+                escribir_contribuyente(archivo, contribuyente, indice);
+                writeln('Contribuyente modificado satisfactoriamente :)');
             end;
         end
         else
         begin
-            if leer_si_no('El contribuyente no existe. ¿Desea crearlo?') = 's' then
-                alta_contribuyente(archivo, archivo_contador, raiz_dni, raiz_nombre, puntero_datos, tipo);
+            if (leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's') then
+                activar_contribuyente(archivo, contribuyente, indice);
         end;
 
         writeln('Presione una tecla para continuar...');
@@ -393,27 +334,19 @@ implementation
     end;
 
     procedure consultar_contribuyente(var archivo : t_archivo_contribuyentes;
-                                        var archivo_contador : t_archivo_contador;
-                                        var raiz_dni : t_puntero_arbol;
-                                        var raiz_nombre : t_puntero_arbol;
-                                        puntero_datos : t_puntero_arbol;
-                                        tipo : string);
+                                      var raiz_nro_contribuyente : t_puntero_arbol;
+                                          nro_contribuyente : string);
     var
         contribuyente : t_contribuyente;
+        nodo : t_puntero_arbol;
         indice : cardinal;
+        
     begin
-        indice := info_raiz(puntero_datos).indice; 
+        nodo := preorden(raiz_nro_contribuyente, nro_contribuyente);
+        indice := nodo^.info.indice;
 
-        if indice <> 0 then
-            begin
-                contribuyente := leer_contribuyente(archivo, indice);
-                mostrar_contribuyente(contribuyente);
-            end
-        else
-        begin
-            if leer_si_no('El contribuyente no existe. ¿Desea crearlo?') = 's' then
-                alta_contribuyente(archivo, archivo_contador, raiz_dni, raiz_nombre, puntero_datos, tipo);
-        end;
+        contribuyente := leer_contribuyente(archivo, indice);
+        mostrar_contribuyente(contribuyente);
     end;
 
 end.
