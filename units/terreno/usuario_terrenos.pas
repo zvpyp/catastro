@@ -49,7 +49,10 @@ interface
                                 var terreno : t_terreno);
     
     // Imprime en pantalla todos los datos del terreno.
-    procedure consulta_terreno(terreno : t_terreno);
+    procedure mostrar_terreno(terreno : t_terreno);
+
+    // Muestra un menú con las propiedades del contribuyente y retorna la seleccionada.
+    function seleccionar_terreno(lista : t_lista_terrenos; nro_contribuyente : string) : t_terreno;
 
 {--------------------------------}
 
@@ -59,7 +62,10 @@ implementation
     usuario_contribuyentes in 'units/contribuyente/usuario_contribuyentes.pas';
 
     // TODO: estilizar.
-    procedure consulta_terreno(terreno : t_terreno);
+
+
+
+    procedure mostrar_terreno(terreno : t_terreno);
     begin
         writeln('Domicilio parcelario: ', terreno.domicilio_parcelario);
         writeln('Número de plano: ', terreno.nro_plano);
@@ -141,7 +147,7 @@ implementation
             end;
         until (propietario.indice <> 0);
 
-        leer_numero_contribuyente := propietario.numero;
+        leer_numero_contribuyente := propietario.clave;
     end;
 
 
@@ -315,6 +321,79 @@ implementation
                 writeln('Presione una tecla para continuar...');
                 readkey;
             end;
+    end;
+
+    function lista_terrenos_contribuyente(lista : t_lista_terrenos; nro_contribuyente : string) : t_lista_terrenos;
+    var
+        terreno_actual : t_terreno;
+    begin
+      
+      primero_lista_terrenos(lista);
+
+      while not (fin_lista_terrenos(lista)) do
+        begin
+
+        recuperar_lista_terrenos(lista, terreno_actual);
+
+        if terreno_actual.nro_contribuyente = nro_contribuyente then
+          enlistar_terreno(lista_terrenos_contribuyente, terreno_actual);
+
+        siguiente_lista_terrenos(lista);
+
+        end;
+
+    end;
+
+
+    function seleccionar_terreno(lista : t_lista_terrenos; nro_contribuyente : string) : t_terreno;
+    var
+        lista_propiedades_contribuyente : t_lista_terrenos;
+        menu : t_menu;
+        terreno_actual : t_terreno;
+        opt, i : cardinal;
+    begin
+        // Inicializa el terreno.
+        terreno_default(seleccionar_terreno);
+
+        // Genera una lista con solo los terrenos del propietario.
+        lista_propiedades_contribuyente := lista_terrenos_contribuyente(lista, nro_contribuyente);
+        
+        // Genera el menú
+        menu := crear_menu('Seleccione un terreno');
+        // Crea las opciones.
+        while not (fin_lista_terrenos(lista_propiedades_contribuyente)) do
+          begin
+
+            recuperar_lista_terrenos(lista_propiedades_contribuyente, terreno_actual);
+
+            agregar_opcion(menu, (terreno_actual.domicilio_parcelario + ' ($' + FloatToStr(terreno_actual.avaluo) + ')'));
+
+          end;
+
+        if lista_propiedades_contribuyente.tam <> 0 then
+        begin
+            repeat
+                opt := seleccion_menu(menu);
+            until (opt <> 0); // Evitar salir con escape.
+            
+            // Retorna el terreno seleccionado.
+            primero_lista_terrenos(lista_propiedades_contribuyente);
+            
+            if opt > 1 then
+                begin
+                    for i := 2 to opt do
+                    siguiente_lista_terrenos(lista_propiedades_contribuyente);
+                end; 
+
+            recuperar_lista_terrenos(lista_propiedades_contribuyente, seleccionar_terreno);
+        end
+        else 
+        begin  
+            Writeln('El usuario no es propietario de ningún terreno');
+            Writeln('');
+            Writeln('Presione una tecla para continuar...');
+            readkey;
+        end;
     end;
 
 end.

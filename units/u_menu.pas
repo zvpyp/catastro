@@ -243,7 +243,7 @@ implementation
             agregar_opcion(menu, 'Eliminar terreno');  // 6
             agregar_opcion(menu, 'Salir');             // 7
 
-            menu_principal := seleccion_menu(menu);
+            menu_encontrado := seleccion_menu(menu);
         end;
 
         function menu_consulta(): byte;
@@ -255,7 +255,7 @@ implementation
             agregar_opcion(menu, 'Terreno');            // 2
             agregar_opcion(menu, 'Volver');             // 3
 
-            menu_ABMC := seleccion_menu(menu);
+            menu_consulta := seleccion_menu(menu);
         end;
 
 
@@ -327,7 +327,7 @@ implementation
             agregar_opcion(menu, 'Por nombre completo');    // 2
             agregar_opcion(menu, 'Volver');                 // 3
 
-            menu_consulta := seleccion_menu(menu);
+            menu_consulta_contribuyente := seleccion_menu(menu);
         end;
 
 
