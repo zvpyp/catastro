@@ -18,6 +18,8 @@ function fecha_es_mayor_igual(fecha1 : string; fecha2 : string) : boolean;
 
 function fecha_es_menor_igual(fecha1 : string; fecha2 : string) : boolean;
 
+{--------------------------------}
+
 implementation
 function fecha_es_mayor(fecha1 : string; fecha2 : string) : boolean;
 var

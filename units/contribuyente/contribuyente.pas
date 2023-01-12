@@ -8,6 +8,8 @@ unit contribuyente;
 
 interface
 
+    uses arbol in 'units/arbol.pas';
+
     const
     ruta_contribuyentes = './contribuyentes.dat';
 

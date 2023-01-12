@@ -28,11 +28,15 @@ interface
             ultima : t_puntero_opcion;
             tam : byte;
         end;
+
+    { Funciones de menús }
     
     function menu_principal(): byte;
 
-    // Menú genérico para las opciones agregar, borrar, modificar, consultar.
-    function menu_ABMC(nombre_menu : string): byte;
+    // Acciones a realizar sobre el contribuyente encontrado.
+    function menu_encontrado(): byte;
+
+    function menu_consulta(): byte;
 
     function menu_modificar_terreno(): byte;
 
@@ -43,15 +47,34 @@ interface
     function menu_estadisticas(): byte;
 
     // Opciones de consulta por DNI o por nombre y apellido.
-    function menu_consulta(): byte;
+    function menu_consulta_contribuyente(): byte;
 
-    // Utilizado en el menú de consulta. Aparece si el contribuyente buscado no existe.
-    function menu_contribuyente_inexistente(): byte;
+    // Pide al usuario seleccionar una zona para un terreno.
+    function menu_seleccion_zona(): byte;
+
+    // Pide al usuario seleccionar un tipo de edificación para un terreno.
+    function menu_seleccion_tipo_edificacion(): byte;
+
+
+    { Funciones y procedimientos para crear un menú desde cero
+      Nota: utilizar solamente si se desconocen las opciones de antemano. }
+
+    // Retorna un menú sin opciones. Mensaje superior es el título del menú.
+    function crear_menu(mensaje_superior : string): t_menu;
+
+    // añade una opción a un menú existente, con un mensaje.
+    procedure agregar_opcion(var menu : t_menu; mensaje : string);
+
+
+    // Espera a que el usuario seleccione una opción
+    // luego la retorna como entero, según el orden.
+    // Escape siempre retorna 0;
+    function seleccion_menu(menu : t_menu) : byte;
+
 {--------------------------------}
 
 implementation
 
-        // Retorna un menú sin opciones.
         function crear_menu(mensaje_superior : string): t_menu;
         begin
             crear_menu.mensaje_superior := mensaje_superior;
@@ -62,6 +85,7 @@ implementation
             crear_menu.tam := 0;
         end;
 
+
         // retorna una opción
         function crear_opcion(mensaje : string; indice : byte): t_opcion;
         begin
@@ -71,7 +95,7 @@ implementation
             crear_opcion.siguiente := nil;
         end;
 
-        // añade una opción al menú.
+
         procedure agregar_opcion(var menu : t_menu; mensaje : string);
         var
             puntero_auxiliar : t_puntero_opcion;
@@ -96,6 +120,7 @@ implementation
             menu.ultima := puntero_auxiliar;
         end;
 
+
         // Espera a que el usuario elija una opción válida, y la retorna como una string de 3 letras.
         // Teclas que retorna: arriba, abajo, izquierda, derecha, enter, escape.
         function leer_opcion(): string;
@@ -119,11 +144,13 @@ implementation
             end;
         end;
 
+
         procedure opcion_siguiente(var menu : t_menu);
         begin
             if menu.seleccionada^.siguiente <> nil then
                 menu.seleccionada := menu.seleccionada^.siguiente;
         end;
+
 
         procedure opcion_anterior(var menu : t_menu);
         begin
@@ -131,10 +158,12 @@ implementation
                 menu.seleccionada := menu.seleccionada^.anterior;
         end;
 
+
         procedure inicio_menu(var menu : t_menu);
         begin
             menu.actual := menu.cabecera;
         end;
+
 
         // Escribe el menú con una interfaz bonita.
         procedure mostrar_menu(menu : t_menu);
@@ -154,9 +183,7 @@ implementation
             end;
         end;
 
-        // Espera a que el usuario seleccione una opción
-        // luego la retorna.
-        // Escape siempre retorna 0;
+
         function seleccion_menu(menu : t_menu) : byte;
         var
             opt : string;
@@ -188,33 +215,49 @@ implementation
                 seleccion_menu := menu.seleccionada^.indice;
         end;
 
+
         function menu_principal(): byte;
         var
             menu : t_menu;
         begin
-            menu := crear_menu('Bienvenido a Catastro, del equipo 10 ¿Qué desea hacer? :)');
-            agregar_opcion(menu, 'Alta');                       // 1
-            agregar_opcion(menu, 'Baja');                       // 2
-            agregar_opcion(menu, 'Modificación');               // 3
-            agregar_opcion(menu, 'Consulta');                   // 4
-            agregar_opcion(menu, 'Listas e impresión de datos');// 5
-            agregar_opcion(menu, 'Estadísticas');               // 6
-            agregar_opcion(menu, 'Salir');                      // 7
+            menu := crear_menu('Bienvenido al Catastro del equipo 10 ¿Qué desea hacer? :)');
+            agregar_opcion(menu, 'Ingresar número de contribuyente');  // 1
+            agregar_opcion(menu, 'Consulta');                          // 2
+            agregar_opcion(menu, 'Listas e impresión de datos');       // 3
+            agregar_opcion(menu, 'Estadísticas');                      // 4
+            agregar_opcion(menu, 'Salir');                             // 5
 
             menu_principal := seleccion_menu(menu);
         end;
 
-        function menu_ABMC(nombre_menu : string): byte;
+        function menu_encontrado(): byte;
         var
             menu : t_menu;
         begin
-            menu := crear_menu('Usted se encuentra en el menú de '+ nombre_menu +'. Elija una opción:');
+            menu := crear_menu('¿Qué desea realizar?');
+            agregar_opcion(menu, 'Modificación');      // 1
+            agregar_opcion(menu, 'Baja');              // 2
+            agregar_opcion(menu, 'Ver terrenos');      // 3
+            agregar_opcion(menu, 'Agregar terreno');   // 4
+            agregar_opcion(menu, 'Modificar terreno'); // 5
+            agregar_opcion(menu, 'Eliminar terreno');  // 6
+            agregar_opcion(menu, 'Salir');             // 7
+
+            menu_encontrado := seleccion_menu(menu);
+        end;
+
+        function menu_consulta(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('¿Qué desea consultar?');
             agregar_opcion(menu, 'Contribuyente');      // 1
             agregar_opcion(menu, 'Terreno');            // 2
             agregar_opcion(menu, 'Volver');             // 3
 
-            menu_ABMC := seleccion_menu(menu);
+            menu_consulta := seleccion_menu(menu);
         end;
+
 
         function menu_listados(): byte;
         var
@@ -230,6 +273,7 @@ implementation
             menu_listados := seleccion_menu(menu);
         end;
 
+
         function menu_estadisticas(): byte;
         var
             menu : t_menu;
@@ -244,61 +288,82 @@ implementation
             menu_estadisticas := seleccion_menu(menu);
         end;
 
+
         function menu_modificar_terreno(): byte;
         var
             menu : t_menu;
         begin
             menu := crear_menu('¿Qué desea modificar?');        
-            agregar_opcion(menu, 'Número de contribuyente');    // 1
-            agregar_opcion(menu, 'Número de plano');            // 2
-            agregar_opcion(menu, 'Fecha de inscripción');       // 3
-            agregar_opcion(menu, 'Domicilio parcelario');       // 4
-            agregar_opcion(menu, 'Superficie');                 // 5
-            agregar_opcion(menu, 'Zona');                       // 6
-            agregar_opcion(menu, 'Tipo de edificación');        // 7
-            agregar_opcion(menu, 'Volver');                     // 8
+            agregar_opcion(menu, 'Superficie');                 // 1
+            agregar_opcion(menu, 'Zona');                       // 2
+            agregar_opcion(menu, 'Tipo de edificación');        // 3
+            agregar_opcion(menu, 'Volver');                     // 4
 
             menu_modificar_terreno := seleccion_menu(menu);
         end;
+
 
         function menu_modificar_contribuyente(): byte;
         var
             menu : t_menu;
         begin
             menu := crear_menu('¿Qué desea modificar?');
-            agregar_opcion(menu, 'Número de contribuyente');    // 1
-            agregar_opcion(menu, 'Apellido');                   // 2
-            agregar_opcion(menu, 'Nombre');                     // 3
-            agregar_opcion(menu, 'Dirección');                  // 4
-            agregar_opcion(menu, 'Ciudad');                     // 5
-            agregar_opcion(menu, 'DNI');                        // 6
-            agregar_opcion(menu, 'Fecha de nacimiento');        // 7
-            agregar_opcion(menu, 'Teléfono');                   // 8
-            agregar_opcion(menu, 'Email');                      // 9
-            agregar_opcion(menu, 'Volver');                     // 10
+            agregar_opcion(menu, 'Dirección');                  // 1
+            agregar_opcion(menu, 'Ciudad');                     // 2
+            agregar_opcion(menu, 'Teléfono');                   // 3
+            agregar_opcion(menu, 'Email');                      // 4
+            agregar_opcion(menu, 'Volver');                     // 5
 
             menu_modificar_contribuyente := seleccion_menu(menu);
         end;
 
-        function menu_consulta(): byte;
+
+        function menu_consulta_contribuyente(): byte;
         var
             menu : t_menu;
         begin
             menu := crear_menu('¿Cómo desea realizar la consulta?');
-            agregar_opcion(menu, 'Por nombre completo');        // 1
-            agregar_opcion(menu, 'Por DNI');                    // 2
-            agregar_opcion(menu, 'Volver');                     // 3
+            agregar_opcion(menu, 'Por DNI');                // 1
+            agregar_opcion(menu, 'Por nombre completo');    // 2
+            agregar_opcion(menu, 'Volver');                 // 3
 
-            menu_consulta := seleccion_menu(menu);
+            menu_consulta_contribuyente := seleccion_menu(menu);
         end;
 
-        function menu_contribuyente_inexistente(): byte;
+
+        function menu_seleccion_zona(): byte;
         var
             menu : t_menu;
         begin
-            menu := crear_menu('No existe ningún usuario con este número de contribuyente. ¿Qué desea hacer?');
-            agregar_opcion(menu, 'Ingresar otro número de contribuyente');  // 1
-            agregar_opcion(menu, 'Volver a la pantalla anterior');          // 2
+            menu := crear_menu('Seleccione la zona del terreno:');
+            agregar_opcion(menu, 'Zona 1 (150%)');    // 1
+            agregar_opcion(menu, 'Zona 2 (110%)');    // 2
+            agregar_opcion(menu, 'Zona 3 (70%)');     // 3
+            agregar_opcion(menu, 'Zona 4 (40%)');     // 4
+            agregar_opcion(menu, 'Zona 5 (10%)');     // 5
+
+            // Evitar salir con escape.
+            repeat
+                menu_seleccion_zona := seleccion_menu(menu);
+            until (menu_seleccion_zona <> 0);
+        end;
+
+
+        function menu_seleccion_tipo_edificacion(): byte;
+        var
+            menu : t_menu;
+        begin
+            menu := crear_menu('Seleccione el tipo de edificación:');
+            agregar_opcion(menu, 'Categoría 1 (170%)');    // 1
+            agregar_opcion(menu, 'Categoría 2 (130%)');    // 2
+            agregar_opcion(menu, 'Categoría 3 (110%)');    // 3
+            agregar_opcion(menu, 'Categoría 4 (80%)');     // 4
+            agregar_opcion(menu, 'Categoría 5 (50%)');     // 5
+
+            // Evitar salir con escape.
+            repeat
+                menu_seleccion_tipo_edificacion := seleccion_menu(menu);
+            until (menu_seleccion_tipo_edificacion <> 0);
         end;
 
 end.
