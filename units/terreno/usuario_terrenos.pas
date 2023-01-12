@@ -52,7 +52,7 @@ interface
     procedure mostrar_terreno(terreno : t_terreno);
 
     // Muestra un menú con las propiedades del contribuyente y retorna la seleccionada.
-    function seleccionar_terreno(lista : t_lista_terrenos; nro_contribuyente : string) : t_terreno;
+    function seleccionar_terreno(var lista : t_lista_terrenos; nro_contribuyente : string) : t_terreno;
 
 {--------------------------------}
 
@@ -67,18 +67,23 @@ implementation
 
     procedure mostrar_terreno(terreno : t_terreno);
     begin
-        writeln('Domicilio parcelario: ', terreno.domicilio_parcelario);
-        writeln('Número de plano: ', terreno.nro_plano);
-        writeln('Número de contribuyente: ', terreno.nro_contribuyente);
-        writeln('Avalúo: ', terreno.avaluo);
-        writeln('Fecha de inscripción: ', terreno.fecha_inscripcion);
-        writeln('Superficie: ', terreno.superficie);
-        writeln('Zona: ', terreno.zona);
-        writeln('Tipo de edificación: ', terreno.tipo_edificacion);
+        clrscr;
+        if terreno.indice <> 0 then
+        begin
+            writeln('Domicilio parcelario: ', terreno.domicilio_parcelario);
+            writeln('Número de plano: ', terreno.nro_plano);
+            writeln('Número de contribuyente: ', terreno.nro_contribuyente);
+            writeln('Avalúo: $', terreno.avaluo:0:1);
+            writeln('Fecha de inscripción: ', terreno.fecha_inscripcion);
+            writeln('Superficie: ', terreno.superficie:0:0, ' m2');
+            writeln('Zona: ', terreno.zona);
+            writeln('Tipo de edificación: ', terreno.tipo_edificacion);
+        end
+        else Writeln('Terreno inexistente');
 
-        writeln('');
-        writeln('Presione una tecla para continuar...');
-        readkey;
+            writeln('');
+            writeln('Presione una tecla para continuar...');
+            readkey;
     end;
 
 
@@ -323,29 +328,27 @@ implementation
             end;
     end;
 
-    function lista_terrenos_contribuyente(lista : t_lista_terrenos; nro_contribuyente : string) : t_lista_terrenos;
+    function lista_terrenos_contribuyente(var lista : t_lista_terrenos; nro_contribuyente : string) : t_lista_terrenos;
     var
         terreno_actual : t_terreno;
     begin
-      
+      crear_lista_terrenos(lista_terrenos_contribuyente);
       primero_lista_terrenos(lista);
-
       while not (fin_lista_terrenos(lista)) do
         begin
 
         recuperar_lista_terrenos(lista, terreno_actual);
-
+        
         if terreno_actual.nro_contribuyente = nro_contribuyente then
           enlistar_terreno(lista_terrenos_contribuyente, terreno_actual);
 
         siguiente_lista_terrenos(lista);
-
         end;
 
     end;
 
 
-    function seleccionar_terreno(lista : t_lista_terrenos; nro_contribuyente : string) : t_terreno;
+    function seleccionar_terreno(var lista : t_lista_terrenos; nro_contribuyente : string) : t_terreno;
     var
         lista_propiedades_contribuyente : t_lista_terrenos;
         menu : t_menu;
@@ -357,16 +360,16 @@ implementation
         // Genera una lista con solo los terrenos del propietario.
         lista_propiedades_contribuyente := lista_terrenos_contribuyente(lista, nro_contribuyente);
         
+        
         // Genera el menú
         menu := crear_menu('Seleccione un terreno');
         // Crea las opciones.
+        primero_lista_terrenos(lista_propiedades_contribuyente);
         while not (fin_lista_terrenos(lista_propiedades_contribuyente)) do
           begin
-
             recuperar_lista_terrenos(lista_propiedades_contribuyente, terreno_actual);
-
             agregar_opcion(menu, (terreno_actual.domicilio_parcelario + ' ($' + FloatToStr(terreno_actual.avaluo) + ')'));
-
+            siguiente_lista_terrenos(lista_propiedades_contribuyente);
           end;
 
         if lista_propiedades_contribuyente.tam <> 0 then

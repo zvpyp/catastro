@@ -72,6 +72,11 @@ implementation
 
     procedure siguiente_lista_terrenos(var lista : t_lista_terrenos);
     begin
+        // TEST 
+        {writeln('actual = nil: ',lista.actual = nil);
+        readkey;
+        writeln('siguiente = nil: ',lista.actual^.siguiente = nil);
+        readkey;}
         lista.actual := lista.actual^.siguiente;
     end;
 
@@ -102,7 +107,9 @@ implementation
     begin
         new(puntero_nuevo);
         puntero_nuevo^.info := terreno;
-
+        {writeln(terreno.fecha_inscripcion);
+        writeln(lista.cabecera^.info.fecha_inscripcion);
+        readkey;}
         if (lista.cabecera = nil) or 
            (fecha_es_mayor(lista.cabecera^.info.fecha_inscripcion, terreno.fecha_inscripcion)) then
         begin

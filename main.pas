@@ -84,6 +84,7 @@ var
     terreno_aux : t_terreno; // utilizado para la selección.
     contribuyente_aux : t_contribuyente; // utilizado para la consulta por dni y nombre.
     dato_aux : t_dato_arbol; // utilizado para la busqueda de contribuyente.
+    indice_aux : cardinal;
 
     nro_contribuyente : string;
 
@@ -134,64 +135,72 @@ begin
         begin
             nro_contribuyente := leer_entrada('Número de contribuyente: ', 15, 'natural');
             dato_aux := info_raiz(preorden(arbol_contribuyentes_nro, nro_contribuyente));
-            if dato_aux.indice <> 0 then
+            indice_aux := dato_aux.indice; 
+            if indice_aux <> 0 then
               begin
               contribuyente_aux := leer_contribuyente(archivo_contribuyentes, dato_aux.indice);
-              Writeln('Este número de contribuyente pertenece a ' + contribuyente_aux.nombre + ' ' + contribuyente_aux.apellido + '.');
-              Writeln('');
-              Writeln('Presione una tecla para continuar...');
-              readkey;
-              clrscr;
-              mostrar_contribuyente(contribuyente_aux);
-                repeat
+              if  not (contribuyente_aux.activo) then 
+              begin
+                if leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's' then activar_contribuyente(archivo_contribuyentes, contribuyente_aux, indice_aux);
+              end;
+              if contribuyente_aux.activo then
+                begin
+                    Writeln('Este número de contribuyente pertenece a ' + contribuyente_aux.nombre + ' ' + contribuyente_aux.apellido + '.');
+                    Writeln('');
+                    Writeln('Presione una tecla para continuar...');
+                    readkey;
+                    clrscr;
+                    mostrar_contribuyente(contribuyente_aux);
+                        repeat
 
-                    opcion_submenu := menu_encontrado();
+                            opcion_submenu := menu_encontrado();
 
-                    case opcion_submenu of
-                    
-                    // opción de modificación.
-                    1: modificar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, nro_contribuyente);
+                            case opcion_submenu of
+                            
+                            // Opción de modificación.
+                            1: modificar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, nro_contribuyente);
 
-                    // Opción de baja.
-                    2: 
-                    begin
-                      
-                      Writeln('Al dar de baja a un contribuyente, también se eliminaran todas sus propiedades.');
-                      readkey;
-                      if leer_si_no('¿Quiere continuar?') = 's' then
-                      baja_contribuyente(archivo_contribuyentes, archivo_terrenos, archivo_contador, lista_terrenos_fecha, arbol_contribuyentes_nro, nro_contribuyente);
+                            // Opción de baja.
+                            2: 
+                            begin
+                            
+                            Writeln('Al dar de baja a un contribuyente, también se eliminaran todas sus propiedades.');
+                            readkey;
+                            if leer_si_no('¿Quiere continuar?') = 's' then
+                            baja_contribuyente(archivo_contribuyentes, archivo_terrenos, archivo_contador, lista_terrenos_fecha, arbol_contribuyentes_nro, nro_contribuyente);
 
-                    end;
+                            end;
 
-                    // Opción de ver terrenos.
-                    3:
-                    begin
-                        terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
-                        if terreno_aux.indice <> 0 then
-                            mostrar_terreno(terreno_aux);
-                    end;
+                            // Opción de ver terrenos.
+                            3:
+                            begin
+                                terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
+                                if terreno_aux.indice <> 0 then
+                                    mostrar_terreno(terreno_aux);
+                            end;
 
-                    // Opción de agregar terreno.
-                    4: alta_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, nro_contribuyente);
+                            // Opción de agregar terreno.
+                            4: alta_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, nro_contribuyente);
 
-                    // Opción de modificar terreno.
-                    5:
-                    begin
-                        terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
-                        if terreno_aux.indice <> 0 then
-                            modificar_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, terreno_aux);
-                    end;
+                            // Opción de modificar terreno.
+                            5:
+                            begin
+                                terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
+                                if terreno_aux.indice <> 0 then
+                                    modificar_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, terreno_aux);
+                            end;
 
-                    // Opción de eliminar terreno.
-                    6:
-                    begin
-                        terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
-                        if terreno_aux.indice <> 0 then
-                          baja_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, terreno_aux);
-                    end;
+                            // Opción de eliminar terreno.
+                            6:
+                            begin
+                                terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
+                                if terreno_aux.indice <> 0 then
+                                baja_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, terreno_aux);
+                            end;
 
-                    end;
-                until ((opcion_submenu = 0) or (opcion_submenu = 7)); // 0 es salir por escape, 7 es por selección
+                            end;
+                        until ((opcion_submenu = 0) or (opcion_submenu = 7)); // 0 es salir por escape, 7 es por selección
+                end;
               end
               else 
                 begin
@@ -219,7 +228,10 @@ begin
 
                         puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
                         if puntero_aux^.info.indice <> 0 then
-                            contribuyente_aux := leer_contribuyente(archivo_contribuyentes, puntero_aux^.info.indice)
+                            begin
+                            contribuyente_aux := leer_contribuyente(archivo_contribuyentes, puntero_aux^.info.indice);
+                            mostrar_contribuyente(contribuyente_aux);
+                            end
                         else 
                             begin
                                 Writeln('El usuario no existe, presione una tecla para continuar');

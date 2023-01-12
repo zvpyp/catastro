@@ -60,6 +60,8 @@ interface
                                       var raiz_nro_contribuyente : t_puntero_arbol;
                                           nro_contribuyente : string);
 
+     procedure activar_contribuyente(var archivo : t_archivo_contribuyentes; contribuyente : t_contribuyente; indice : cardinal);                           
+
 {--------------------------------}
 
 implementation
@@ -147,12 +149,12 @@ implementation
 
             // Límite 61 (nombre y apellido, incluye espacio);
             clave := leer_entrada('Ingrese el nombre completo del contribuyente', 61, 'normal');
-
+            
             // Encontrar todos los que concuerdan.
             preorden_multiple(raiz_nombre, clave, buscar_contribuyente, cantidad);
-
-            {writeln('la cantidad de encontrados es ', cantidad);
-            readkey;}
+            
+            writeln('la cantidad de encontrados es ', cantidad);
+            readkey;
 
             if cantidad >= 2 then
             begin
