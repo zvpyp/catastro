@@ -82,6 +82,7 @@ var
 
     puntero_aux : t_puntero_arbol; // para algo se usa.
     terreno_aux : t_terreno; // utilizado para la selección.
+    contribuyente_aux : t_contribuyente; // utilizado para la consulta por dni y nombre.
     dato_aux : t_dato_arbol; // utilizado para la busqueda de contribuyente.
 
     nro_contribuyente : string;
@@ -135,7 +136,15 @@ begin
             dato_aux := info_raiz(preorden(arbol_contribuyentes_nro, nro_contribuyente));
             if dato_aux.indice <> 0 then
               begin
+              contribuyente_aux := leer_contribuyente(archivo_contribuyentes, dato_aux.indice);
+              Writeln('Este número de contribuyente pertenece a ' + contribuyente_aux.nombre + ' ' + contribuyente_aux.apellido + '.');
+              Writeln('');
+              Writeln('Presione una tecla para continuar...');
+              readkey;
+              clrscr;
+              mostrar_contribuyente(contribuyente_aux);
                 repeat
+
                     opcion_submenu := menu_encontrado();
 
                     case opcion_submenu of
@@ -147,7 +156,10 @@ begin
                     2: 
                     begin
                       
-                      Writeln()
+                      Writeln('Al dar de baja a un contribuyente, también se eliminaran todas sus propiedades.');
+                      readkey;
+                      if leer_si_no('¿Quiere continuar?') = 's' then
+                      baja_contribuyente(archivo_contribuyentes, archivo_terrenos, archivo_contador, lista_terrenos_fecha, arbol_contribuyentes_nro, nro_contribuyente);
 
                     end;
 
@@ -183,19 +195,22 @@ begin
               end
               else 
                 begin
-                    
+                    Writeln('El número de contribuyente no se encuentra en la base de datos');
+                    readkey;
+                    if leer_si_no('¿Desea crear el contribuyente?') = 's' then
+                      alta_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, arbol_contribuyentes_nro, nro_contribuyente);
                 end;
         end;
 
         // Opción de consulta.
-        {2:  repeat
+        2:  repeat
 
-                opcion_submenu := menu_consulta_contribuyente();
+                opcion_submenu := menu_consulta();
 
                 case opcion_submenu of
-                1:  //Baja de contribuyentes.
+                1:  //Consulta de contribuyentes.
                     begin
-                        opcion_consulta := menu_consulta();
+                        opcion_consulta := menu_consulta_contribuyente();
 
                         case opcion_consulta of
                             1:  tipo_busqueda := 'dni';
@@ -203,15 +218,23 @@ begin
                         end;
 
                         puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
-                        baja_contribuyente(archivo_contribuyentes, archivo_terrenos, archivo_contador, lista_terrenos_fecha, puntero_aux);
+                        if puntero_aux^.info.indice <> 0 then
+                            contribuyente_aux := leer_contribuyente(archivo_contribuyentes, puntero_aux^.info.indice)
+                        else 
+                            begin
+                                Writeln('El usuario no existe, presione una tecla para continuar');
+                                readkey;
+                            end;
                     end;
 
-                2:  //Baja de terrenos.
-                    baja_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha);
-
+                2:  //Consulta de terrenos.
+                    begin
+                        terreno_aux := buscar_terreno(lista_terrenos_fecha);
+                        mostrar_terreno(terreno_aux);
+                    end;
                 end;
             
-            until ((opcion_submenu = 0) or (opcion_submenu = 3));}
+            until ((opcion_submenu = 0) or (opcion_submenu = 3));
 
         // Opción de listados.
         {3:  repeat

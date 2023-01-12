@@ -354,7 +354,6 @@ implementation
     begin
         // Inicializa el terreno.
         terreno_default(seleccionar_terreno);
-
         // Genera una lista con solo los terrenos del propietario.
         lista_propiedades_contribuyente := lista_terrenos_contribuyente(lista, nro_contribuyente);
         
@@ -387,7 +386,7 @@ implementation
 
             recuperar_lista_terrenos(lista_propiedades_contribuyente, seleccionar_terreno);
         end
-        else 
+        else
         begin  
             Writeln('El usuario no es propietario de ningún terreno');
             Writeln('');
