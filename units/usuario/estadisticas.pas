@@ -7,6 +7,7 @@ unit estadisticas
 interface
 
     uses
+    arbol in 'units/arbol/arbol.pas',
     contador_datos in 'units/varios/contador_datos.pas',
     terreno in 'units/terreno/terreno.pas',
     lista_terrenos in 'units/terreno/lista_terrenos.pas',
@@ -35,8 +36,8 @@ implementation
         inactivos := cantidad_contribuyentes(archivo_contador) - cantidad_activos(archivo_contador);
 
         writeln('Propietarios dados de baja: ', inactivos);
-        writeln('Presione una tecla para continuar...');
-        readkey;
+        
+        pedir_tecla();
     end;
 
 
@@ -60,8 +61,7 @@ implementation
         else
             writeln('No hay terrenos en la base de datos.');
         
-        writeln('Presione una tecla para continuar...');
-        readkey;
+        pedir_tecla();
     end;
 
 
@@ -101,6 +101,75 @@ implementation
 
         // Muestra los resultados.
         writeln('Entre el ', fecha1, ' y el ', fecha2, ' hubo ', contador, ' inscripciones');
+
+        pedir_tecla();
+    end;
+
+
+    // Retorna la cantidad de propiedades que posee un contribuyente según el número.
+    function cantidad_propiedades(lista : t_lista_terrenos, nro_contribuyente : string): cardinal;
+    var
+        terreno_actual : t_terreno;
+    begin
+        cantidad_propiedades := 0;
+
+        primero_lista_terrenos(lista);
+
+        while not(fin_lista_terrenos) do
+        begin
+            recuperar_lista_terrenos(lista, terreno_actual);
+
+            if terreno_actual.nro_contribuyente = nro_contribuyente then
+                cantidad_propiedades := cantidad_propiedades + 1;
+
+            siguiente_lista_terrenos(lista);
+        end;
+    end;
+
+
+    // Guarda en una variable la cantidad de propietarios con más de una propiedad.
+    // El árbol a pasar debe ser por número de contribuyente.
+    procedure propietarios_multiples(raiz : t_puntero_arbol; lista : t_lista_terrenos; var cantidad : cardinal);
+    var
+        propiedades_poseidas : cardinal;
+        nro_contribuyente : string;
+    begin
+        // Ignorar nodos nulos.
+        if raiz <> nil then
+        begin
+            propietarios_multiples(hijo_izquierdo(raiz));
+
+
+            nro_contribuyente := info_raiz(raiz).clave;
+
+            propiedades_poseidas := cantidad_propiedades(lista, nro_contribuyente);
+
+            // Suma si el contribuyente tiene más de una propiedad
+            if (propiedades_poseidas > 1) then
+                cantidad := cantidad + 1;
+
+
+            propietarios_multiples(hijo_derecho(raiz));
+        end;
+    end;
+
+
+    procedure porcentaje_propietarios_multiples(raiz : t_puntero_arbol; lista : t_lista_terrenos; var archivo_contador : t_archivo_contador);
+    var
+        multiples : cardinal;
+        activos : cardinal;
+    begin
+        cantidad := 0;
+        propietarios_multiples(raiz, lista, multiples) // Cuenta la cantidad de propietarios múltiples.
+
+        activos := cantidad_activos(archivo_contador);
+
+        if activos <> 0 then
+        begin
+            writeln('Propietarios con más de una propiedad: ', (100 * multiples/activos), '%');
+        end
+        else
+            writeln('No hay contribuyentes activos');
 
         pedir_tecla();
     end;
