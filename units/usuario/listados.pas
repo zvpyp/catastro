@@ -8,20 +8,22 @@ interface
 
     uses
     terreno in 'units/terreno/terreno.pas',
-    lista_terrenos in 'units/terreno/lista_terrenos.pas';
+    lista_terrenos in 'units/terreno/lista_terrenos.pas',
+    crt,
+    compara_fechas in 'units/varios/compara_fechas.pas';
 
     // Muestra los terrenos según la zona que le corresponda.
     procedure terrenos_por_zona(lista : t_lista_terrenos);
 
     // Muestra todas las inscripciones de terrenos dadas en un año.
-    procedure inscripciones_anio(var lista : t_lista_terrenos; t_anio : string);
+    procedure inscripciones_anio(var lista : t_lista_terrenos; anio : string);
 
 {--------------------------------}
 
 implementation
 
 
-    // TODO?: hacer ver como grilla
+    // TODO: hacer ver como grilla
     procedure terrenos_por_zona(lista : t_lista_terrenos);
     var
         vector_por_zona : t_vector_listas;
@@ -30,7 +32,7 @@ implementation
         i : 1..5;
     begin
         vector_por_zona := generar_vector_por_zona(lista);
-        
+    
         for i := 1 to 5 do
         begin
             writeln('Zona ', i, ':');
@@ -41,6 +43,8 @@ implementation
 
             while not(fin_lista_terrenos(lista_actual)) do
             begin
+            writeln(i);
+            readkey;
                 recuperar_lista_terrenos(lista_actual, terreno_actual);
                 writeln(terreno_actual.domicilio_parcelario);
                 siguiente_lista_terrenos(lista_actual);
@@ -53,7 +57,7 @@ implementation
     end;
 
 
-    procedure inscripciones_anio(var lista : t_lista_terrenos; t_anio : string);
+    procedure inscripciones_anio(var lista : t_lista_terrenos; anio : string);
     var
         anio_con_ceros : string;
         ceros : byte;

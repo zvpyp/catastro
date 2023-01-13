@@ -246,7 +246,12 @@ implementation
     function generar_vector_por_zona(lista : t_lista_terrenos): t_vector_listas;
     var
         actual : t_terreno;
+        i : byte;
     begin
+        for i := 1 to 5 do
+          begin
+          crear_lista_terrenos(generar_vector_por_zona[i]);
+          end;
         primero_lista_terrenos(lista);
 
         while not(fin_lista_terrenos(lista)) do
