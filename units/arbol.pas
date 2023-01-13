@@ -34,7 +34,10 @@ interface
     // Retorna el t_dato de la raíz de un árbol.
     function info_raiz(raiz : t_puntero_arbol): t_dato_arbol;
 
-    // Retorna el hijo derecho de un árbol.
+    // Retorna el hijo izquierdo de un nodo.
+    function hijo_izquierdo(raiz : t_puntero_arbol): t_puntero_arbol;
+
+    // Retorna el hijo derecho de un nodo.
     function hijo_derecho(raiz : t_puntero_arbol): t_puntero_arbol;
 
     // Retorna un puntero al primer elemento encontrado. Si no existe, retorna un t_dato_arbol con índice 0.
@@ -97,10 +100,17 @@ implementation
     end;
 
 
+    function hijo_izquierdo(raiz : t_puntero_arbol): t_puntero_arbol;
+    begin
+        hijo_izquierdo := raiz^.si;
+    end;
+
+
     function hijo_derecho(raiz : t_puntero_arbol): t_puntero_arbol;
     begin
         hijo_derecho := raiz^.sd;
     end;
+
 
     function preorden(raiz : t_puntero_arbol; clave : string): t_puntero_arbol;
     begin
