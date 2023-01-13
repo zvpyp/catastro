@@ -255,6 +255,9 @@ begin
                 opcion_submenu := menu_listados();
 
                 case opcion_submenu of
+                2:  // Lista de inscripciones en un año.
+                    // TODO: verificar si funciona.
+                    inscripciones_anio(lista_terrenos_fecha, leer_entrada('Año: ', 4, 'normal'));
                 3:  begin
                         // Lista de terrenos por zona.
                         // TODO: verificar si funciona.
@@ -264,9 +267,6 @@ begin
                     // TODO: Idem.
                     //listado_contribuyentes_propiedades(arbol_contribuyentes_nombre);
 
-                2:  // Lista de inscripciones en un año.
-                    // TODO: verificar si funciona.
-                    //listado_inscripciones_anio(lista_terrenos_fecha);
 
                 3:  begin
                         // Lista de terrenos por zona.
