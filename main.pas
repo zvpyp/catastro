@@ -15,6 +15,7 @@ program main;
         usuario_terrenos in 'units/terreno/usuario_terrenos.pas',
         compara_fechas in 'units/varios/compara_fechas.pas',
         lista_terrenos in 'units/terreno/lista_terrenos.pas',
+        listados in 'units/usuario/listados.pas',
         //usuario_listados_estadisticas in 'units/usuario/usuario_listados_estadisticas.pas',
         //comprobante in 'units/usuario/comprobante.pas',
         crt;
@@ -73,7 +74,7 @@ var
     
     lista_terrenos_fecha : t_lista_terrenos; // Listas de terrenos.
 
-    //vector_terrenos_por_zona : t_vector_listas; // Se genera cada vez que sea necesario.
+    vector_terrenos_por_zona : t_vector_listas; // Se genera cada vez que sea necesario.
 
     opcion_principal : byte; // utilizado para la interacción con el menú principal.
     opcion_submenu : byte; // utilizado para los submenús del menú principal.
@@ -249,12 +250,17 @@ begin
             until ((opcion_submenu = 0) or (opcion_submenu = 3));
 
         // Opción de listados.
-        {3:  repeat
+        3:  repeat
             
                 opcion_submenu := menu_listados();
 
                 case opcion_submenu of
-                1:  // Lista de contribuyentes con sus propiedades valorizadas.
+                3:  begin
+                        // Lista de terrenos por zona.
+                        // TODO: verificar si funciona.
+                        terrenos_por_zona(lista_terrenos_fecha);
+                    end;
+                {1:  // Lista de contribuyentes con sus propiedades valorizadas.
                     // TODO: Idem.
                     //listado_contribuyentes_propiedades(arbol_contribuyentes_nombre);
 
@@ -265,16 +271,16 @@ begin
                 3:  begin
                         // Lista de terrenos por zona.
                         // TODO: verificar si funciona.
-                        //vector_terrenos_por_zona := generar_vector_por_zona(lista_terrenos_fecha);
-                        //listado_zona_terrenos(vector_terrenos_por_zona);
+                        terrenos_por_zona(lista_terrenos_fecha);
                     end;
 
                 4:  // Imprimir comprobante.
                     // TODO: verificar si funciona.
-                    //consultar_comprobante(lista_terrenos_fecha);
+                    //consultar_comprobante(lista_terrenos_fecha);}
                 end;
 
-            until ((opcion_submenu = 0) or (opcion_submenu = 5));}
+            until ((opcion_submenu = 0) or (opcion_submenu = 5));
+
         // Opción de estadísticas.
         {4:  repeat
 
