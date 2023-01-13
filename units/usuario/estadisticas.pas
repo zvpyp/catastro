@@ -23,6 +23,9 @@ interface
     // Pide dos fechas al usuario. Muestre todas las inscripciones entre ambas fechas.
     procedure inscripciones_entre_fechas(lista : t_lista_terrenos);
 
+    // Muestra en pantalla el porcentaje de propietarios con más de una propiedad.
+    procedure porcentaje_propietarios_multiples(raiz : t_puntero_arbol; lista : t_lista_terrenos; var archivo_contador : t_archivo_contador);
+
 {--------------------------------}
 
 implementation
