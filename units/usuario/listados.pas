@@ -107,7 +107,7 @@ implementation
         end;}
 
         clrscr;
-        writeln('En el año ', anio, ' se ha/n inscripto ', cantidad, ' propiedade/s');
+        writeln('En el año ', anio, ' se ha/n inscripto ', cantidad, ' propiedad/es');
         writeln();
         writeln('Presione una tecla para continuar...');
         readkey;
