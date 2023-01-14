@@ -26,6 +26,9 @@ uses sysutils, crt;
     // Muestra un mensaje al usuario. No retorna hasta que elija s o n.
     function leer_si_no(mensaje : string): string;
 
+    // Pide al usuario que presione cualquier tecla.
+    procedure pedir_tecla();
+
 {--------------------------------}
 
 implementation
@@ -277,5 +280,14 @@ implementation
             leer_si_no := lowercase(leer_si_no);
             
         until ((leer_si_no = 's') or (leer_si_no = 'n'));
+    end;
+
+
+    procedure pedir_tecla();
+    begin
+        writeln('');
+        writeln('Presione una tecla para continuar...');
+        readkey;
+        clrscr;
     end;
 end.

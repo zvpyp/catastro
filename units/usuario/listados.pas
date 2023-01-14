@@ -8,6 +8,7 @@ interface
 
     uses
     terreno in 'units/terreno/terreno.pas',
+    contribuyente in 'units/contribuyente/contribuyente.pas',
     lista_terrenos in 'units/terreno/lista_terrenos.pas',
     crt,
     compara_fechas in 'units/varios/compara_fechas.pas';
@@ -22,6 +23,44 @@ interface
 
 implementation
 
+    // TODO: hacer ver como grilla
+    procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol;
+                                                    lista : t_lista_terrenos;
+                                                    archivo_contribuyentes : t_archivo_contribuyentes);
+    var
+        dato : t_dato_arbol;
+        nombre : string;
+        nro_contribuyente : string;
+        terreno : t_terreno;
+    begin
+        // Ignorar nodos nulos.
+        if raiz <> nil then
+        begin
+            inorden_boilerplate(hijo_izquierdo(raiz));
+
+            // Carga los datos.
+            dato := info_raiz(raiz);
+            nombre := dato.clave;
+            nro_contribuyente := leer_contribuyente(archivo_contribuyentes, dato.indice).numero;
+
+            writeln(nombre);
+
+            // Escribe los terrenos que le corresponden a ese número de contribuyente.
+            primero_lista_terrenos(lista);
+            while not(fin_lista_terrenos(lista)) do
+            begin
+                recuperar_lista_terrenos(lista, terreno);
+
+                if terreno.nro_contribuyente = nro_contribuyente then
+                    writeln(terreno.domicilio_parcelario, '(', strToFloat(terreno.avaluo) ,')');
+
+                siguiente_lista_terrenos(lista);
+            end;
+
+
+            inorden_boilerplate(hijo_derecho(raiz));
+        end;
+    end;
 
     // TODO: hacer ver como grilla
     procedure terrenos_por_zona(lista : t_lista_terrenos);
