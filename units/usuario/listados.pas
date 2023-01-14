@@ -133,13 +133,13 @@ implementation
         primero_lista_terrenos(lista);
 
         // Ignora las inscripciones de años anteriores
-        while not(fin_lista_terrenos(lista)) and (fecha_es_menor(fecha_actual, fecha1)) do
+        while not(fin_lista_terrenos(lista)) do
         begin
             recuperar_lista_terrenos(lista, terreno_actual);
             fecha_actual := terreno_actual.fecha_inscripcion;
-            siguiente_lista_terrenos(lista);
             if fecha_es_mayor_igual(fecha_actual, fecha1) and fecha_es_menor_igual(fecha_actual, fecha1) then
-              cantidad := cantidad + 1;
+              Writeln('- ', terreno_actual.domicilio_parcelario, ' (', fecha_actual,')');
+            siguiente_lista_terrenos(lista);
         end;
         
        { // Cuenta las inscripciones de ese año
@@ -153,11 +153,7 @@ implementation
             fecha_actual := terreno_actual.fecha_inscripcion;
         end;}
 
-        clrscr;
-        writeln('En el año ', anio, ' se ha/n inscripto ', cantidad, ' propiedade/s');
-        writeln();
-        writeln('Presione una tecla para continuar...');
-        readkey;
+        pedir_tecla();
     end;
 
 
