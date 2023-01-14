@@ -16,8 +16,8 @@ program main;
         compara_fechas in 'units/varios/compara_fechas.pas',
         lista_terrenos in 'units/terreno/lista_terrenos.pas',
         listados in 'units/usuario/listados.pas',
-        //usuario_listados_estadisticas in 'units/usuario/usuario_listados_estadisticas.pas',
-        //comprobante in 'units/usuario/comprobante.pas',
+        estadisticas in 'units/usuario/estadisticas.pas',
+        comprobante in 'units/usuario/comprobante.pas',
         crt;
     
 
@@ -255,6 +255,9 @@ begin
                 opcion_submenu := menu_listados();
 
                 case opcion_submenu of
+                1:  // Lista de contribuyentes con sus propiedades valorizadas.
+                    // TODO: Idem.
+                    listado_contribuyentes_propiedades(arbol_contribuyentes_nombre, lista_terrenos_fecha, archivo_contribuyentes);
                 2:  // Lista de inscripciones en un año.
                     // TODO: verificar si funciona.
                     inscripciones_anio(lista_terrenos_fecha, leer_entrada('Año: ', 4, 'normal'));
@@ -263,46 +266,36 @@ begin
                         // TODO: verificar si funciona.
                         terrenos_por_zona(lista_terrenos_fecha);
                     end;
-                {1:  // Lista de contribuyentes con sus propiedades valorizadas.
-                    // TODO: Idem.
-                    //listado_contribuyentes_propiedades(arbol_contribuyentes_nombre);
-
-
-                3:  begin
-                        // Lista de terrenos por zona.
-                        // TODO: verificar si funciona.
-                        terrenos_por_zona(lista_terrenos_fecha);
-                    end;
 
                 4:  // Imprimir comprobante.
                     // TODO: verificar si funciona.
-                    //consultar_comprobante(lista_terrenos_fecha);}
+                    consultar_comprobante(lista_terrenos_fecha);
                 end;
 
             until ((opcion_submenu = 0) or (opcion_submenu = 5));
 
         // Opción de estadísticas.
-        {4:  repeat
+        4:  repeat
 
                 opcion_submenu := menu_estadisticas();
 
                 case opcion_submenu of
                 1:  // Mostrar cantidad de inscripciones entre dos fechas.
-                    //cantidad_inscripciones_entre_fechas(lista_terrenos_fecha);
+                    inscripciones_entre_fechas(lista_terrenos_fecha);
 
                 2:  // Mostrar porcentaje de propietarios con más de una propiedad.
-                    //porc_propietarios_mult_propiedades(arbol_contribuyentes_nombre, archivo_contador);
+                    porcentaje_propietarios_multiples(arbol_contribuyentes_nombre,lista_terrenos_fecha, archivo_contador);
 
-                3:  // Mostrar porcentaje de propietarios por tipo de edificación.
+                {3:  // Mostrar porcentaje de propietarios por tipo de edificación.
                     //porc_por_tipo_edif(lista_terrenos_fecha, archivo_contador);
 
                 4:  begin
                         // Mostrar cantidad de propietarios dados de baja.
                         //propietarios_dados_de_baja(archivo_contribuyentes, archivo_contador);
-                    end;
+                    end;}
                 end;
             
-            until ((opcion_submenu = 0) or (opcion_submenu = 5));}
+            until ((opcion_submenu = 0) or (opcion_submenu = 5));
         end;
         
     until ((opcion_principal = 0) or (opcion_principal = 5)); // 0 es salir por escape, 5 es por selección

@@ -102,13 +102,8 @@ implementation
         nro_plano : string;
     begin
         clrscr;
-        repeat
-            
-            writeln('Escriba el número de plano (15 dígitos como máximo)');
-            readln(nro_plano);
-
-            clrscr;
-        until (string_numerica(nro_plano) and limite_caracteres(nro_plano, 15));
+        
+        nro_plano := leer_entrada('Ingrese el número de plano', 15, 'natural');
 
         primero_lista_terrenos(lista);
         recuperar_lista_terrenos(lista, terreno_actual);

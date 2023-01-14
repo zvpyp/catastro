@@ -10,7 +10,9 @@ interface
     terreno in 'units/terreno/terreno.pas',
     contribuyente in 'units/contribuyente/contribuyente.pas',
     lista_terrenos in 'units/terreno/lista_terrenos.pas',
-    crt,
+    crt, sysutils,
+    comprobante in 'units/usuario/comprobante.pas',
+    arbol in 'units/arbol.pas',
     compara_fechas in 'units/varios/compara_fechas.pas';
 
     // Muestra los terrenos según la zona que le corresponda.
@@ -18,6 +20,10 @@ interface
 
     // Muestra todas las inscripciones de terrenos dadas en un año.
     procedure inscripciones_anio(var lista : t_lista_terrenos; anio : string);
+
+    procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol;
+                                                    lista : t_lista_terrenos;
+                                                    var archivo_contribuyentes : t_archivo_contribuyentes);
 
 {--------------------------------}
 
@@ -52,10 +58,12 @@ implementation
                 recuperar_lista_terrenos(lista, terreno);
 
                 if terreno.nro_contribuyente = nro_contribuyente then
-                    writeln(terreno.domicilio_parcelario, '(', strToFloat(terreno.avaluo) ,')');
+                    writeln(terreno.domicilio_parcelario, '(', terreno.avaluo:0:2 ,')');
 
                 siguiente_lista_terrenos(lista);
             end;
+            readkey;
+            clrscr;
 
 
             listado_contribuyentes_propiedades(hijo_derecho(raiz), lista, archivo_contribuyentes);
