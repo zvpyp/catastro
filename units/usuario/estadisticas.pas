@@ -100,7 +100,7 @@ implementation
             if fecha_es_mayor_igual(fecha_aux, fecha1) and (fecha_es_menor_igual(fecha_aux, fecha2)) then
             begin
                 contador := contador + 1;
-                writeln('la fecha añadida es ', fecha_aux);
+                writeln('la fecha añadida es ', fecha_aux); // TEST
             end;
 
             siguiente_lista_terrenos(lista);
