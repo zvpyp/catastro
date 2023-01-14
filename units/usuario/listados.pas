@@ -8,8 +8,11 @@ interface
 
     uses
     terreno in 'units/terreno/terreno.pas',
+    contribuyente in 'units/contribuyente/contribuyente.pas',
     lista_terrenos in 'units/terreno/lista_terrenos.pas',
-    crt,
+    crt, sysutils,
+    comprobante in 'units/usuario/comprobante.pas',
+    arbol in 'units/arbol.pas',
     compara_fechas in 'units/varios/compara_fechas.pas';
 
     // Muestra los terrenos según la zona que le corresponda.
@@ -18,10 +21,54 @@ interface
     // Muestra todas las inscripciones de terrenos dadas en un año.
     procedure inscripciones_anio(var lista : t_lista_terrenos; anio : string);
 
+    procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol;
+                                                    lista : t_lista_terrenos;
+                                                    var archivo_contribuyentes : t_archivo_contribuyentes);
+
 {--------------------------------}
 
 implementation
 
+    // TODO: hacer ver como grilla
+    procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol;
+                                                    lista : t_lista_terrenos;
+                                                    var archivo_contribuyentes : t_archivo_contribuyentes);
+    var
+        dato : t_dato_arbol;
+        nombre : string;
+        nro_contribuyente : string;
+        terreno : t_terreno;
+    begin
+        // Ignorar nodos nulos.
+        if raiz <> nil then
+        begin
+            listado_contribuyentes_propiedades(hijo_izquierdo(raiz), lista, archivo_contribuyentes);
+
+            // Carga los datos.
+            dato := info_raiz(raiz);
+            nombre := dato.clave;
+            nro_contribuyente := leer_contribuyente(archivo_contribuyentes, dato.indice).numero;
+
+            writeln(nombre);
+
+            // Escribe los terrenos que le corresponden a ese número de contribuyente.
+            primero_lista_terrenos(lista);
+            while not(fin_lista_terrenos(lista)) do
+            begin
+                recuperar_lista_terrenos(lista, terreno);
+
+                if terreno.nro_contribuyente = nro_contribuyente then
+                    writeln(terreno.domicilio_parcelario, '(', terreno.avaluo:0:2 ,')');
+
+                siguiente_lista_terrenos(lista);
+            end;
+            readkey;
+            clrscr;
+
+
+            listado_contribuyentes_propiedades(hijo_derecho(raiz), lista, archivo_contribuyentes);
+        end;
+    end;
 
     // TODO: hacer ver como grilla
     procedure terrenos_por_zona(lista : t_lista_terrenos);

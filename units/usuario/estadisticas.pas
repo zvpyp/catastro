@@ -1,4 +1,4 @@
-unit estadisticas
+unit estadisticas;
 
 {$codepage utf8}
 
@@ -12,7 +12,8 @@ interface
     terreno in 'units/terreno/terreno.pas',
     lista_terrenos in 'units/terreno/lista_terrenos.pas',
     validacion_entradas in 'units/varios/validacion_entradas.pas',
-    compara_fechas in 'units/varios/compara_fechas.pas';
+    compara_fechas in 'units/varios/compara_fechas.pas',
+    crt;
 
     // Muestra en pantalla la cantidad de usuarios dados de baja.
     procedure propietarios_inactivos(var archivo_contador : t_archivo_contador);
@@ -80,7 +81,7 @@ implementation
         fecha2 := leer_fecha('Ingrese la segunda fecha');
 
         // Las ordena en caso de estar en orden incorrecto.
-        if fecha_es_menor(fecha1, fecha2) then
+        if fecha_es_menor(fecha2, fecha1) then
         begin
             fecha_aux := fecha1;
             fecha1 := fecha2;
@@ -88,16 +89,20 @@ implementation
         end;
 
         primero_lista_terrenos(lista);
-        fecha_aux := '0001-01-01'; // para que lea la primera iteración siempre si la lista no está vacía.
 
         // Cuenta los terrenos entre ambas fechas.
-        while not(fin_lista_terrenos(lista)) and (fecha_es_menor_igual(fecha_aux, fecha2)) do
+        while not(fin_lista_terrenos(lista)) do
         begin
             recuperar_lista_terrenos(lista, terreno_actual);
             fecha_aux := terreno_actual.fecha_inscripcion;
 
-            if fecha_es_mayor_igual(fecha_aux, fecha1) then
+            writeln(fecha_aux);
+
+            if fecha_es_mayor_igual(fecha_aux, fecha1) and (fecha_es_menor_igual(fecha_aux, fecha2)) then
+            begin
                 contador := contador + 1;
+                {writeln('la fecha añadida es ', fecha_aux); // TEST}
+            end;
 
             siguiente_lista_terrenos(lista);
         end;
@@ -110,7 +115,7 @@ implementation
 
 
     // Retorna la cantidad de propiedades que posee un contribuyente según el número.
-    function cantidad_propiedades(lista : t_lista_terrenos, nro_contribuyente : string): cardinal;
+    function cantidad_propiedades(lista : t_lista_terrenos; nro_contribuyente : string): cardinal;
     var
         terreno_actual : t_terreno;
     begin
@@ -118,7 +123,7 @@ implementation
 
         primero_lista_terrenos(lista);
 
-        while not(fin_lista_terrenos) do
+        while not(fin_lista_terrenos(lista)) do
         begin
             recuperar_lista_terrenos(lista, terreno_actual);
 
@@ -140,7 +145,7 @@ implementation
         // Ignorar nodos nulos.
         if raiz <> nil then
         begin
-            propietarios_multiples(hijo_izquierdo(raiz));
+            propietarios_multiples(hijo_izquierdo(raiz), lista, cantidad);
 
 
             nro_contribuyente := info_raiz(raiz).clave;
@@ -152,7 +157,7 @@ implementation
                 cantidad := cantidad + 1;
 
 
-            propietarios_multiples(hijo_derecho(raiz));
+            propietarios_multiples(hijo_derecho(raiz), lista, cantidad);
         end;
     end;
 
@@ -161,15 +166,17 @@ implementation
     var
         multiples : cardinal;
         activos : cardinal;
+        cantidad : cardinal;
     begin
         cantidad := 0;
-        propietarios_multiples(raiz, lista, multiples) // Cuenta la cantidad de propietarios múltiples.
+        propietarios_multiples(raiz, lista, multiples); // Cuenta la cantidad de propietarios múltiples.
 
         activos := cantidad_activos(archivo_contador);
 
         if activos <> 0 then
         begin
-            writeln('Propietarios con más de una propiedad: ', (100 * multiples/activos), '%');
+            {TEST} writeln('multiples: ', multiples, 'activos: ', activos);
+            writeln('Propietarios con más de una propiedad: ', (100 * multiples/activos):0:2, '%');
         end
         else
             writeln('No hay contribuyentes activos');
