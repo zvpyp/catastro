@@ -22,6 +22,40 @@ interface
 
 implementation
 
+    // TODO: hacer ver como grilla
+    // TODO: buscar número de contribuyente mediante otra función que tome
+    //          un árbol y un índice.
+    procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol; lista : t_lista_terrenos);
+    var
+        nombre : string;
+        nro_contribuyente : string;
+        terreno : t_terreno;
+    begin
+        // Ignorar nodos nulos.
+        if raiz <> nil then
+        begin
+            inorden_boilerplate(hijo_izquierdo(raiz));
+
+            
+            nombre := info_raiz(raiz).clave;
+
+            writeln(nombre);
+
+            primero_lista_terrenos(lista);
+            while not(fin_lista_terrenos(lista)) do
+            begin
+                recuperar_lista_terrenos(lista, terreno);
+
+                // TODO: seguir
+                //if terreno.nro_contribuyente = 
+
+                siguiente_lista_terrenos(lista);
+            end;
+
+
+            inorden_boilerplate(hijo_derecho(raiz));
+        end;
+    end;
 
     // TODO: hacer ver como grilla
     procedure terrenos_por_zona(lista : t_lista_terrenos);
