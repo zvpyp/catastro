@@ -89,7 +89,6 @@ implementation
         end;
 
         primero_lista_terrenos(lista);
-        fecha_aux := '0001-01-01'; // para que lea la primera iteración siempre si la lista no está vacía.
 
         // Cuenta los terrenos entre ambas fechas.
         while not(fin_lista_terrenos(lista)) do
@@ -97,10 +96,12 @@ implementation
             recuperar_lista_terrenos(lista, terreno_actual);
             fecha_aux := terreno_actual.fecha_inscripcion;
 
+            writeln(fecha_aux);
+
             if fecha_es_mayor_igual(fecha_aux, fecha1) and (fecha_es_menor_igual(fecha_aux, fecha2)) then
             begin
                 contador := contador + 1;
-                writeln('la fecha añadida es ', fecha_aux); // TEST
+                {writeln('la fecha añadida es ', fecha_aux); // TEST}
             end;
 
             siguiente_lista_terrenos(lista);
