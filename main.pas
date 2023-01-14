@@ -286,13 +286,13 @@ begin
                 2:  // Mostrar porcentaje de propietarios con más de una propiedad.
                     porcentaje_propietarios_multiples(arbol_contribuyentes_nombre,lista_terrenos_fecha, archivo_contador);
 
-                {3:  // Mostrar porcentaje de propietarios por tipo de edificación.
-                    //porc_por_tipo_edif(lista_terrenos_fecha, archivo_contador);
+                3:  // Mostrar porcentaje de propietarios por tipo de edificación.
+                    porcentaje_terrenos_tipo(archivo_contador);
 
-                4:  begin
-                        // Mostrar cantidad de propietarios dados de baja.
-                        //propietarios_dados_de_baja(archivo_contribuyentes, archivo_contador);
-                    end;}
+                4:
+                    // Mostrar cantidad de propietarios dados de baja.
+                    propietarios_inactivos(archivo_contador);
+                   
                 end;
             
             until ((opcion_submenu = 0) or (opcion_submenu = 5));
