@@ -116,10 +116,10 @@ begin
         generar_lista(lista_terrenos_fecha, archivo_terrenos, cantidad_terrenos(archivo_contador));
 
     // TEST:
-    writeln('al abrir:');
+    {writeln('al abrir:');
     writeln('cantidad_contribuyentes: ', cantidad_contribuyentes(archivo_contador));
     writeln('cantidad_terrenos: ', cantidad_terrenos(archivo_contador));
-    readkey;
+    readkey;}
 
     // Generar lista de terrenos.
     // ¿TODO?: lista ordenada por dueño

@@ -43,12 +43,12 @@ if  (anio1 > anio2) or
   fecha_es_mayor := true;
 
 // TEST:
-writeln('año ', anio1, 'es mayor a ', anio2, ':', (anio1 > anio2));
+{writeln('año ', anio1, 'es mayor a ', anio2, ':', (anio1 > anio2));
 writeln('mes ', mes1, ' es mayor a ', mes2, ': ', (mes1 > mes2));
 writeln('dia ', dia1, ' es mayor a ', dia1, ': ', (dia1 > dia2));
 writeln(fecha1, ' es mayor a ', fecha2, ': ', fecha_es_mayor);
 readkey;
-clrscr;
+clrscr;}
 end;
 
 function fecha_es_menor(fecha1 : string; fecha2 : string) : boolean;
