@@ -155,7 +155,7 @@ implementation
             end;
 
             // Se posiciona en el terreno más cercano (mayor o igual)
-            while (not(fin_lista_terrenos(lista)) and (actual < clave)) do
+            while (not(fin_lista_terrenos(lista)) and not(secuencial_terreno)) do
             begin
                 siguiente_lista_terrenos(lista);
 
@@ -167,11 +167,17 @@ implementation
                     'plano':            actual := lista.actual^.info.nro_plano;
                     end;
                 end;
-            end;
 
-            // Si son iguales, retornar true.
-            if (not(fin_lista_terrenos(lista)) and (actual = clave)) then
-                secuencial_terreno := true;
+                if actual = clave then
+                    secuencial_terreno := true;
+                
+                {// Test
+                writeln(actual);
+                writeln(clave);
+                writeln('iguales: ', (actual = clave));
+                readkey;
+                clrscr;}
+            end;
         end;
     end;
 
