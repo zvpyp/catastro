@@ -12,6 +12,7 @@ interface
     lista_terrenos in 'units/terreno/lista_terrenos.pas',
     crt, sysutils,
     comprobante in 'units/usuario/comprobante.pas',
+    validacion_entradas in 'units/varios/validacion_entradas.pas',
     arbol in 'units/arbol.pas',
     compara_fechas in 'units/varios/compara_fechas.pas';
 
