@@ -26,7 +26,7 @@ implementation
     // TODO: hacer ver como grilla
     procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol;
                                                     lista : t_lista_terrenos;
-                                                    archivo_contribuyentes : t_archivo_contribuyentes);
+                                                    var archivo_contribuyentes : t_archivo_contribuyentes);
     var
         dato : t_dato_arbol;
         nombre : string;
@@ -36,7 +36,7 @@ implementation
         // Ignorar nodos nulos.
         if raiz <> nil then
         begin
-            inorden_boilerplate(hijo_izquierdo(raiz));
+            listado_contribuyentes_propiedades(hijo_izquierdo(raiz), lista, archivo_contribuyentes);
 
             // Carga los datos.
             dato := info_raiz(raiz);
@@ -58,7 +58,7 @@ implementation
             end;
 
 
-            inorden_boilerplate(hijo_derecho(raiz));
+            listado_contribuyentes_propiedades(hijo_derecho(raiz), lista, archivo_contribuyentes);
         end;
     end;
 
