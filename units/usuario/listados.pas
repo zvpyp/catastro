@@ -152,7 +152,7 @@ implementation
             recuperar_lista_terrenos(lista, terreno_actual);
             fecha_actual := terreno_actual.fecha_inscripcion;
         end;}
-
+        
         pedir_tecla();
     end;
 
