@@ -59,7 +59,7 @@ implementation
             for i := 1 to 5 do
             begin
                 actual := cantidad_terrenos_tipo(archivo, i);
-                writeln('Tipo ', i, ': ', (actual * 100 / total), '%');
+                writeln('Tipo ', i, ': ', (actual * 100 / total):0:2, '%');
             end;
         end
         else
