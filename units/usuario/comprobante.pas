@@ -59,7 +59,7 @@ implementation
         gotoxy(5,17);
         write('Avaluo: ');
         gotoxy(15,17);
-        write(terreno.avaluo:7:2);
+        write('$',terreno.avaluo:7:2);
         gotoxy(40,16);
         writeln('|');
         gotoxy(40,17);
@@ -69,7 +69,7 @@ implementation
         gotoxy(47,17);
         write('Superficie: ');
         gotoxy(60,17);
-        write(terreno.superficie:7:2);
+        write(terreno.superficie:7:2, ' m2');
         gotoxy(4,19);
         writeln('-----------------------------------------------------------------------');
         gotoxy(5,21);
