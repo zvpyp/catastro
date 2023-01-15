@@ -32,8 +32,8 @@ implementation
 
     // TODO: hacer ver como grilla
     procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol;
-                                                    lista : t_lista_terrenos;
-                                                    var archivo_contribuyentes : t_archivo_contribuyentes);
+                                                lista : t_lista_terrenos;
+                                            var archivo_contribuyentes : t_archivo_contribuyentes);
     var
         dato : t_dato_arbol;
         nombre : string;
@@ -50,7 +50,7 @@ implementation
             nombre := dato.clave;
             nro_contribuyente := leer_contribuyente(archivo_contribuyentes, dato.indice).numero;
 
-            writeln(nombre);
+            //writeln('| Propietario | Domicilio parcelario | Valor de la propiedad |');
 
             // Escribe los terrenos que le corresponden a ese número de contribuyente.
             primero_lista_terrenos(lista);
@@ -59,12 +59,10 @@ implementation
                 recuperar_lista_terrenos(lista, terreno);
 
                 if terreno.nro_contribuyente = nro_contribuyente then
-                    writeln(terreno.domicilio_parcelario, '(', terreno.avaluo:0:2 ,')');
+                    writeln('|',nombre, '|', terreno.domicilio_parcelario, '|', terreno.avaluo:0:2 ,'|');
 
                 siguiente_lista_terrenos(lista);
             end;
-            readkey;
-            clrscr;
 
 
             listado_contribuyentes_propiedades(hijo_derecho(raiz), lista, archivo_contribuyentes);

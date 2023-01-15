@@ -147,8 +147,8 @@ implementation
         begin
             cantidad := 0;
 
-            // Límite 61 (nombre y apellido, incluye espacio);
-            clave := leer_entrada('Ingrese el nombre completo del contribuyente', 61, 'normal');
+            // Límite 61 (apellido y nombre, incluye espacio);
+            clave := leer_entrada('Ingrese el apellido y nombre del contribuyente', 61, 'normal');
             
             // Encontrar todos los que concuerdan.
             preorden_multiple(raiz_nombre, clave, buscar_contribuyente, cantidad);
