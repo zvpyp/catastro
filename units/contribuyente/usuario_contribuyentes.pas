@@ -331,8 +331,7 @@ implementation
                 activar_contribuyente(archivo, contribuyente, indice);
         end;
 
-        writeln('Presione una tecla para continuar...');
-        readkey;
+        pedir_tecla();
     end;
 
     procedure consultar_contribuyente(var archivo : t_archivo_contribuyentes;
