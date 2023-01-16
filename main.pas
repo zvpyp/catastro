@@ -224,17 +224,21 @@ begin
                             2:  tipo_busqueda := 'nombre';
                         end;
 
-                        puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
-                        if puntero_aux^.info.indice <> 0 then
-                            begin
-                            contribuyente_aux := leer_contribuyente(archivo_contribuyentes, puntero_aux^.info.indice);
-                            mostrar_contribuyente(contribuyente_aux);
-                            end
-                        else 
-                            begin
-                                Writeln('El usuario no existe, presione una tecla para continuar');
-                                readkey;
-                            end;
+                        // ignorar casos en que se seleccione volver o se presione escape.
+                        if (opcion_consulta <> 3) and (opcion_consulta <> 0) then
+                        begin
+                            puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, tipo_busqueda);
+                            if puntero_aux^.info.indice <> 0 then
+                                begin
+                                contribuyente_aux := leer_contribuyente(archivo_contribuyentes, puntero_aux^.info.indice);
+                                mostrar_contribuyente(contribuyente_aux);
+                                end
+                            else 
+                                begin
+                                    Writeln('El usuario no existe, presione una tecla para continuar');
+                                    readkey;
+                                end;
+                        end;
                     end;
 
                 2:  //Consulta de terrenos.
