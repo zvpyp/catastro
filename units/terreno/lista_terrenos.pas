@@ -168,7 +168,7 @@ implementation
                     end;
                 end;
 
-                if actual = clave then
+                if lowercase(actual) = lowercase(clave) then
                     secuencial_terreno := true;
                 
                 {// Test
