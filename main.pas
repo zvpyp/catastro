@@ -36,7 +36,7 @@ program main;
             if tipo = 'dni' then
                 dato.clave := contribuyente.dni
             else if tipo = 'nombre' then
-                dato.clave := contribuyente.nombre + ' ' + contribuyente.apellido
+                dato.clave := contribuyente.apellido + ' ' + contribuyente.nombre
             else if tipo = 'numero' then
                 dato.clave := contribuyente.numero;
             
@@ -147,10 +147,7 @@ begin
               if contribuyente_aux.activo then
                 begin
                     Writeln('Este número de contribuyente pertenece a ' + contribuyente_aux.nombre + ' ' + contribuyente_aux.apellido + '.');
-                    Writeln('');
-                    Writeln('Presione una tecla para continuar...');
-                    readkey;
-                    clrscr;
+                    pedir_tecla();
                     mostrar_contribuyente(contribuyente_aux);
                         repeat
 
@@ -257,7 +254,11 @@ begin
                 case opcion_submenu of
                 1:  // Lista de contribuyentes con sus propiedades valorizadas.
                     // TODO: Idem.
-                    listado_contribuyentes_propiedades(arbol_contribuyentes_nombre, lista_terrenos_fecha, archivo_contribuyentes);
+                    begin
+                        writeln('| Propietario | Domicilio parcelario | Valor de la propiedad |');
+                        listado_contribuyentes_propiedades(arbol_contribuyentes_nombre, lista_terrenos_fecha, archivo_contribuyentes);
+                        pedir_tecla();
+                    end;
                 2:  // Lista de inscripciones en un año.
                     // TODO: verificar si funciona.
                     inscripciones_anio(lista_terrenos_fecha, leer_entrada('Año: ', 4, 'normal'));
