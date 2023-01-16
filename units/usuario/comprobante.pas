@@ -7,9 +7,9 @@ uses
     terreno in 'units/terreno/terreno.pas',
     validacion_entradas in 'units/varios/validacion_entradas.pas',
     lista_terrenos in 'units/terreno/lista_terrenos.pas',
+    usuario_terrenos in 'units/terreno/usuario_terrenos.pas',
     crt;
 
-    // Obtiene la lista de terrenos. Pide un número de plano y muestra el comprobante si existe.
     procedure consultar_comprobante(lista : t_lista_terrenos);
 
 implementation
@@ -92,34 +92,24 @@ implementation
         write('Tipo de edificación: ');
         gotoxy(71,25);
         write(terreno.tipo_edificacion);
-        readkey;
-        clrscr;
+        gotoxy(1,28);
     end;
 
     procedure consultar_comprobante(lista : t_lista_terrenos);
     var
-        terreno_actual : t_terreno;
-        nro_plano : string;
+        terreno : t_terreno;
     begin
         clrscr;
-        
-        nro_plano := leer_entrada('Ingrese el número de plano', 15, 'natural');
 
-        primero_lista_terrenos(lista);
-        recuperar_lista_terrenos(lista, terreno_actual);
-
-        while not(fin_lista_terrenos(lista)) and (terreno_actual.nro_plano <> nro_plano) do
-        begin
-            siguiente_lista_terrenos(lista);
-            recuperar_lista_terrenos(lista, terreno_actual);
-        end;
-
-        if not(fin_lista_terrenos(lista)) then
-            mostrar_comprobante(terreno_actual)
-        else
-            writeln('El número de plano ingresado no se encuentra en la base de datos');
-
+        terreno := buscar_terreno(lista);
         clrscr;
+
+        if terreno.indice <> 0 then
+            mostrar_comprobante(terreno)
+        else
+            writeln('Terreno inexistente.');
+
+        pedir_tecla();
     end;
 
 end.
