@@ -204,8 +204,8 @@ implementation
     
         contribuyente.numero := nro_contribuyente; // Le pasamos el nro de contribuyente que se pidió antes.
         contribuyente.dni := leer_entrada('DNI', 10, 'natural');
-        contribuyente.nombre := leer_entrada('Nombre', 30, 'normal');
         contribuyente.apellido := leer_entrada('Apellido', 30, 'normal');
+        contribuyente.nombre := leer_entrada('Nombre', 30, 'normal');
         contribuyente.direccion := leer_entrada('Dirección', 30, 'normal');
         contribuyente.ciudad := leer_entrada('Ciudad', 40, 'normal');
         contribuyente.fecha_nacimiento := leer_fecha('Fecha de nacimiento');
