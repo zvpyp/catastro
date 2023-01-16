@@ -241,7 +241,7 @@ implementation
             agregar_opcion(menu, 'Agregar terreno');   // 4
             agregar_opcion(menu, 'Modificar terreno'); // 5
             agregar_opcion(menu, 'Eliminar terreno');  // 6
-            agregar_opcion(menu, 'Salir');             // 7
+            agregar_opcion(menu, 'Volver');             // 7
 
             menu_encontrado := seleccion_menu(menu);
         end;
