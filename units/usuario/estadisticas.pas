@@ -152,6 +152,10 @@ implementation
 
             propiedades_poseidas := cantidad_propiedades(lista, nro_contribuyente);
 
+            // TEST:
+            {writeln('El contribuyente tiene ', propiedades_poseidas, ' propiedades');
+            readkey;}
+
             // Suma si el contribuyente tiene más de una propiedad
             if (propiedades_poseidas > 1) then
                 cantidad := cantidad + 1;
@@ -169,6 +173,8 @@ implementation
         cantidad : cardinal;
     begin
         cantidad := 0;
+        multiples := 0;
+        activos := 0;
         propietarios_multiples(raiz, lista, multiples); // Cuenta la cantidad de propietarios múltiples.
 
         activos := cantidad_activos(archivo_contador);

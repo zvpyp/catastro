@@ -289,7 +289,7 @@ begin
                     inscripciones_entre_fechas(lista_terrenos_fecha);
 
                 2:  // Mostrar porcentaje de propietarios con más de una propiedad.
-                    porcentaje_propietarios_multiples(arbol_contribuyentes_nombre,lista_terrenos_fecha, archivo_contador);
+                    porcentaje_propietarios_multiples(arbol_contribuyentes_nro,lista_terrenos_fecha, archivo_contador);
 
                 3:  // Mostrar porcentaje de propietarios por tipo de edificación.
                     porcentaje_terrenos_tipo(archivo_contador);
