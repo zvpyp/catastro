@@ -233,7 +233,7 @@ implementation
 
         clrscr;
         writeln('Contribuyente creado satisfactoriamente :)');
-        readkey;
+        pedir_tecla();
     end;
 
 
@@ -265,15 +265,13 @@ implementation
         begin
             recuperar_lista_terrenos(lista_terrenos, terreno_encontrado);
 
-            writeln('Borrando: ', terreno_encontrado.domicilio_parcelario); readkey; // Test
+            {writeln('Borrando: ', terreno_encontrado.domicilio_parcelario); readkey;} // Test
                     
             borrar_terreno(archivo_terrenos, archivo_contador, lista_terrenos, terreno_encontrado);
         end;
 
         writeln('Contribuyente dado de baja satisfactoriamente :)');
-        writeln('');
-        writeln('Presione una tecla para continuar...');
-        readkey;
+        pedir_tecla();
     end;
 
 

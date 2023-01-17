@@ -188,13 +188,13 @@ implementation
     begin
 
         // TEST
-        writeln('cabecera plano: ', lista.cabecera^.info.nro_plano);
-        readkey;
+        {writeln('cabecera plano: ', lista.cabecera^.info.nro_plano);
+        readkey;}
         
         if (buscado = lista.cabecera^.info.nro_plano) then
         begin
             // TEST:
-            writeln('Borrar cabecera');
+            {writeln('Borrar cabecera');}
 
             puntero_aux := lista.cabecera;
             lista.cabecera := lista.cabecera^.siguiente;
@@ -205,7 +205,7 @@ implementation
         else
         begin
             // TEST:
-            writeln('Borrar distinto a cabecera');
+            {writeln('Borrar distinto a cabecera');}
 
             anterior := lista.cabecera;
             lista.actual := anterior^.siguiente;

@@ -125,11 +125,12 @@ implementation
 
 
             clrscr;
-            writeln('actual: ', raiz^.info.clave);
+            //TEST:
+            {writeln('actual: ', raiz^.info.clave);
             writeln('buscado: ', clave);
             writeln('indice: ', raiz^.info.indice);
             writeln('iguales: ', (lowercase(raiz^.info.clave) = lowercase(clave)));
-            readkey;
+            readkey;}
 
             if (lowercase(raiz^.info.clave) = lowercase(clave)) then
                 preorden := raiz

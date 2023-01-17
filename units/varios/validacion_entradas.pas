@@ -38,6 +38,10 @@ implementation
     function caracter_numerico(caracter : char): boolean;
     begin
         caracter_numerico := (('0' <= caracter) and (caracter <= '9')) or (caracter = '.');
+        // TEST:
+        {writeln('caracter ingresado: ', caracter);
+        writeln('es numérico/punto: ', caracter_numerico);
+        readkey;}
     end;
 
     // retorna verdadero si una string es un número entero.
@@ -58,12 +62,12 @@ implementation
 
         // caso del primer carácter.
         if positivo then
-            primer_digito := 1
+            primer_digito := 1 // marca que el primer dígito está en la posición 1.
         else
         begin
             // caso de que permita negativos
             if (entrada[1] = '-') then
-                primer_digito := 2;
+                primer_digito := 2; // marca que el primer dígito está en la posición 2.
         end;
 
         for i := primer_digito to length(entrada) do

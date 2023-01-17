@@ -181,7 +181,7 @@ implementation
         terreno.nro_plano := leer_numero_plano(lista);
         terreno.fecha_inscripcion := leer_fecha('Ingrese la fecha de inscripción');
         terreno.domicilio_parcelario := leer_entrada('Ingrese el domicilio parcelario', 30, 'normal');
-        terreno.superficie := strToFloat(leer_entrada('Ingrese la superficie en km cuadrados', 255, 'real'));
+        terreno.superficie := strToFloat(leer_entrada('Ingrese la superficie en km cuadrados', 255, 'real_positivo'));
         terreno.zona := menu_seleccion_zona();
         terreno.tipo_edificacion := menu_seleccion_tipo_edificacion();
 
@@ -227,12 +227,12 @@ implementation
         ultimo_terreno.indice := terreno.indice; // Actualizar el índice del último terreno.
         escribir_terreno(archivo, ultimo_terreno, terreno.indice);
 
-        writeln('Terreno eliminado del archivo'); readkey; // TEST
+        {writeln('Terreno eliminado del archivo'); readkey;} // TEST
 
         // Borrar de la lista.
         desenlistar_terreno(lista, terreno.nro_plano);
 
-        writeln('Terreno desenlistado'); readkey; // TEST
+        {writeln('Terreno desenlistado'); readkey;} // TEST
 
         // Actualizar el índice del último terreno en la lista.
         if not(lista_vacia_terrenos(lista)) then
@@ -240,7 +240,7 @@ implementation
             desenlistar_terreno(lista, ultimo_terreno.nro_plano);
             enlistar_terreno(lista, ultimo_terreno);
 
-            writeln('Ultimo terreno actualizado en lista'); readkey; // TEST
+            {writeln('Ultimo terreno actualizado en lista'); readkey;} // TEST
         end;
 
         // Descontar un terreno
@@ -285,7 +285,7 @@ implementation
             opt := menu_modificar_terreno();
 
             case opt of
-                1:  nuevo_terreno.superficie := strToFloat(leer_entrada('Superficie', 255, 'real'));
+                1:  nuevo_terreno.superficie := strToFloat(leer_entrada('Superficie', 255, 'real_positivo'));
                 2:  nuevo_terreno.zona := menu_seleccion_zona();
                 3:  nuevo_terreno.tipo_edificacion := menu_seleccion_tipo_edificacion();
             end;
