@@ -213,8 +213,9 @@ implementation
 
             if (lista.actual <> nil) then
             begin
-                if (lista.actual^.info.fecha_inscripcion = buscado) then
+                if (lista.actual^.info.nro_plano = buscado) then
                 begin
+                    {writeln('Borrado: ', buscado);} // TEST
                     anterior^.siguiente := lista.actual^.siguiente;
                     dispose(lista.actual);
                     lista.tam := lista.tam - 1;
