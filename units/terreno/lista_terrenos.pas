@@ -148,17 +148,9 @@ implementation
         begin
             primero_lista_terrenos(lista);
 
-            case tipo of
-            'domicilio':        actual := lista.actual^.info.domicilio_parcelario;
-            'contribuyente':    actual := lista.actual^.info.nro_contribuyente;
-            'plano':            actual := lista.actual^.info.nro_plano;
-            end;
-
             // Se posiciona en el terreno más cercano (mayor o igual)
             while (not(fin_lista_terrenos(lista)) and not(secuencial_terreno)) do
             begin
-                siguiente_lista_terrenos(lista);
-
                 if lista.actual <> nil then
                 begin
                     case tipo of
@@ -169,12 +161,14 @@ implementation
                 end;
 
                 if lowercase(actual) = lowercase(clave) then
-                    secuencial_terreno := true;
+                    secuencial_terreno := true
+                else
+                    siguiente_lista_terrenos(lista);
                 
-                {// Test
-                writeln(actual);
+                // Test
+                {writeln(actual);
                 writeln(clave);
-                writeln('iguales: ', (actual = clave));
+                writeln('iguales: ', (lowercase(actual) = lowercase(clave)));
                 readkey;
                 clrscr;}
             end;
