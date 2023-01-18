@@ -220,10 +220,12 @@ implementation
                                 terreno : t_terreno);
     var
         ultimo_terreno : t_terreno;
+        ultimo_indice : cardinal;
     begin
 
         // Borrar del archivo (desplazar el último e insertarlo en posición del antiguo)
         ultimo_terreno := leer_terreno(archivo, cantidad_terrenos(archivo_contador));
+        ultimo_indice := ultimo_terreno.indice;
         ultimo_terreno.indice := terreno.indice; // Actualizar el índice del último terreno.
         escribir_terreno(archivo, ultimo_terreno, terreno.indice);
 
@@ -234,10 +236,11 @@ implementation
 
         {writeln('Terreno desenlistado'); readkey;} // TEST
 
-        // Actualizar el índice del último terreno en la lista.
-        if not(lista_vacia_terrenos(lista)) then
+        desenlistar_terreno(lista, ultimo_terreno.nro_plano);
+
+        // Actualizar el índice del último terreno en la lista si no es el borrado.
+        if (ultimo_terreno.indice <> cantidad_terrenos(archivo_contador)) then
         begin
-            desenlistar_terreno(lista, ultimo_terreno.nro_plano);
             enlistar_terreno(lista, ultimo_terreno);
 
             {writeln('Ultimo terreno actualizado en lista'); readkey;} // TEST
@@ -245,6 +248,16 @@ implementation
 
         // Descontar un terreno
         restar_terreno(archivo_contador, terreno.tipo_edificacion);
+
+        // TEST:
+        primero_lista_terrenos(lista);
+        while not(fin_lista_terrenos(lista)) do
+        begin
+            recuperar_lista_terrenos(lista, terreno);
+            writeln(terreno.nro_plano);
+            siguiente_lista_terrenos(lista);
+        end;
+        readkey;
 
     end;
 
