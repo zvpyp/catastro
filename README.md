@@ -29,10 +29,6 @@ https://www.freepascal.org/download.html
 
 Enter catastro's folder and compile _main.pas_.
 
-##### Note:
-
-If you use windows, you might have to change the _slashes_ (/) with _backslashes_ (\\) in all _.pas_ files before compiling.
-
 ```
 cd catastro/
 fpc main.pas
@@ -77,10 +73,6 @@ https://www.freepascal.org/download.html
 ```
 
 Ingresa a la carpeta de catastro, y compila _main.pas_.
-
-##### Nota:
-
-Seguramente si utilizas windows, tengas que cambiar cambiar todos los _slashes_ (/) por _backslashes_ (\\) en todos los archivos _.pas_ antes de compilar.
 
 ```
 cd catastro/
