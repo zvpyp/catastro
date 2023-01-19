@@ -137,6 +137,8 @@ implementation
         i : byte;
         menu : t_menu;
     begin
+        crear_arbol(buscar_contribuyente);
+
         if tipo = 'dni' then 
         begin
             // Solo acepta número natural para dni.
@@ -152,9 +154,6 @@ implementation
             
             // Encontrar todos los que concuerdan.
             preorden_multiple(raiz_nombre, clave, buscar_contribuyente, cantidad);
-            
-            writeln('la cantidad de encontrados es ', cantidad);
-            readkey;
 
             if cantidad >= 2 then
             begin
