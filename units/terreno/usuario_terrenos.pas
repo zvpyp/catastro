@@ -161,9 +161,18 @@ implementation
     begin
         leer_numero_plano := leer_entrada('Ingrese el número de plano', 15, 'normal');
 
-        // Vuelve a pedir hasta que no lo encuentre.
+        // Vuelve a pedir hasta que no sea duplicado.
         while secuencial_terreno(lista, leer_numero_plano, 'plano') do
             leer_numero_plano := leer_entrada('Número de plano ya existente. Por favor, ingrese un número de plano distinto', 15, 'normal');
+    end;
+
+    function leer_domicilio_parcelario(var lista : t_lista_terrenos): string;
+    begin
+        leer_domicilio_parcelario := leer_entrada('Ingrese el domicilio parcelario', 30, 'normal');
+
+        // Vuelve a pedir hasta que no sea duplicado.
+        while secuencial_terreno(lista, leer_domicilio_parcelario, 'domicilio') do
+            leer_domicilio_parcelario := leer_entrada('Domicilio ya existente. Por favor, ingrese un domicilio distinto', 30, 'normal');
     end;
 
 
@@ -180,7 +189,7 @@ implementation
         terreno.nro_contribuyente := nro_contribuyente;
         terreno.nro_plano := leer_numero_plano(lista);
         terreno.fecha_inscripcion := leer_fecha('Ingrese la fecha de inscripción');
-        terreno.domicilio_parcelario := leer_entrada('Ingrese el domicilio parcelario', 30, 'normal');
+        terreno.domicilio_parcelario := leer_domicilio_parcelario(lista);
         terreno.superficie := strToFloat(leer_entrada('Ingrese la superficie en km cuadrados', 255, 'real_positivo'));
         terreno.zona := menu_seleccion_zona();
         terreno.tipo_edificacion := menu_seleccion_tipo_edificacion();
