@@ -266,14 +266,14 @@ implementation
         restar_terreno(archivo_contador, terreno.tipo_edificacion);
 
         // TEST:
-        primero_lista_terrenos(lista);
+        {primero_lista_terrenos(lista);
         while not(fin_lista_terrenos(lista)) do
         begin
             recuperar_lista_terrenos(lista, terreno);
             writeln(terreno.nro_plano);
             siguiente_lista_terrenos(lista);
         end;
-        readkey;
+        readkey;}
 
     end;
 
