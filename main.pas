@@ -281,13 +281,24 @@ begin
                 1:  // Lista de contribuyentes con sus propiedades valorizadas.
                     // TODO: Idem.
                     begin
-                        writeln('| Propietario | Domicilio parcelario | Valor de la propiedad |');
+                        escribir_xy('-----------------------------------------------------------------------------------------',11,1);
+                        escribir_xy('| Propietario',10,2);
+                        escribir_xy('| Domicilio parcelario',40,2);
+                        escribir_xy('| Valor de la propiedad',70,2);
+                        escribir_xy('|',100,2);
+                        escribir_xy('-----------------------------------------------------------------------------------------',11,3);
                         listado_contribuyentes_propiedades(arbol_contribuyentes_nombre, lista_terrenos_fecha, archivo_contribuyentes);
                         pedir_tecla();
                     end;
                 2:  // Lista de inscripciones en un año.
                     // TODO: verificar si funciona.
+                    begin
+                    escribir_xy('| Domicilio parcelario',10,2);
+                    escribir_xy('| Fecha de inscripción',40,2);
+                    escribir_xy('|',70,2);
+                    escribir_xy('-----------------------------------------------------------------------------------------',11,3);
                     inscripciones_anio(lista_terrenos_fecha, leer_entrada('Año: ', 4, 'normal'));
+                    end;
                 3:  begin
                         // Lista de terrenos por zona.
                         // TODO: verificar si funciona.
