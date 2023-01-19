@@ -188,8 +188,30 @@ begin
                                     modificar_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, terreno_aux);
                             end;
 
-                            // Opción de eliminar terreno.
+                            // Opción de transferir terreno.
                             6:
+                            begin
+                                terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
+                                if terreno_aux.indice <> 0 then
+                                begin
+                                    // Busca el contribuyente a transferir.
+                                    puntero_aux := buscar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, 'nombre');
+                                    contribuyente_aux := leer_contribuyente(archivo_contribuyentes, info_raiz(puntero_aux).indice);
+
+                                    if info_raiz(puntero_aux).indice <> 0 then
+                                    begin
+                                        transferir_terreno(archivo_terrenos, archivo_contador, lista_terrenos_fecha, terreno_aux, contribuyente_aux.numero);
+                                        writeln('Terreno transferido con éxito a ', contribuyente_aux.nombre, ' ', contribuyente_aux.apellido, '!');
+                                    end
+                                    else
+                                        writeln('No se pudo transferir porque el contribuyente no existe');
+                                    
+                                    pedir_tecla();
+                                end;
+                            end;
+
+                            // Opción de eliminar terreno.
+                            7:
                             begin
                                 terreno_aux := seleccionar_terreno(lista_terrenos_fecha, nro_contribuyente);
                                 if terreno_aux.indice <> 0 then
@@ -197,7 +219,7 @@ begin
                             end;
 
                             end;
-                        until ((opcion_submenu = 0) or (opcion_submenu = 7)); // 0 es salir por escape, 7 es por selección
+                        until ((opcion_submenu = 0) or (opcion_submenu = 8)); // 0 es salir por escape, 8 es por selección
                 end;
               end
               else 

@@ -235,13 +235,14 @@ implementation
             menu : t_menu;
         begin
             menu := crear_menu('¿Qué desea realizar?');
-            agregar_opcion(menu, 'Modificación');      // 1
-            agregar_opcion(menu, 'Baja');              // 2
-            agregar_opcion(menu, 'Ver terrenos');      // 3
-            agregar_opcion(menu, 'Agregar terreno');   // 4
-            agregar_opcion(menu, 'Modificar terreno'); // 5
-            agregar_opcion(menu, 'Eliminar terreno');  // 6
-            agregar_opcion(menu, 'Volver');             // 7
+            agregar_opcion(menu, 'Modificación');       // 1
+            agregar_opcion(menu, 'Baja');               // 2
+            agregar_opcion(menu, 'Ver terrenos');       // 3
+            agregar_opcion(menu, 'Agregar terreno');    // 4
+            agregar_opcion(menu, 'Modificar terreno');  // 5
+            agregar_opcion(menu, 'Transferir terreno'); // 6
+            agregar_opcion(menu, 'Eliminar terreno');   // 7
+            agregar_opcion(menu, 'Volver');             // 8
 
             menu_encontrado := seleccion_menu(menu);
         end;

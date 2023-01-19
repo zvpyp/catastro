@@ -47,6 +47,13 @@ interface
                                 var archivo_contador : t_archivo_contador;
                                 var lista : t_lista_terrenos;
                                 var terreno : t_terreno);
+
+    // Cambia el número de contribuyente del terreno.
+    procedure transferir_terreno(var archivo_terrenos : t_archivo_terrenos;
+                                    var archivo_contador : t_archivo_contador;
+                                    var lista : t_lista_terrenos;
+                                    terreno : t_terreno;
+                                    nuevo_nro : string);
     
     // Imprime en pantalla todos los datos del terreno.
     procedure mostrar_terreno(terreno : t_terreno);
@@ -349,6 +356,22 @@ implementation
                 readkey;
             end;
     end;
+
+
+    procedure transferir_terreno(var archivo_terrenos : t_archivo_terrenos;
+                                    var archivo_contador : t_archivo_contador;
+                                    var lista : t_lista_terrenos;
+                                    terreno : t_terreno;
+                                    nuevo_nro : string);
+    begin
+        // Borrar datos viejos.
+        borrar_terreno(archivo_terrenos, archivo_contador, lista, terreno);
+
+        // Agregar datos con nuevo número.
+        terreno.nro_contribuyente := nuevo_nro;
+        crear_terreno(archivo_terrenos, archivo_contador, lista, terreno);
+    end;
+
 
     function lista_terrenos_contribuyente(var lista : t_lista_terrenos; nro_contribuyente : string) : t_lista_terrenos;
     var
