@@ -38,6 +38,9 @@ interface
     // Resta un contribuyente a los datos.
     procedure restar_contribuyente(var archivo : t_archivo_contador);
 
+    // Suma uno a los contribuyentes activos.
+    procedure sumar_activo(var archivo : t_archivo_contador);
+
     // Resta un terreno a los datos.
     procedure restar_terreno(var archivo : t_archivo_contador; tipo : byte);
 
@@ -131,6 +134,18 @@ implementation
         write(archivo, contador_aux);
     end;
 
+    procedure sumar_activo(var archivo : t_archivo_contador);
+    var
+        contador_aux : t_contador_datos;
+    begin
+        seek(archivo, 1);
+        read(archivo, contador_aux);
+
+        contador_aux.contribuyentes_activos := contador_aux.contribuyentes_activos + 1;
+
+        seek(archivo, 1);
+        write(archivo, contador_aux);
+    end;
 
     procedure restar_terreno(var archivo : t_archivo_contador; tipo : byte);
     var

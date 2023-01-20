@@ -79,7 +79,7 @@ implementation
 
         fecha1 := leer_fecha('Ingrese la primera fecha');
         fecha2 := leer_fecha('Ingrese la segunda fecha');
-
+        clrscr;
         // Las ordena en caso de estar en orden incorrecto.
         if fecha_es_menor(fecha2, fecha1) then
         begin
@@ -95,8 +95,6 @@ implementation
         begin
             recuperar_lista_terrenos(lista, terreno_actual);
             fecha_aux := terreno_actual.fecha_inscripcion;
-
-            writeln(fecha_aux);
 
             if fecha_es_mayor_igual(fecha_aux, fecha1) and (fecha_es_menor_igual(fecha_aux, fecha2)) then
             begin
@@ -181,7 +179,7 @@ implementation
 
         if activos <> 0 then
         begin
-            {TEST} writeln('multiples: ', multiples, 'activos: ', activos);
+            {TEST} {writeln('multiples: ', multiples, 'activos: ', activos);}
             writeln('Propietarios con más de una propiedad: ', (100 * multiples/activos):0:2, '%');
         end
         else

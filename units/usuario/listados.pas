@@ -14,10 +14,11 @@ interface
     comprobante in 'units/usuario/comprobante.pas',
     validacion_entradas in 'units/varios/validacion_entradas.pas',
     arbol in 'units/arbol.pas',
-    compara_fechas in 'units/varios/compara_fechas.pas';
+    compara_fechas in 'units/varios/compara_fechas.pas',
+    contador_datos in 'units/varios/contador_datos';
 
     // Muestra los terrenos según la zona que le corresponda.
-    procedure terrenos_por_zona(lista : t_lista_terrenos);
+    procedure terrenos_por_zona(lista : t_lista_terrenos; var archivo : t_archivo_contador);
 
     // Muestra todas las inscripciones de terrenos dadas en un año.
     procedure inscripciones_anio(var lista : t_lista_terrenos; anio : string);
@@ -79,7 +80,7 @@ implementation
     end;
 
     // TODO: hacer ver como grilla
-    procedure terrenos_por_zona(lista : t_lista_terrenos);
+    procedure terrenos_por_zona(lista : t_lista_terrenos; var archivo : t_archivo_contador);
     var
         vector_por_zona : t_vector_listas;
         lista_actual : t_lista_terrenos;
@@ -88,56 +89,60 @@ implementation
         mensaje : string;
         y, max : byte;
     begin
-        max := 3;
-        vector_por_zona := generar_vector_por_zona(lista);
-        escribir_xy('-----------------------------------------------------------------------------------------------------',10,1);
-        for i := 1 to 5 do
-        begin
-            y := 3;
-            mensaje := '| Zona '+ FloatToStr(i);
-            case i of
-            1: escribir_xy(mensaje,10,2);
-            2: escribir_xy(mensaje,30,2);
-            3: escribir_xy(mensaje,50,2);
-            4: escribir_xy(mensaje,70,2);
-            5: 
+        if cantidad_terrenos(archivo) <> 0 then
+          begin
+            max := 3;
+            vector_por_zona := generar_vector_por_zona(lista);
+            escribir_xy('-----------------------------------------------------------------------------------------------------',10,1);
+            for i := 1 to 5 do
             begin
-                escribir_xy(mensaje,90,2);
-                escribir_xy('|',110,2);
-                escribir_xy('-----------------------------------------------------------------------------------------------------',10,3);
-            end;
-            end;
-
-            lista_actual := vector_por_zona[i];
-            primero_lista_terrenos(lista_actual);
-
-            if lista_actual.tam <> 0 then
-            begin
-                while not(fin_lista_terrenos(lista_actual)) do
+                y := 3;
+                mensaje := '| Zona '+ FloatToStr(i);
+                case i of
+                1: escribir_xy(mensaje,10,2);
+                2: escribir_xy(mensaje,30,2);
+                3: escribir_xy(mensaje,50,2);
+                4: escribir_xy(mensaje,70,2);
+                5: 
                 begin
-                    y := y + 1;
-                    if y > max then max := y;
-                    recuperar_lista_terrenos(lista_actual, terreno_actual);
-                    mensaje := '| ' + terreno_actual.domicilio_parcelario;
-                    escribir_xy('|',10,y);
-                    escribir_xy('|',30,y);
-                    escribir_xy('|',50,y);
-                    escribir_xy('|',70,y);
-                    escribir_xy('|',90,y);
-                    escribir_xy('|',110,y);
-                    case i of
-                        1: escribir_xy(mensaje,10,y);
-                        2: escribir_xy(mensaje,30,y);
-                        3: escribir_xy(mensaje,50,y);
-                        4: escribir_xy(mensaje,70,y);
-                        5: escribir_xy(mensaje,90,y);
+                    escribir_xy(mensaje,90,2);
+                    escribir_xy('|',110,2);
+                    escribir_xy('-----------------------------------------------------------------------------------------------------',10,3);
+                end;
+                end;
+
+                lista_actual := vector_por_zona[i];
+                primero_lista_terrenos(lista_actual);
+
+                if lista_actual.tam <> 0 then
+                begin
+                    while not(fin_lista_terrenos(lista_actual)) do
+                    begin
+                        y := y + 1;
+                        if y > max then max := y;
+                        recuperar_lista_terrenos(lista_actual, terreno_actual);
+                        mensaje := '| ' + terreno_actual.domicilio_parcelario;
+                        escribir_xy('|',10,y);
+                        escribir_xy('|',30,y);
+                        escribir_xy('|',50,y);
+                        escribir_xy('|',70,y);
+                        escribir_xy('|',90,y);
+                        escribir_xy('|',110,y);
+                        case i of
+                            1: escribir_xy(mensaje,10,y);
+                            2: escribir_xy(mensaje,30,y);
+                            3: escribir_xy(mensaje,50,y);
+                            4: escribir_xy(mensaje,70,y);
+                            5: escribir_xy(mensaje,90,y);
+                        end;
+                        siguiente_lista_terrenos(lista_actual);
                     end;
-                    siguiente_lista_terrenos(lista_actual);
                 end;
             end;
-        end;
-        escribir_xy('-----------------------------------------------------------------------------------------------------',10,max + 1);
-        pedir_tecla();
+            escribir_xy('-----------------------------------------------------------------------------------------------------',10,max + 1);
+            end else
+            Writeln('No se encuentra ningún archivo en la base de datos.');
+            pedir_tecla();
     end;
 
 

@@ -53,14 +53,15 @@ interface
     // Modifica un contribuyente dado.
     procedure modificar_contribuyente(var archivo : t_archivo_contribuyentes;
                                       var raiz_nro_contribuyente : t_puntero_arbol;
-                                          nro_contribuyente : string);
+                                          nro_contribuyente : string;
+                                      var archivo_contador : t_archivo_contador);
 
     // Busca el contribuyente en el árbol e imprime sus datos.
     procedure consultar_contribuyente(var archivo : t_archivo_contribuyentes;
                                       var raiz_nro_contribuyente : t_puntero_arbol;
                                           nro_contribuyente : string);
 
-     procedure activar_contribuyente(var archivo : t_archivo_contribuyentes; contribuyente : t_contribuyente; indice : cardinal);                           
+    procedure activar_contribuyente(var archivo : t_archivo_contribuyentes; contribuyente : t_contribuyente; indice : cardinal; var archivo_contador : t_archivo_contador);                         
 
 {--------------------------------}
 
@@ -178,10 +179,11 @@ implementation
         end;
     end;
 
-    procedure activar_contribuyente(var archivo : t_archivo_contribuyentes; contribuyente : t_contribuyente; indice : cardinal);
+    procedure activar_contribuyente(var archivo : t_archivo_contribuyentes; contribuyente : t_contribuyente; indice : cardinal; var archivo_contador : t_archivo_contador);
     begin
         contribuyente.activo := true;
         escribir_contribuyente(archivo, contribuyente, indice);
+        sumar_activo(archivo_contador);
         writeln('Contribuyente activado con éxito:');
         writeln('');
         mostrar_contribuyente(contribuyente);
@@ -276,7 +278,8 @@ implementation
 
     procedure modificar_contribuyente(var archivo : t_archivo_contribuyentes;
                                       var raiz_nro_contribuyente : t_puntero_arbol;
-                                          nro_contribuyente : string);
+                                          nro_contribuyente : string;
+                                      var archivo_contador : t_archivo_contador);
     var
         contribuyente : t_contribuyente;
         nodo : t_puntero_arbol;
@@ -325,7 +328,7 @@ implementation
         else
         begin
             if (leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's') then
-                activar_contribuyente(archivo, contribuyente, indice);
+                activar_contribuyente(archivo, contribuyente, indice, archivo_contador);
         end;
 
         pedir_tecla();

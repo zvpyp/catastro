@@ -142,7 +142,7 @@ begin
               contribuyente_aux := leer_contribuyente(archivo_contribuyentes, dato_aux.indice);
               if  not (contribuyente_aux.activo) then 
               begin
-                if leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's' then activar_contribuyente(archivo_contribuyentes, contribuyente_aux, indice_aux);
+                if leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's' then activar_contribuyente(archivo_contribuyentes, contribuyente_aux, indice_aux, archivo_contador);
               end;
               if contribuyente_aux.activo then
                 begin
@@ -156,7 +156,7 @@ begin
                             case opcion_submenu of
                             
                             // Opción de modificación.
-                            1: modificar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, nro_contribuyente);
+                            1: modificar_contribuyente(archivo_contribuyentes, arbol_contribuyentes_nro, nro_contribuyente, archivo_contador);
 
                             // Opción de baja.
                             2: 
@@ -279,7 +279,6 @@ begin
 
                 case opcion_submenu of
                 1:  // Lista de contribuyentes con sus propiedades valorizadas.
-                    // TODO: Idem.
                     begin
                         escribir_xy('-----------------------------------------------------------------------------------------',11,1);
                         escribir_xy('| Propietario',10,2);
@@ -291,22 +290,13 @@ begin
                         pedir_tecla();
                     end;
                 2:  // Lista de inscripciones en un año.
-                    // TODO: verificar si funciona.
-                    begin
-                    escribir_xy('| Domicilio parcelario',10,2);
-                    escribir_xy('| Fecha de inscripción',40,2);
-                    escribir_xy('|',70,2);
-                    escribir_xy('-----------------------------------------------------------------------------------------',11,3);
                     inscripciones_anio(lista_terrenos_fecha, leer_entrada('Año: ', 4, 'normal'));
-                    end;
                 3:  begin
                         // Lista de terrenos por zona.
-                        // TODO: verificar si funciona.
-                        terrenos_por_zona(lista_terrenos_fecha);
+                        terrenos_por_zona(lista_terrenos_fecha, archivo_contador);
                     end;
 
                 4:  // Imprimir comprobante.
-                    // TODO: verificar si funciona.
                     consultar_comprobante(lista_terrenos_fecha);
                 end;
 
