@@ -14,10 +14,11 @@ interface
     comprobante in 'units/usuario/comprobante.pas',
     validacion_entradas in 'units/varios/validacion_entradas.pas',
     arbol in 'units/arbol.pas',
-    compara_fechas in 'units/varios/compara_fechas.pas';
+    compara_fechas in 'units/varios/compara_fechas.pas',
+    contador_datos in 'units/varios/contador_datos';
 
     // Muestra los terrenos según la zona que le corresponda.
-    procedure terrenos_por_zona(lista : t_lista_terrenos);
+    procedure terrenos_por_zona(lista : t_lista_terrenos; var archivo : t_archivo_contador);
 
     // Muestra todas las inscripciones de terrenos dadas en un año.
     procedure inscripciones_anio(var lista : t_lista_terrenos; anio : string);
@@ -36,14 +37,15 @@ implementation
                                             var archivo_contribuyentes : t_archivo_contribuyentes);
     var
         dato : t_dato_arbol;
-        nombre : string;
-        nro_contribuyente : string;
+        nombre, nro_contribuyente, mensaje : string;
         terreno : t_terreno;
+        y : byte;
     begin
         // Ignorar nodos nulos.
         if raiz <> nil then
         begin
             listado_contribuyentes_propiedades(hijo_izquierdo(raiz), lista, archivo_contribuyentes);
+            y := 3;
 
             // Carga los datos.
             dato := info_raiz(raiz);
@@ -57,50 +59,90 @@ implementation
             while not(fin_lista_terrenos(lista)) do
             begin
                 recuperar_lista_terrenos(lista, terreno);
+                y := y + 1;
 
                 if terreno.nro_contribuyente = nro_contribuyente then
-                    writeln('|',nombre, '|', terreno.domicilio_parcelario, '|', terreno.avaluo:0:2 ,'|');
-
+                begin
+                    mensaje := '| '+ nombre;
+                    escribir_xy(mensaje,10,y);
+                    mensaje := '| ' + terreno.domicilio_parcelario;
+                    escribir_xy(mensaje,40,y);
+                    mensaje := '| ' + '$' + FloatToStr(terreno.avaluo);
+                    escribir_xy(mensaje,70,y);
+                    escribir_xy('|',100,y);
+                end;
                 siguiente_lista_terrenos(lista);
             end;
-
+            escribir_xy('-----------------------------------------------------------------------------------------',11,y+1);
 
             listado_contribuyentes_propiedades(hijo_derecho(raiz), lista, archivo_contribuyentes);
         end;
     end;
 
     // TODO: hacer ver como grilla
-    procedure terrenos_por_zona(lista : t_lista_terrenos);
+    procedure terrenos_por_zona(lista : t_lista_terrenos; var archivo : t_archivo_contador);
     var
         vector_por_zona : t_vector_listas;
         lista_actual : t_lista_terrenos;
         terreno_actual : t_terreno;
         i : 1..5;
+        mensaje : string;
+        y, max : byte;
     begin
-        vector_por_zona := generar_vector_por_zona(lista);
-    
-        for i := 1 to 5 do
-        begin
-            writeln('Zona ', i, ':');
-            writeln('');
-
-            lista_actual := vector_por_zona[i];
-            primero_lista_terrenos(lista_actual);
-
-            if lista_actual.tam <> 0 then
+        if cantidad_terrenos(archivo) <> 0 then
+          begin
+            max := 3;
+            vector_por_zona := generar_vector_por_zona(lista);
+            escribir_xy('-----------------------------------------------------------------------------------------------------',10,1);
+            for i := 1 to 5 do
             begin
-                while not(fin_lista_terrenos(lista_actual)) do
+                y := 3;
+                mensaje := '| Zona '+ FloatToStr(i);
+                case i of
+                1: escribir_xy(mensaje,10,2);
+                2: escribir_xy(mensaje,30,2);
+                3: escribir_xy(mensaje,50,2);
+                4: escribir_xy(mensaje,70,2);
+                5: 
                 begin
-                    recuperar_lista_terrenos(lista_actual, terreno_actual);
-                    writeln(terreno_actual.domicilio_parcelario);
-                    siguiente_lista_terrenos(lista_actual);
+                    escribir_xy(mensaje,90,2);
+                    escribir_xy('|',110,2);
+                    escribir_xy('-----------------------------------------------------------------------------------------------------',10,3);
                 end;
-            end else Writeln('No se encontró ningún terreno perteneciente a esta zona');
-            writeln('');
-            writeln('Presione una tecla para continuar...');
-            readkey;
-            clrscr;
-        end;
+                end;
+
+                lista_actual := vector_por_zona[i];
+                primero_lista_terrenos(lista_actual);
+
+                if lista_actual.tam <> 0 then
+                begin
+                    while not(fin_lista_terrenos(lista_actual)) do
+                    begin
+                        y := y + 1;
+                        if y > max then max := y;
+                        recuperar_lista_terrenos(lista_actual, terreno_actual);
+                        mensaje := '| ' + terreno_actual.domicilio_parcelario;
+                        escribir_xy('|',10,y);
+                        escribir_xy('|',30,y);
+                        escribir_xy('|',50,y);
+                        escribir_xy('|',70,y);
+                        escribir_xy('|',90,y);
+                        escribir_xy('|',110,y);
+                        case i of
+                            1: escribir_xy(mensaje,10,y);
+                            2: escribir_xy(mensaje,30,y);
+                            3: escribir_xy(mensaje,50,y);
+                            4: escribir_xy(mensaje,70,y);
+                            5: escribir_xy(mensaje,90,y);
+                        end;
+                        siguiente_lista_terrenos(lista_actual);
+                    end;
+                end;
+            end;
+            escribir_xy('-----------------------------------------------------------------------------------------------------',10,max + 1);
+            end else
+            Writeln('No se encuentra ningún archivo en la base de datos.');
+            pedir_tecla();
     end;
 
 
@@ -110,10 +152,13 @@ implementation
         ceros : byte;
         i : byte;
         terreno_actual : t_terreno;
-        fecha1, fecha2, fecha_actual : string;
+        fecha1, fecha2, fecha_actual, mensaje : string;
         cantidad : cardinal;
+        existe : boolean;
     begin
+        clrscr;
         cantidad := 0;
+        existe := false;
 
         // Convertir a string de 4 dígitos en caso de ser necesario.
         ceros := 4 - length(anio);
@@ -130,16 +175,36 @@ implementation
         fecha_actual := '0001-01-01'; // por predeterminado, la fecha mínima posible
         
         primero_lista_terrenos(lista);
-
+        i := 3;
         // Escribe todos los terrenos entre ambas fechas.
         while not(fin_lista_terrenos(lista)) do
         begin
             recuperar_lista_terrenos(lista, terreno_actual);
             fecha_actual := terreno_actual.fecha_inscripcion;
             if fecha_es_mayor_igual(fecha_actual, fecha1) and fecha_es_menor_igual(fecha_actual, fecha2) then
-              Writeln('- ', terreno_actual.domicilio_parcelario, ' (', fecha_actual,')');
+            begin
+            if not existe then
+              begin 
+              escribir_xy('------------------------------------------------------------',11,1);
+              escribir_xy('| Domicilio parcelario',10,2);
+              escribir_xy('| Fecha de inscripción',40,2);
+              escribir_xy('|',70,2);
+              escribir_xy('------------------------------------------------------------',11,3);
+              existe := true;
+              end;
+              i := i + 1;
+              mensaje := '| '+ terreno_actual.domicilio_parcelario;
+              escribir_xy(mensaje,10,i);
+              mensaje := '| '+ fecha_actual;
+              escribir_xy(mensaje,40,i);
+              escribir_xy('|',70,i);
+              
+            end;
             siguiente_lista_terrenos(lista);
         end;
+        if existe then
+        escribir_xy('------------------------------------------------------------',11,i + 1)
+        else writeln('Ningún terreno se inscribió en el año ', anio_con_ceros);
         
         pedir_tecla();
     end;

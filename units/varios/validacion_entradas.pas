@@ -29,6 +29,9 @@ uses sysutils, crt;
     // Pide al usuario que presione cualquier tecla.
     procedure pedir_tecla();
 
+    // Escribe el mensaje dado en las coordenadas indicadas.
+    procedure escribir_xy(mensaje : string; x : byte; y : byte);
+
 {--------------------------------}
 
 implementation
@@ -293,5 +296,11 @@ implementation
         writeln('Presione una tecla para continuar...');
         readkey;
         clrscr;
+    end;
+
+    procedure escribir_xy(mensaje : string; x : byte; y : byte);
+    begin
+      gotoxy(x,y);
+      writeln(mensaje);
     end;
 end.
