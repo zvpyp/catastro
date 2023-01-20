@@ -9,7 +9,7 @@
 
 ### What is this?
 
-This is a project made in pascal as a final project for "Algorithm and Data Structure", of the _National Technological University, Concepción del Uruguay Regional Faculty_.
+This is a project made in pascal as a final project for "Algorithm and Data Structures", of the _National Technological University, Concepción del Uruguay Regional Faculty_.
 
 ### May I download it?
 
