@@ -31,7 +31,7 @@ interface
 
 implementation
 
-    // TODO: hacer ver como grilla
+    
     procedure listado_contribuyentes_propiedades(raiz : t_puntero_arbol;
                                                 lista : t_lista_terrenos;
                                             var archivo_contribuyentes : t_archivo_contribuyentes);

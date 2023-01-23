@@ -221,7 +221,7 @@ implementation
             menu : t_menu;
         begin
             menu := crear_menu('Bienvenido al Catastro del equipo 10 ¿Qué desea hacer? :)');
-            agregar_opcion(menu, 'Ingresar número de contribuyente');  // 1
+            agregar_opcion(menu, 'Ingresar DNI');                      // 1
             agregar_opcion(menu, 'Consulta');                          // 2
             agregar_opcion(menu, 'Listas e impresión de datos');       // 3
             agregar_opcion(menu, 'Estadísticas');                      // 4

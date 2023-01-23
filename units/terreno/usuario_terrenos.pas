@@ -166,7 +166,7 @@ implementation
     // pide un número de plano al usuario. Si ya existe en la lista, lo vuelve a pedir.
     function leer_numero_plano(var lista : t_lista_terrenos): string;
     begin
-        leer_numero_plano := leer_entrada('Ingrese el número de plano', 15, 'normal');
+        leer_numero_plano := leer_entrada('Ingrese el número de plano', 15, 'natural');
 
         // Vuelve a pedir hasta que no sea duplicado.
         while secuencial_terreno(lista, leer_numero_plano, 'plano') do

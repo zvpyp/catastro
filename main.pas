@@ -88,6 +88,7 @@ var
     indice_aux : cardinal;
 
     nro_contribuyente : string;
+    dni : string;
 
 begin
     clrscr;
@@ -131,22 +132,23 @@ begin
 
         case opcion_principal of
 
-        // Opción de ingresar número de contribuyente.
+        // Opción de ingresar DNI.
         1:
         begin
-            nro_contribuyente := leer_entrada('Número de contribuyente: ', 15, 'natural');
-            dato_aux := info_raiz(preorden(arbol_contribuyentes_nro, nro_contribuyente));
-            indice_aux := dato_aux.indice; 
+            dni := leer_entrada('DNI: ', 8, 'natural');
+            dato_aux := info_raiz(preorden(arbol_contribuyentes_dni, dni));
+            indice_aux := dato_aux.indice;
             if indice_aux <> 0 then
               begin
               contribuyente_aux := leer_contribuyente(archivo_contribuyentes, dato_aux.indice);
+              nro_contribuyente := contribuyente_aux.numero;
               if  not (contribuyente_aux.activo) then 
               begin
                 if leer_si_no('Contribuyente inactivo. ¿Desea activarlo?') = 's' then activar_contribuyente(archivo_contribuyentes, contribuyente_aux, indice_aux, archivo_contador);
               end;
               if contribuyente_aux.activo then
                 begin
-                    Writeln('Este número de contribuyente pertenece a ' + contribuyente_aux.nombre + ' ' + contribuyente_aux.apellido + '.');
+                    Writeln('Este DNI pertenece a ' + contribuyente_aux.nombre + ' ' + contribuyente_aux.apellido + '.');
                     pedir_tecla();
                     mostrar_contribuyente(contribuyente_aux);
                         repeat
@@ -224,7 +226,7 @@ begin
               end
               else 
                 begin
-                    Writeln('El número de contribuyente no se encuentra en la base de datos');
+                    Writeln('El DNI no se encuentra en la base de datos');
                     readkey;
                     if leer_si_no('¿Desea crear el contribuyente?') = 's' then
                       alta_contribuyente(archivo_contribuyentes, archivo_contador, arbol_contribuyentes_dni, arbol_contribuyentes_nombre, arbol_contribuyentes_nro, nro_contribuyente);

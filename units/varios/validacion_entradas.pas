@@ -243,13 +243,12 @@ implementation
             restricciones := 'hasta ' + IntToStr(limite) + ' dígitos';
 
         repeat
-            clrscr;
-            writeln(mensaje, '(', restricciones, '):');
+            write(mensaje, '(', restricciones, '): ');
 
             valido := true;
 
             readln(leer_entrada);
-
+            Writeln;
             // tipos numéricos
             case tipo of
                 'natural':          begin
@@ -272,9 +271,9 @@ implementation
     function leer_fecha(mensaje : string): string;
     begin
         repeat
-            clrscr;
-            writeln(mensaje, ' (AAAA-MM-DD):');
+            write(mensaje, ' (AAAA-MM-DD): ');
             readln(leer_fecha);
+            Writeln;
         until (es_fecha_valida(leer_fecha));
     end;
 
